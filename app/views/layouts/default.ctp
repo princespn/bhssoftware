@@ -58,9 +58,33 @@ $(document).ready(function(){
 </script>
 <script>
 $(document).ready(function() {
+    $('#InventoryMasterError').click(function(event) {  //on click
+        if(this.checked) { // check select status
+            $('.checkerror').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1" 
+				 $('div.btnClick').show();
+				 $('#selecctall').removeAttr("disabled");
+            });
+        }else{
+            $('.checkerror').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
+				$('div.btnClick').hide();
+
+            });        
+        }
+    });
+   
+});
+</script>
+<script>
+$(document).ready(function() {
     $('#selecctall').click(function(event) {  //on click
         if(this.checked) { // check select status
             $('.checkbox1').each(function() { //loop through each checkbox
+                this.checked = true;  //select all checkboxes with class "checkbox1" 
+				 $('div.btnClick').show();
+            });
+			 $('.checkerror').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
 				 $('div.btnClick').show();
             });
@@ -68,7 +92,11 @@ $(document).ready(function() {
             $('.checkbox1').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
 				$('div.btnClick').hide();
-            });        
+            }); 
+			$('.checkerror').each(function() { //loop through each checkbox
+                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
+				$('div.btnClick').hide();
+            }); 
         }
     });
    

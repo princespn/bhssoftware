@@ -16,21 +16,21 @@ class ProductListingsController extends AppController {
 		public function index () {
 			$this->set('title', 'Product code information.');
 		
-            if((!empty($this->data)) &&(!empty($_POST['submit']))){
+            if((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['ProductListing']['all_item']))){
 
                     $string = explode(",",trim($this->data['ProductListing']['all_item']));
                     $prsku = 	$string[0];
                     if(!empty($string[1])){$prname = $string[1];}
                         if((!empty($prsku)) && (!empty($prname))){
 
-                            $conditions = array('ProductListing.product_code LIKE' => '%'.$prname.'%','ProductListing.product_sku LIKE' => '%'.$prsku.'%');
-                            $this->paginate = array('limit' => 200,'order'=>'ProductListing.id  ASC','conditions' => $conditions);
+                            $conditions = array('ProductListing.product_code LIKE' => '%'.$prname.'%','ProductListing.product_sku LIKE' => '%'.$prsku.'%','ProductListing.product_asin LIKE' => '%'.$prsku.'%');
+                            $this->paginate = array('limit' => 500,'order'=>'ProductListing.id  ASC','conditions' => $conditions);
                         }
                         if((!empty($prsku))){
 
                             $conditions = array(
-                            'OR'=> array('ProductListing.product_code LIKE' => "%$prsku%",'ProductListing.product_sku LIKE' => "%$prsku%"));
-                            $this->paginate = array('limit' => 200,'order'=>'ProductListing.id  ASC','conditions' => $conditions);
+                            'OR'=> array('ProductListing.product_code LIKE' => "%$prsku%",'ProductListing.product_sku LIKE' => "%$prsku%",'ProductListing.product_asin LIKE' => "%$prsku%"));
+                            $this->paginate = array('limit' => 500,'order'=>'ProductListing.id  ASC','conditions' => $conditions);
                         }
 
                     $this->set('product_listings', $this->paginate());
@@ -50,7 +50,7 @@ class ProductListingsController extends AppController {
             else
             {
                     $this->ProductListing->recursive = 1;
-                    $this->paginate = array('limit' => 200,'order'=>'ProductListing.id  ASC');
+                    $this->paginate = array('limit' => 500,'order'=>'ProductListing.id  ASC');
                     $this->set('product_listings', $this->paginate());
             }
     }

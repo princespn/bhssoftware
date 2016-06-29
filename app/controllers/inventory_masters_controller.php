@@ -16,48 +16,63 @@ class InventoryMastersController extends AppController {
     function index () {
 			$this->set('title', 'Master UK Amazon Listing information.');
 		
-            if((!empty($this->data)) &&(!empty($_POST['submit']))){
+            if((!empty($this->data)) &&(!empty($_POST['submit'])) && (!empty($this->data['InventoryMaster']['all_item']))){
 
                     $string = explode(",",trim($this->data['InventoryMaster']['all_item']));
                     $prsku = 	$string[0];
                     if(!empty($string[1])){$prname = $string[1];}
                         if((!empty($prsku)) && (!empty($prname))){
-
-                            $conditions = array('InventoryMaster.product_code LIKE' => '%'.$prname.'%','InventoryMaster.item_sku LIKE' => '%'.$prsku.'%');
-                            $this->paginate = array('limit' => 200,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
+							$this->loadModel('ProductListing');
+                            $conditions = array('InventoryMaster.item_sku LIKE' => '%'.$prname.'%','InventoryMaster.item_sku LIKE' => '%'.$prsku.'%');
+                            $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
                         }
                         if((!empty($prsku))){
 
                             $conditions = array(
-                            'OR'=> array('InventoryMaster.product_code LIKE' => "%$prsku%",'InventoryMaster.item_sku LIKE' => "%$prsku%"));
-                            $this->paginate = array('limit' => 200,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
+                            'OR'=> array('InventoryMaster.item_sku LIKE' => "%$prsku%",'InventoryMaster.item_sku LIKE' => "%$prsku%"));
+                            $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
                         }
-
+					$this->InventoryMaster->recursive = 1;
                     $this->set('inventory_masters', $this->paginate());
 
             }
-            else if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
-                    $checkboxid = $_POST['checkid'];
-                    App::import("Vendor","parsecsv");
+			elseif((!empty($_POST['checkid'])) && (!empty($_POST['exports'])) && (($this->data['InventoryMaster']['error'])=='error')){
+					if(!empty($_SERVER['REQUEST_URI'])){$orderfinal ='InventoryMaster.error  DESC';}else{$orderfinal ='InventoryMaster.id  ASC';}					
+					$checkboxid = $_POST['checkid'];
+					App::import("Vendor","parsecsv");
+                    $csv = new parseCSV();
+                    $filepath = "C:\Users\Administrator\Downloads"."inventory_masters.csv";	
+                    $csv->auto($filepath);	// array('InventoryMaster.id' => $checkboxid,'not' => array('InventoryMaster.error'=>null))		
+                    $conditions = array(array('InventoryMaster.id'=>$checkboxid),'AND'=>array('InventoryMaster.error !='=>''));
+					$this->set('inventory_masters',$this->InventoryMaster->find('all',array('order'=>$orderfinal,'conditions' =>$conditions)));
+                    $this->layout = null;
+                    $this->autoLayout = false;
+                    Configure::write('debug', '2');					
+			}
+			elseif((!empty($_POST['checkid'])) && (!empty($_POST['exports'])) && (($_POST['selecctall'])=='All')){
+				if(!empty($_SERVER['REQUEST_URI'])){$orderfinal ='InventoryMaster.error  DESC';}else{$orderfinal ='InventoryMaster.id  ASC';}					
+					$checkboxid = $_POST['checkid'];
+					App::import("Vendor","parsecsv");
                     $csv = new parseCSV();
                     $filepath = "C:\Users\Administrator\Downloads"."inventory_masters.csv";	
                     $csv->auto($filepath);			
-                    $this->set('inventory_masters',$this->InventoryMaster->find('all',array('order'=>'InventoryMaster.id ASC','conditions'=>array('InventoryMaster.id' => $checkboxid))));
+                    $this->set('inventory_masters',$this->InventoryMaster->find('all',array('order'=>$orderfinal,'conditions'=>array('InventoryMaster.id' => $checkboxid))));
                     $this->layout = null;
                     $this->autoLayout = false;
-                    Configure::write('debug', '2');
-            }
+                    Configure::write('debug', '2');	
+						
+			}				
             else
             {
                     $this->InventoryMaster->recursive = 1;
-                    $this->paginate = array('limit' => 200,'order'=>'InventoryMaster.id  ASC');
+                    $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC');
                     $this->set('inventory_masters', $this->paginate());
             }
     }
 
         function categoriesPro() {
-                $this->loadModel('InventoryMaster');
-                $procategory = $this->InventoryMaster->find('list', array('fields' =>'category','group'=>'category','recursive' => 0));
+                $this->loadModel('ProductListing');
+                $procategory = $this->ProductListing->find('list', array('fields' =>'category','group'=>'category','recursive' => 0));
                 return $procategory;
         }
 		
@@ -78,14 +93,18 @@ class InventoryMastersController extends AppController {
 			
 			$this->set('title', 'Master UK Amazon Listing information.');
 		
-                    if((!empty($id)))    {
-                    $this->loadModel('InventoryMaster');
-                    $procategory = $this->InventoryMaster->find('list',array('fields'=>'item_sku','conditions' => array('InventoryMaster.category LIKE' => "%$id%")));
-
-                    $conditions = array('InventoryMaster.item_sku'=>$procategory);
-                    $this->paginate = array('limit' => 200,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
+                    if((!empty($id)) && ($id!='All'))    {
+                    $this->loadModel('ProductListing');
+                    $procategory = $this->ProductListing->find('list',array('fields'=>'product_sku','conditions' => array('ProductListing.category LIKE' => "%$id%")));
+					//print_r($procategory);die();
+                    $this->InventoryMaster->recursive = 1;
+					$conditions = array('InventoryMaster.item_sku'=>$procategory);
+                    $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
 					$this->set('foo',$id);
-                }
+                }else{
+					//$conditions = array('InventoryMaster.item_sku'=>$procategory);
+                    $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' =>'');
+					}
                     $this->InventoryMaster->recursive = 1;
                     $this->set('inventory_masters', $this->paginate());
 
