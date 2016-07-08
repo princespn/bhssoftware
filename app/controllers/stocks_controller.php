@@ -8,7 +8,7 @@ class StocksController extends AppController {
 		function beforeFilter()
                 {
                     parent::beforeFilter();
-                    $this->Auth->allow(array('login','logout','index','update','category'));
+                    $this->Auth->allow(array('login','logout','index','update','category','tokenkey'));
                     $this->Auth->userModel = 'User';  
                     $this->Session->activate();
 					$this->layout = 'admin';
@@ -62,6 +62,7 @@ class StocksController extends AppController {
 					$result = curl_exec($ch);
 					$yummy = json_decode($result);
 					curl_close($ch);
+					print_r($yummy);die();
 					return $yummy->{'Token'};
 							
 	}	
@@ -243,8 +244,9 @@ class StocksController extends AppController {
 					curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 					$result = curl_exec($ch);
 					$stocks = json_decode($result);
+					print_r($stocks);die();
 					curl_close($ch);
-					$this->set(compact('stocks','categories','options','pagination'));				
+					//$this->set(compact('stocks','categories','options','pagination'));				
 	}
 	
 	

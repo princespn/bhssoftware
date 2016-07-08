@@ -27,16 +27,17 @@ echo $csv->render($filename);
 <?php  echo $form->create('ProductListing',array('action'=>'index','id'=>'saveForm')); ?>
 <tr style="color:#ffffff;">
 <th colspan="2"></th>
-<th colspan="4"><?php	echo $this->Form->input('all_item',array('label'=>'','placeholder'=>'Search Product Code,SKU...','class'=>'export_box')); ?></th>
+<th colspan="4"><?php	echo $this->Form->input('all_item',array('label'=>'','placeholder'=>'Search Linnworks Code, Amazon Sku, Amazon Asin...','class'=>'export_box')); ?></th>
 <th colspan="2"></th>
 </tr>
 <tr style="background:#666666;color:#ffffff;">				
 <th><input type="checkbox" id="selecctall"/></th>
-<th><?php __('Product Code');?></th>
-<th><?php __('Product Sku');?></th> 
+<th><?php __('Linnworks Code');?></th>
+<th><?php __('Amazon SKU');?></th> 
 <th><?php __('Website Sku');?></th>             
-<th><?php __('Product Asin');?></th>
-<th><?php __('fulfillmentchannel');?></th>
+<th><?php __('Amazon Asin');?></th>
+<th><?php __('Category');?></th>
+<th><?php __('fulfillment channel');?></th>
 <th colspan='2'><div style="float:right"><div style="margin: 5px;"><?php echo $this->Form->button('Search', array('value'=>'submit','name'=>'submit','id'=>'submit','type'=>'submit')); ?></div><div class="btnClick" style="display:none;"><?php echo $this->Form->button('Export Data', array('value'=>'exports','name'=>'exports','type'=>'submit')); ?></div></div></th>
 </tr>
 <?php 
@@ -55,7 +56,8 @@ echo $this->Form->input('ProductListing.id',array('class'=>'checkbox1', 'selecte
 <td><?php echo $product_listing['ProductListing']['product_code']; ?></td>
 <td><?php echo $product_listing['ProductListing']['product_sku']; ?></td>	
 <td><?php echo $product_listing['ProductListing']['web_sku']; ?></td>	
-<td><?php echo $product_listing['ProductListing']['product_asin']; ?></td>	
+<td><?php echo $product_listing['ProductListing']['product_asin']; ?></td>
+<td><?php echo $product_listing['ProductListing']['category']; ?></td>		
 <td><?php echo $product_listing['ProductListing']['fulfillmentchannel']; ?></td>	
 <td colspan='2'>
 <?php

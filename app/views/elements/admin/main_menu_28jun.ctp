@@ -1,18 +1,10 @@
 <ul class="nav main">
 	<li>
 	<?php echo $this->Html->link(__('Master Listing', true), array('controller' => 'stocks', 'action' => 'index/?page=1')); ?>
-	</li>
-	<li>
-	<?php echo $this->Html->link(__('UK Product Code', true), array('controller' => 'product_listings', 'action' => 'index')); ?>
-		<ul>
-		<li><?php echo $this->Html->link(__('Import Product code', true), array('controller' => 'product_listings', 'action' => 'importcode')); ?></li>
-        </ul>	
-	</li>
-	<li>
-	<?php echo $this->Html->link(__('Master UK Listing', true), array('controller' => 'inventory_masters', 'action' => 'index')); ?>
 		<ul>
 		<li><?php echo $this->Html->link(__('Import Listing', true), array('controller' => 'inventory_masters', 'action' => 'import')); ?></li>
 		<li><?php echo $this->Html->link(__('Update Listing', true), array('controller' => 'inventory_masters', 'action' => 'update')); ?></li>
+		<li><?php echo $this->Html->link(__('Master UK Listing', true), array('controller' => 'inventory_masters', 'action' => 'index')); ?></li>
 		</ul>	
 	</li>	
 	<li>
@@ -20,20 +12,14 @@
 		<ul>
 			 <li><?php echo $this->Html->link(__('Import UK Listing', true), array('controller' => 'english_listings', 'action' => 'import')); ?></li>
              <li><?php echo $this->Html->link(__('Update UK Listing', true), array('controller' => 'english_listings', 'action' => 'update')); ?></li>
-		</ul>	
-	</li>
-	<li>
-	<?php echo $this->Html->link(__('FR Product Code', true), array('controller' => 'france_product_listings', 'action' => 'index')); ?>
-		<ul>
-		<li><?php echo $this->Html->link(__('Import Product code', true), array('controller' => 'france_product_listings', 'action' => 'importcode')); ?></li>
+			 <li><?php echo $this->Html->link(__('Manage UK Listing', true), array('controller' => 'english_listings', 'action' => 'index')); ?></li>
         </ul>	
 	</li>
 	<li>
-	<?php echo $this->Html->link(__('Master FR Listing', true), array('controller' => 'france_master_listings', 'action' => 'index')); ?>
+	<?php echo $this->Html->link(__('Product Code', true), array('controller' => 'product_listings', 'action' => 'index')); ?>
 		<ul>
-		<li><?php echo $this->Html->link(__('Import Listing', true), array('controller' => 'france_master_listings', 'action' => 'import')); ?></li>
-		<li><?php echo $this->Html->link(__('Update Listing', true), array('controller' => 'france_master_listings', 'action' => 'update')); ?></li>
-		</ul>	
+		<li><?php echo $this->Html->link(__('Import Product code', true), array('controller' => 'product_listings', 'action' => 'importcode')); ?></li>
+        </ul>	
 	</li>
 	<li>
 		<?php echo $this->Html->link(__('My Account', true), array('controller' => 'users','action' => 'index'));?>	

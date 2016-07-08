@@ -56,8 +56,8 @@ class EnglishListingsController extends AppController {
     }
 
         function categoriesPro() {
-                $this->loadModel('InventoryMaster');
-                $procategory = $this->InventoryMaster->find('list', array('fields' =>'category','group'=>'category','recursive' => 0));
+                $this->loadModel('ProductListing');
+                $procategory = $this->ProductListing->find('list', array('fields' =>'category','group'=>'category','recursive' => 0));
                 return $procategory;
         }
 		

@@ -93,17 +93,18 @@ class InventoryMastersController extends AppController {
 			
 			$this->set('title', 'Master UK Amazon Listing information.');
 		
-                    if((!empty($id)) && ($id!='All'))    {
-                    $this->loadModel('ProductListing');
+                    if((!empty($id)) && (($id)==='--Select Category--'))    {
+                    $this->Session->setFlash(__('Please select valid category.', true));
+					$this->redirect(array('controller'=>'inventory_masters','action' => 'index'));
+					}
+					else
+					{
+					$this->loadModel('ProductListing');
                     $procategory = $this->ProductListing->find('list',array('fields'=>'product_sku','conditions' => array('ProductListing.category LIKE' => "%$id%")));
-					//print_r($procategory);die();
-                    $this->InventoryMaster->recursive = 1;
+					$this->InventoryMaster->recursive = 1;
 					$conditions = array('InventoryMaster.item_sku'=>$procategory);
                     $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' => $conditions);
 					$this->set('foo',$id);
-                }else{
-					//$conditions = array('InventoryMaster.item_sku'=>$procategory);
-                    $this->paginate = array('limit' => 500,'order'=>'InventoryMaster.id  ASC','conditions' =>'');
 					}
                     $this->InventoryMaster->recursive = 1;
                     $this->set('inventory_masters', $this->paginate());

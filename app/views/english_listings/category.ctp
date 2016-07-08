@@ -44,8 +44,8 @@ echo '<option'.' '.$select.' '.'value='.$option.'>'.$option.'</option>';
 }?></select></th>                    
 <th><?php __('Browse nodes');?></th>
 <th><?php __('Product name');?></th>
-<th><?php __('Available');?></th>
-<th><?php __('Price');?></th>
+<th><?php __('Standard price');?></th>
+<th><?php __('Sale price');?></th>
 <th   colspan='3'><div style="float:right"><div style="margin: 5px;"><?php echo $this->Form->button('Search', array('value'=>'submit','name'=>'submit','id'=>'submit','type'=>'submit')); ?></div><div class="btnClick" style="display:none;"><?php echo $this->Form->button('Export Data', array('value'=>'exports','name'=>'exports','type'=>'submit')); ?></div></div></th>
 </tr>
 <?php
@@ -113,25 +113,6 @@ echo "<div style='color:red;'>The Title is required</div>";
 	}
 ?></td>
 <td class="checkbox"><?php 
-$stanprice = $english_listing['EnglishListing']['sale_price'];
-if(!(empty($stanprice)))
-{
-	echo $stanprice;
-	echo "</BR>";
-	foreach ($keywords as $keyword){
-	$pieces = explode(",", $keyword);
-	if($pieces[1]===($english_listing['EnglishListing']['item_sku'])){
-	if($pieces[3] !== $stanprice){echo "<span style='color:red;'>Sale Price is did not match.</span>";}	
-	}
-	} 
-}
-else
-{
-	echo "<span style='color:red;'>Sale Price is Required</span>";
-
-}
-?></td>	
-<td class="checkbox"><?php 
 $saleprice = $english_listing['EnglishListing']['standard_price'];
 if(!(empty($saleprice)))
 {
@@ -140,9 +121,13 @@ if(!(empty($saleprice)))
 	foreach ($keywords as $keyword){
 	$pieces = explode(",", $keyword);
 	if($pieces[1]===($english_listing['EnglishListing']['item_sku'])){
-	if($pieces[3] !== $saleprice){echo "<span style='color:red;'>Standard Price is did not match.</span>";}	
+	if((is_int($pieces[3])) !== (is_int($saleprice)) || (is_float($pieces[3])) !== (is_float($saleprice))){echo "<span style='color:red;'>Standard Price is did not match.</span>";}	
 	}
 	}
+}
+else if(($inventory_master['InventoryMaster']['parent_child'])==='parent')
+{
+	echo "<span style='color:red;'>Parent</span>";
 }
 else
 {
@@ -175,6 +160,29 @@ else
 	echo $stanprice;
 	}
 }*/
+?></td>
+<td class="checkbox"><?php 
+$stanprice = $english_listing['EnglishListing']['sale_price'];
+if(!(empty($stanprice)))
+{
+	echo $stanprice;
+	echo "</BR>";
+	foreach ($keywords as $keyword){
+	$pieces = explode(",", $keyword);
+	if($pieces[1]===($english_listing['EnglishListing']['item_sku'])){
+	if((is_int($pieces[3])) !== (is_int($stanprice)) || (is_float($pieces[3])) !== (is_float($stanprice))){echo "<span style='color:red;'>Sale Price is did not match.</span>";}	
+	}
+	} 
+}
+else if(($inventory_master['InventoryMaster']['parent_child'])==='parent')
+{
+	echo "<span style='color:red;'>Parent</span>";
+}
+else
+{
+	echo "<span style='color:red;'>Sale Price is Required</span>";
+
+}
 ?></td>	
 <td>
 <?php

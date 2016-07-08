@@ -1,7 +1,7 @@
 <?php
-class InventoryMaster extends AppModel {
-        var $name = 'InventoryMaster';
-		var $validate = array(
+class FranceMasterListing extends AppModel {
+            var $name = 'FranceMasterListing';
+            var $validate = array(
                     'item_sku' => array(				
 					'Unique-1' => array(
 					'rule' => 'notempty',					
@@ -59,21 +59,21 @@ class InventoryMaster extends AppModel {
                         ),
                     ),
 					
-					'quantity' => array(
+                    'quantity' => array(
                         'rule-q' => array(
                         'rule' => 'notempty', 
                         'message' => 'Quantity is required.'
                         ),
                     ), 
 					
-					'sale_price' => array(
+                    'sale_price' => array(
                         'rule-i' => array(
                         'rule' => 'notempty', 
                         'message' => 'Sale price is required.'
                         ),
                     ), 
 					
-					'condition_type' => array(
+                    'condition_type' => array(
                         'rule_c' => array(
                         'rule' => 'notempty',
                         'message' => 'Condition type is Required.'
@@ -207,9 +207,7 @@ class InventoryMaster extends AppModel {
                     ),
         );
 
-     
-
-        public function import($filename)
+		public function import($filename)
         {
                 $i = null; $error = null;
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' .$filename; 
@@ -235,7 +233,7 @@ class InventoryMaster extends AppModel {
                             }
                             else 
                             {
-                            $data['InventoryMaster'][$head]=(isset($row[$k])) ? $row[$k] : '';
+                            $data['FranceMasterListing'][$head]=(isset($row[$k])) ? $row[$k] : '';
                             }
                         }
 
@@ -245,179 +243,179 @@ class InventoryMaster extends AppModel {
 								
                         if (!empty($id))
                         {	
-                            $projects = $this->find('all', array('conditions' => array('InventoryMaster.item_sku' =>$id)));
+                            $projects = $this->find('all', array('conditions' => array('FranceMasterListing.item_sku' =>$id)));
                             
 							if (!empty($projects))
                             {
-                                $apiConfig = (isset($projects[0]['InventoryMaster']) && is_array($projects[0]['InventoryMaster'])) ? ($projects[0]['InventoryMaster']) : array(); 
-                                $data['InventoryMaster'] = array_merge($apiConfig,$data['InventoryMaster']);
+                                $apiConfig = (isset($projects[0]['FranceProductListing']) && is_array($projects[0]['FranceProductListing'])) ? ($projects[0]['FranceProductListing']) : array(); 
+                                $data['FranceProductListing'] = array_merge($apiConfig,$data['FranceProductListing']);
                                 $wordlist = split ("\_", $apiConfig['item_sku']);	
 								$wordp = split ("\-", $apiConfig['item_sku']);
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['item_name'])) && (!empty($data['InventoryMaster']['item_name'])) && (($apiConfig['item_name'])!== ($data['InventoryMaster']['item_name'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['item_name'])) && (!empty($data['FranceProductListing']['item_name'])) && (($apiConfig['item_name'])!== ($data['FranceProductListing']['item_name'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['item_name'],$data['InventoryMaster']['item_name']);
+								$data['FranceProductListing'] = array_merge($apiConfig['item_name'],$data['FranceProductListing']['item_name']);
                                 $limit = 'Item name did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['brand_name'])) && (!empty($data['InventoryMaster']['brand_name'])) && (($apiConfig['brand_name'])!== ($data['InventoryMaster']['brand_name'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['brand_name'])) && (!empty($data['FranceProductListing']['brand_name'])) && (($apiConfig['brand_name'])!== ($data['FranceProductListing']['brand_name'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['brand_name'],$data['InventoryMaster']['brand_name']);
+								$data['FranceProductListing'] = array_merge($apiConfig['brand_name'],$data['FranceProductListing']['brand_name']);
                                 $limit = 'Brand Name did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['manufacturer'])) && (!empty($data['InventoryMaster']['manufacturer'])) && (($apiConfig['manufacturer'])!== ($data['InventoryMaster']['manufacturer'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['manufacturer'])) && (!empty($data['FranceProductListing']['manufacturer'])) && (($apiConfig['manufacturer'])!== ($data['FranceProductListing']['manufacturer'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['manufacturer'],$data['InventoryMaster']['manufacturer']);
+								$data['FranceProductListing'] = array_merge($apiConfig['manufacturer'],$data['FranceProductListing']['manufacturer']);
                                 $limit = 'Manufacturer did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['feed_product_type'])) && (!empty($data['InventoryMaster']['feed_product_type'])) && (($apiConfig['feed_product_type'])!== ($data['InventoryMaster']['feed_product_type'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['feed_product_type'])) && (!empty($data['FranceProductListing']['feed_product_type'])) && (($apiConfig['feed_product_type'])!== ($data['FranceProductListing']['feed_product_type'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['feed_product_type'],$data['InventoryMaster']['feed_product_type']);
+								$data['FranceProductListing'] = array_merge($apiConfig['feed_product_type'],$data['FranceProductListing']['feed_product_type']);
                                 $limit = 'Product feed type did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['product_description'])) && (!empty($data['InventoryMaster']['product_description'])) && (($apiConfig['product_description'])!== ($data['InventoryMaster']['product_description'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['product_description'])) && (!empty($data['FranceProductListing']['product_description'])) && (($apiConfig['product_description'])!== ($data['FranceProductListing']['product_description'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['product_description'],$data['InventoryMaster']['product_description']);
+								$data['FranceProductListing'] = array_merge($apiConfig['product_description'],$data['FranceProductListing']['product_description']);
                                 $limit = 'Product description did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((!empty($wordp[1])) && (!empty($apiConfig['standard_price'])) && (!empty($data['InventoryMaster']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['InventoryMaster']['standard_price'])))
+								if ((!empty($wordp[1])) && (!empty($apiConfig['standard_price'])) && (!empty($data['FranceProductListing']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['FranceProductListing']['standard_price'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['standard_price'],$data['InventoryMaster']['standard_price']);
+								$data['FranceProductListing'] = array_merge($apiConfig['standard_price'],$data['FranceProductListing']['standard_price']);
                                 $limit = 'Standard Price did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((!empty($wordp[1])) && (!empty($apiConfig['sale_price'])) && (!empty($data['InventoryMaster']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['InventoryMaster']['sale_price'])))
+								if ((!empty($wordp[1])) && (!empty($apiConfig['sale_price'])) && (!empty($data['FranceProductListing']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['FranceProductListing']['sale_price'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['sale_price'],$data['InventoryMaster']['sale_price']);
+								$data['FranceProductListing'] = array_merge($apiConfig['sale_price'],$data['FranceProductListing']['sale_price']);
                                 $limit = 'Sale price did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['condition_type'])) && (!empty($data['InventoryMaster']['condition_type'])) && (($apiConfig['condition_type'])!== ($data['InventoryMaster']['condition_type'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['condition_type'])) && (!empty($data['FranceProductListing']['condition_type'])) && (($apiConfig['condition_type'])!== ($data['FranceProductListing']['condition_type'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['condition_type'],$data['InventoryMaster']['condition_type']);
+								$data['FranceProductListing'] = array_merge($apiConfig['condition_type'],$data['FranceProductListing']['condition_type']);
                                 $limit = 'Condition type did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['recommended_browse_nodes1'])) && (!empty($data['InventoryMaster']['recommended_browse_nodes1'])) && (($apiConfig['recommended_browse_nodes1'])!== ($data['InventoryMaster']['recommended_browse_nodes1'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['recommended_browse_nodes1'])) && (!empty($data['FranceProductListing']['recommended_browse_nodes1'])) && (($apiConfig['recommended_browse_nodes1'])!== ($data['FranceProductListing']['recommended_browse_nodes1'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['recommended_browse_nodes1'],$data['InventoryMaster']['recommended_browse_nodes1']);
+								$data['FranceProductListing'] = array_merge($apiConfig['recommended_browse_nodes1'],$data['FranceProductListing']['recommended_browse_nodes1']);
                                 $limit = 'Browse nodes did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point1'])) && (!empty($data['InventoryMaster']['bullet_point1'])) && (($apiConfig['bullet_point1'])!== ($data['InventoryMaster']['bullet_point1'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point1'])) && (!empty($data['FranceProductListing']['bullet_point1'])) && (($apiConfig['bullet_point1'])!== ($data['FranceProductListing']['bullet_point1'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['bullet_point1'],$data['InventoryMaster']['bullet_point1']);
+								$data['FranceProductListing'] = array_merge($apiConfig['bullet_point1'],$data['FranceProductListing']['bullet_point1']);
                                 $limit = 'Bullet Point1 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point2'])) && (!empty($data['InventoryMaster']['bullet_point2'])) && (($apiConfig['bullet_point2'])!== ($data['InventoryMaster']['bullet_point2'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point2'])) && (!empty($data['FranceProductListing']['bullet_point2'])) && (($apiConfig['bullet_point2'])!== ($data['FranceProductListing']['bullet_point2'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['bullet_point2'],$data['InventoryMaster']['bullet_point2']);
+								$data['FranceProductListing'] = array_merge($apiConfig['bullet_point2'],$data['FranceProductListing']['bullet_point2']);
                                 $limit = 'Bullet Point2 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point3'])) && (!empty($data['InventoryMaster']['bullet_point3'])) && (($apiConfig['bullet_point3'])!== ($data['InventoryMaster']['bullet_point3'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point3'])) && (!empty($data['FranceProductListing']['bullet_point3'])) && (($apiConfig['bullet_point3'])!== ($data['FranceProductListing']['bullet_point3'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['bullet_point3'],$data['InventoryMaster']['bullet_point3']);
+								$data['FranceProductListing'] = array_merge($apiConfig['bullet_point3'],$data['FranceProductListing']['bullet_point3']);
                                 $limit = 'Bullet Point3 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point4'])) && (!empty($data['InventoryMaster']['bullet_point4'])) && (($apiConfig['bullet_point4'])!== ($data['InventoryMaster']['bullet_point4'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point4'])) && (!empty($data['FranceProductListing']['bullet_point4'])) && (($apiConfig['bullet_point4'])!== ($data['FranceProductListing']['bullet_point4'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['bullet_point4'],$data['InventoryMaster']['bullet_point4']);
+								$data['FranceProductListing'] = array_merge($apiConfig['bullet_point4'],$data['FranceProductListing']['bullet_point4']);
                                 $limit = 'Bullet Point4 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point5'])) && (!empty($data['InventoryMaster']['bullet_point5'])) && (($apiConfig['bullet_point5'])!== ($data['InventoryMaster']['bullet_point5'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['bullet_point5'])) && (!empty($data['FranceProductListing']['bullet_point5'])) && (($apiConfig['bullet_point5'])!== ($data['FranceProductListing']['bullet_point5'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['bullet_point5'],$data['InventoryMaster']['bullet_point5']);
+								$data['FranceProductListing'] = array_merge($apiConfig['bullet_point5'],$data['FranceProductListing']['bullet_point5']);
                                 $limit = 'Bullet Point5 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords1'])) && (!empty($data['InventoryMaster']['generic_keywords1'])) && (($apiConfig['generic_keywords1'])!== ($data['InventoryMaster']['generic_keywords1'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords1'])) && (!empty($data['FranceProductListing']['generic_keywords1'])) && (($apiConfig['generic_keywords1'])!== ($data['FranceProductListing']['generic_keywords1'])))
 								{									
-								$data['InventoryMaster'] = array_merge($apiConfig['generic_keywords1'],$data['InventoryMaster']['generic_keywords1']);
+								$data['FranceProductListing'] = array_merge($apiConfig['generic_keywords1'],$data['FranceProductListing']['generic_keywords1']);
                                 $limit = 'Generic keywords1 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords2'])) && (!empty($data['InventoryMaster']['generic_keywords2'])) && (($apiConfig['generic_keywords2'])!== ($data['InventoryMaster']['generic_keywords2'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords2'])) && (!empty($data['FranceProductListing']['generic_keywords2'])) && (($apiConfig['generic_keywords2'])!== ($data['FranceProductListing']['generic_keywords2'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['generic_keywords2'],$data['InventoryMaster']['generic_keywords2']);
+								$data['FranceProductListing'] = array_merge($apiConfig['generic_keywords2'],$data['FranceProductListing']['generic_keywords2']);
                                 $limit = 'Generic keywords2 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords3'])) && (!empty($data['InventoryMaster']['generic_keywords3'])) && (($apiConfig['generic_keywords3'])!== ($data['InventoryMaster']['generic_keywords3'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords3'])) && (!empty($data['FranceProductListing']['generic_keywords3'])) && (($apiConfig['generic_keywords3'])!== ($data['FranceProductListing']['generic_keywords3'])))
 								{								
-								$data['InventoryMaster'] = array_merge($apiConfig['generic_keywords3'],$data['InventoryMaster']['generic_keywords3']);
+								$data['FranceProductListing'] = array_merge($apiConfig['generic_keywords3'],$data['FranceProductListing']['generic_keywords3']);
                                 $limit = 'Generic keywords3 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords4'])) && (!empty($data['InventoryMaster']['generic_keywords4'])) && (($apiConfig['generic_keywords4'])!== ($data['InventoryMaster']['generic_keywords4'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords4'])) && (!empty($data['FranceProductListing']['generic_keywords4'])) && (($apiConfig['generic_keywords4'])!== ($data['FranceProductListing']['generic_keywords4'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['generic_keywords4'],$data['InventoryMaster']['generic_keywords4']);
+								$data['FranceProductListing'] = array_merge($apiConfig['generic_keywords4'],$data['FranceProductListing']['generic_keywords4']);
                                 $limit = 'Generic keywords4 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords5'])) && (!empty($data['InventoryMaster']['generic_keywords5'])) && (($apiConfig['generic_keywords5'])!== ($data['InventoryMaster']['generic_keywords5'])))
+								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['generic_keywords5'])) && (!empty($data['FranceProductListing']['generic_keywords5'])) && (($apiConfig['generic_keywords5'])!== ($data['FranceProductListing']['generic_keywords5'])))
 								{
-								$data['InventoryMaster'] = array_merge($apiConfig['generic_keywords5'],$data['InventoryMaster']['generic_keywords5']);
+								$data['FranceProductListing'] = array_merge($apiConfig['generic_keywords5'],$data['FranceProductListing']['generic_keywords5']);
                                 $limit = 'Generic keywords5 did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                                 $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
@@ -564,10 +562,9 @@ class InventoryMaster extends AppModel {
                 return $return;
                 fclose($handle);
         }
-        
 		
-    public function update($filename)
-        {
+		 public function update($filename)
+			{
                 $i = null; $error = null;
                 $filename = $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' .$filename; 
                 $handle = fopen($filename, "r");
@@ -592,7 +589,7 @@ class InventoryMaster extends AppModel {
                             }
                             else 
                             {
-                            $data['InventoryMaster'][$head]=(isset($row[$k])) ? $row[$k] : '';
+                            $data['FranceMasterListing'][$head]=(isset($row[$k])) ? $row[$k] : '';
                             }
                         }
 
@@ -601,19 +598,19 @@ class InventoryMaster extends AppModel {
 						$listp = split ("\-", $id);
 					   if (!empty($id))
                         {	
-                            $projects = $this->find('all', array('conditions' => array('InventoryMaster.item_sku' =>$id)));
+                            $projects = $this->find('all', array('conditions' => array('FranceMasterListing.item_sku' =>$id)));
                             
 							if (!empty($projects))
                             {
-                                $apiConfig = (isset($projects[0]['InventoryMaster']) && is_array($projects[0]['InventoryMaster'])) ? ($projects[0]['InventoryMaster']) : array(); 
-                                $data['InventoryMaster'] = array_merge($apiConfig,$data['InventoryMaster']);
+                                $apiConfig = (isset($projects[0]['FranceMasterListing']) && is_array($projects[0]['FranceMasterListing'])) ? ($projects[0]['FranceMasterListing']) : array(); 
+                                $data['FranceMasterListing'] = array_merge($apiConfig,$data['FranceMasterListing']);
                                 						
-								if ((!empty($apiConfig['standard_price'])) && (!empty($data['InventoryMaster']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['InventoryMaster']['standard_price'])))
+								if ((!empty($apiConfig['standard_price'])) && (!empty($data['FranceMasterListing']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['FranceMasterListing']['standard_price'])))
 								{
 								$err = "";
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((!empty($apiConfig['sale_price'])) && (!empty($data['InventoryMaster']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['InventoryMaster']['sale_price'])))
+								if ((!empty($apiConfig['sale_price'])) && (!empty($data['FranceMasterListing']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['FranceMasterListing']['sale_price'])))
 								{
 								$err = "";
                                 $this->saveField('error',$err,array($this->id = $i));	
@@ -760,10 +757,7 @@ class InventoryMaster extends AppModel {
                 fclose($handle);
         }
         
-		
-
-
-            var $belongsTo = array(
+		var $belongsTo = array(
                 'User' => array(
                 'className' => 'User',
                 'foreignKey' => 'user_id',
@@ -772,30 +766,15 @@ class InventoryMaster extends AppModel {
                 'order' => ''
                 ),
             );
-			
-			var $hasOne = array(
-                'ProductListing' => array(
-                'className' => 'ProductListing',
+		
+		var $hasOne = array(
+                'FranceProductListing' => array(
+                'className' => 'FranceProductListing',
                 'foreignKey' => false,
-                'conditions' =>  'InventoryMaster.item_sku = ProductListing.product_sku'
-                ),
-				
-               'EnglishListing' => array(
-                'className' => 'EnglishListing',
-                'foreignKey' => false,
-                'conditions' =>  'InventoryMaster.item_sku = EnglishListing.item_sku'
-                ),
-                 /*'GermanListing' => array(
-                'className' => 'GermanListing',
-                'foreignKey' => false,
-                'conditions' =>  'InventoryMaster.item_sku = GermanListing.item_sku'
-                ),
-                'EbayenglishListing' => array(
-                'className' => 'EbayenglishListing',
-                'foreignKey' => false,
-                'conditions' =>  'InventoryMaster.item_sku = EbayenglishListing.item_sku'
-                )*/
+                'conditions' =>  'FranceMasterListing.item_sku = FranceProductListing.product_sku'
+                ),               
             );		
+        
         
 
 }

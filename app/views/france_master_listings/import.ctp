@@ -4,46 +4,33 @@ if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_
 $this->requestAction('/users/logout/', array('return'));
 }
 ?>
-
-
 <div class="imports form">
 <div class="grid_16">
-<h2 id="page-heading"><?php __('Import uk product code Inventory');?></h2>
-<?php 
-echo $this->Form->create('ProductListing',array('action' => 'importcode','enctype'=>'multipart/form-data'));?>
+<h2 id="page-heading"><?php __('Master Amazon France Database.');?></h2>
+<?php echo $this->Form->create('FranceMasterListing',array('action' => 'import','enctype'=>'multipart/form-data')); ?>
 <fieldset>
-<legend><?php __('Import Product code'); ?></legend>
+<legend><?php __('Import Master FR Amazon Listing'); ?></legend>
 <?php
-echo $this->Form->input('file', array('label'=>'Import Product code','type'=>'file') );
-//echo $form->input('user_id', array('type' => 'hidden'));
-
-//$created_by = $session->read('Auth.User.username');
-
-//echo $this->Form->hidden('created_by',array('value'=>$created_by));
+echo $this->Form->input('file', array('label'=>'Import listing','type'=>'file') );
+echo $form->input('user_id', array('type' => 'hidden'));
+$created_by = $session->read('Auth.User.username');
+echo $this->Form->hidden('created_by',array('value'=>$created_by));
 ?> 
-
 </fieldset>
 <div class='submit'>
-<?php 
-echo $this->Form->button('Import Product code', array('id'=>'submit','disabled'=>'disabled','type'=>'submit'));
-?>
+<?php echo $this->Form->button('Import the listing', array('id'=>'submit','disabled'=>'disabled','type'=>'submit')); ?>
 </div>
-<?php
-echo $this->Form->end();?>
-<?php 
+<?php echo $this->Form->end();
 if (!empty($anything)){ ?>
 <div class="errorSummary">
 <ul>
-<?php
-$key = $anything['errors']; if(!empty($key)):?>
+<?php $key = $anything['errors']; if(!empty($key)):?>
 <table style="width:100%">
   <tr style="background-color:#dedede">
     <td>Error</td>    
     <td>SKU</td>
   </tr> 
-
-<?php endif; $str = 0;
-foreach ($key as $value){  ?>
+<?php endif; $str = 0; foreach ($key as $value){  ?>
 <li style="background-color:#dedede;color: #000;list-style-type:none;">
  <?php if(!empty($value)): ?>
   <tr>   
@@ -54,18 +41,12 @@ foreach ($key as $value){  ?>
   </tr>
   <?php endif ?>
 </li>
-<?php 
-}
-?>
+<?php } ?>
 </table>
 </ul>
 </div>
-
-<?php 
-} else {
-?>
+<?php } else { ?>
 <div id="progress" style="display: none;"><?php echo $html->image('home2.gif');?></div>
 <?php } ?>
 </div>
 </div>
-

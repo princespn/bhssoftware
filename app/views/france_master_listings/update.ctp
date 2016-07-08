@@ -8,24 +8,24 @@ $this->requestAction('/users/logout/', array('return'));
 
 <div class="imports form">
 <div class="grid_16">
-<h2 id="page-heading"><?php __('Import uk product code Inventory');?></h2>
+<h2 id="page-heading"><?php __('Update FR Masters Database');?></h2>
 <?php 
-echo $this->Form->create('ProductListing',array('action' => 'importcode','enctype'=>'multipart/form-data'));?>
+echo $this->Form->create('FranceMasterListing',array('action' => 'update','enctype'=>'multipart/form-data'));?>
 <fieldset>
-<legend><?php __('Import Product code'); ?></legend>
+<legend><?php __('Update FR Master Listing'); ?></legend>
 <?php
-echo $this->Form->input('file', array('label'=>'Import Product code','type'=>'file') );
-//echo $form->input('user_id', array('type' => 'hidden'));
+echo $this->Form->input('file', array('label'=>'Master listing','type'=>'file') );
+echo $form->input('user_id', array('type' => 'hidden'));
 
-//$created_by = $session->read('Auth.User.username');
+$created_by = $session->read('Auth.User.username');
 
-//echo $this->Form->hidden('created_by',array('value'=>$created_by));
+echo $this->Form->hidden('created_by',array('value'=>$created_by));
 ?> 
 
 </fieldset>
 <div class='submit'>
 <?php 
-echo $this->Form->button('Import Product code', array('id'=>'submit','disabled'=>'disabled','type'=>'submit'));
+echo $this->Form->button('Update Listing', array('id'=>'submit','disabled'=>'disabled','type'=>'submit'));
 ?>
 </div>
 <?php
@@ -33,9 +33,10 @@ echo $this->Form->end();?>
 <?php 
 if (!empty($anything)){ ?>
 <div class="errorSummary">
-<ul>
+<ul> 
 <?php
-$key = $anything['errors']; if(!empty($key)):?>
+$key = $anything['errors']; 
+if(!empty($key)):?>
 <table style="width:100%">
   <tr style="background-color:#dedede">
     <td>Error</td>    
@@ -68,4 +69,3 @@ foreach ($key as $value){  ?>
 <?php } ?>
 </div>
 </div>
-

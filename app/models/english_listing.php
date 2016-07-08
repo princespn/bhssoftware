@@ -240,6 +240,7 @@ class EnglishListing extends AppModel {
 
                         $id = isset($row[0]) ? $row[0] : 0;
                         $listid = split ("\_", $id);
+						$listp = split ("\-", $id);
 						if (!empty($id))
                         {	
 							
@@ -250,7 +251,8 @@ class EnglishListing extends AppModel {
                                 $apiConfig = (isset($projects[0]['InventoryMaster']) && is_array($projects[0]['InventoryMaster'])) ? ($projects[0]['InventoryMaster']) : array(); 
                                 $data['EnglishListing'] = array_merge($apiConfig,$data['EnglishListing']);
                                 $wordlist = split ("\_", $apiConfig['item_sku']); 
-																
+								$wordp = split ("\-", $apiConfig['item_sku']);
+															
 								if ((($wordlist[1])!=='FBA') && (!empty($apiConfig['item_name'])) && (!empty($data['EnglishListing']['item_name'])) && (($apiConfig['item_name'])!== ($data['EnglishListing']['item_name'])))
 								{
 								$data['EnglishListing'] = array_merge($apiConfig['item_name'],$data['EnglishListing']['item_name']);
@@ -296,8 +298,8 @@ class EnglishListing extends AppModel {
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((!empty($apiConfig['standard_price'])) && (!empty($data['EnglishListing']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['EnglishListing']['standard_price'])))
-								{								
+								if ((!empty($wordp[1])) && (!empty($apiConfig['standard_price'])) && (!empty($data['InventoryMaster']['standard_price'])) && (($apiConfig['standard_price'])!== ($data['InventoryMaster']['standard_price'])))
+								{
 								$data['EnglishListing'] = array_merge($apiConfig['standard_price'],$data['EnglishListing']['standard_price']);
                                 $limit = 'Standard Price did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error  on line %d and Item sku $id :$limit.",$i), true);
@@ -305,8 +307,8 @@ class EnglishListing extends AppModel {
                                 $err = implode("\n",$erritem);
                                 $this->saveField('error',$err,array($this->id = $i));	
 								}
-								if ((!empty($apiConfig['sale_price'])) && (!empty($data['EnglishListing']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['EnglishListing']['sale_price'])))
-								{								
+								if ((!empty($wordp[1])) && (!empty($apiConfig['sale_price'])) && (!empty($data['InventoryMaster']['sale_price'])) && (($apiConfig['sale_price'])!== ($data['InventoryMaster']['sale_price'])))
+								{
 								$data['EnglishListing'] = array_merge($apiConfig['sale_price'],$data['EnglishListing']['sale_price']);
                                 $limit = 'Sale price did not match.';
                                 $return['errors'][] = __(sprintf("Listing Could not be processed due to error  on line %d and Item sku $id :$limit.",$i), true);
@@ -468,7 +470,7 @@ class EnglishListing extends AppModel {
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             }
-							if(!empty($this->validationErrors['standard_price'])){
+							if((!empty($listp[1])) && (!empty($this->validationErrors['standard_price']))){
                             $limit = $this->validationErrors['standard_price'] ;				
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
@@ -478,7 +480,7 @@ class EnglishListing extends AppModel {
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             }
-							if(!empty($this->validationErrors['sale_price'])){
+							if((!empty($listp[1])) && (!empty($this->validationErrors['sale_price']))){
                             $limit = $this->validationErrors['sale_price'] ;				
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
@@ -597,6 +599,7 @@ class EnglishListing extends AppModel {
 
                         $id = isset($row[0]) ? $row[0] : 0;
 						$listid = split ("\_", $id);
+						$listp = split ("\-", $id);
                         if (!empty($id))
                         {	
 							
@@ -662,7 +665,7 @@ class EnglishListing extends AppModel {
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             }
-							 if(!empty($this->validationErrors['standard_price'])){
+							 if((!empty($listp[1])) && (!empty($this->validationErrors['standard_price']))){
                             $limit = $this->validationErrors['standard_price'] ;				
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
@@ -672,7 +675,7 @@ class EnglishListing extends AppModel {
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             }
-							if(!empty($this->validationErrors['sale_price'])){
+							if((!empty($listp[1])) && (!empty($this->validationErrors['sale_price']))){
                             $limit = $this->validationErrors['sale_price'] ;				
                             $return['errors'][] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);
                             $erritem[] = __(sprintf("Listing Could not be processed due to error on line %d and Item sku $id :$limit.",$i), true);

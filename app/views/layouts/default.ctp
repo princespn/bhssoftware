@@ -15,8 +15,20 @@
 <?php echo $this->Html->meta('favicon.ico','/img/favicon.ico',array('type' => 'icon'));?> 
 <?php //echo $this->Html->script('ap-scroll-top');?>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
- 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+	$('#FranceProductListingFile').change(function(){
+	$('#submit').removeAttr('disabled');
+	
+	});
+	$('#submit').click(function(){
+		$('#progress').show(1000);	
+	
+	});
+    
+});
+</script> 
 <script>
 $(document).ready(function(){
 	$('#InventoryMasterFile').change(function(){
@@ -63,13 +75,13 @@ $(document).ready(function() {
             $('.checkerror').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
 				 $('div.btnClick').show();
-				 $('#selecctall').removeAttr("disabled");
+				 $('#selecctall').attr('disabled','disabled');
             });
         }else{
             $('.checkerror').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
 				$('div.btnClick').hide();
-
+				$('#selecctall').removeAttr('disabled','disabled');
             });        
         }
     });
@@ -83,6 +95,7 @@ $(document).ready(function() {
             $('.checkbox1').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
 				 $('div.btnClick').show();
+				 $('#InventoryMasterError').attr('disabled','disabled');
             });
 			 $('.checkerror').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
@@ -92,6 +105,7 @@ $(document).ready(function() {
             $('.checkbox1').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
 				$('div.btnClick').hide();
+				$('#InventoryMasterError').removeAttr('disabled','disabled');
             }); 
 			$('.checkerror').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
