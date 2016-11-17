@@ -18,33 +18,33 @@
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
+	$('#GermanProductListingFile').change(function(){
+	$('#submit').removeAttr('disabled');
+	
+	});
+	$('#submit').click(function(){
+		$('#progress').show(1000);	
+	
+	});
+    
+});
+</script>
+<script>
+$(document).ready(function(){
+	$('#GermanMasterListingFile').change(function(){
+	$('#submit').removeAttr('disabled');
+	
+	});
+	$('#submit').click(function(){
+		$('#progress').show(1000);	
+	
+	});
+    
+});
+</script>
+<script>
+$(document).ready(function(){
 	$('#GermanListingFile').change(function(){
-	$('#submit').removeAttr('disabled');
-	
-	});
-	$('#submit').click(function(){
-		$('#progress').show(1000);	
-	
-	});
-    
-});
-</script>
-<script>
-$(document).ready(function(){
-	$('#ProjectFile').change(function(){
-	$('#submit').removeAttr('disabled');
-	
-	});
-	$('#submit').click(function(){
-		$('#progress').show(1000);	
-	
-	});
-    
-});
-</script>
-<script>
-$(document).ready(function(){
-	$('#ListingFile').change(function(){
 	$('#submit').removeAttr('disabled');
 	
 	});
@@ -57,22 +57,27 @@ $(document).ready(function(){
 </script>
 <script type="text/javascript">
 $.noConflict();
-$(document).ready(function() {
-    $('#selecctall').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-            });
-        }else{
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-            });        
-        }
-    });
-   
-});
+   $(document).ready( function() {
+            $('.checkbox1').change(function () {
+                if ($(this).is(":checked")) {
+                    $('div.btnClick').show();
+                }
+                else {
+                    var isChecked = false;
+                    $('.checkbox1').each(function () {
+                        if ($(this).is(":checked")) {
+                             $('div.btnClick').show();
+                            isChecked = true;
+                        }
+                    });
+                    if (!isChecked) {
+                        $('div.btnClick').hide();
+                    }
+                }
+ 
+ 
+            })
+        });
 </script>
  <script>
 $(document).ready(function(){

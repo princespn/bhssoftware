@@ -1,14 +1,14 @@
-<?
-class AccessComponent extends Object{
-	var $components = array('Acl', 'Auth');
-	var $user;
-	
+<?php
 
-	
-	function checkHelper($aro, $aco, $action = "*"){
-		App::import('Component', 'Acl');
-		$acl = new AclComponent();
-		
-	}
+class AccessComponent extends Object {
+
+    var $components = array('Acl', 'Auth');
+    var $user;
+
+    function checkHelper($aro, $aco, $action = "*") {
+        App::import('Component', 'Acl');
+        $acl = new AclComponent();
+    }
+
 }
 ?>

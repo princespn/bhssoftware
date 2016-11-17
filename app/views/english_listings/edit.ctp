@@ -1,15 +1,28 @@
-<?php 
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+<?php
+if($session->read('Auth.User.group_id')!='1')
 {
 $this->requestAction('/users/logout/', array('return'));
+
 }
 ?>
-<div class="projects form">
 <?php echo $this->Form->create('EnglishListing');?>
-<fieldset>
-<legend><?php __('Edit Amazon UK Listing'); ?></legend>
-<div style="float:right;"><?php echo $this->Form->button('Save data', array('value'=>'Save data','type'=>'submit','id'=>'hide')); ?></div>
-<?php
+<?php echo $this->Session->flash(); ?>
+<h1 class="sub-header"><?php __('Edit Amazon UK Listing');?></h1>
+<hr>
+<div class="row">
+<div class="col-lg-5 col-lg-offset-3">
+    <div class="panel panel-info">
+        <div class="panel-heading custom-panel-heading"><?php __('Amazon UK Listing');?></div>
+            <div class="panel-body form-horizontal">
+                <div class="form-group">          
+                   <div class="col-sm-9">
+                                  <?php echo $this->Form->hidden('id',array('value'=>$this->data['EnglishListing']['id'])); ?>
+                                  <?php $wordlist = split ("\_", $this->data['EnglishListing']['item_sku']);  ?>
+                    </div>
+            </div>        
+<div class="form-group">                               
+<div class="col-sm-9">   
+ <?php
 echo $this->Form->hidden('id',array('value'=>$this->data['EnglishListing']['id']));
 $wordlist = split ("\_", $this->data['EnglishListing']['item_sku']); 	
 echo $this->Form->input('item_sku',array('readonly' => 'readonly','value'=>$this->data['EnglishListing']['item_sku']));		
@@ -110,170 +123,178 @@ echo $this->Form->hidden('error',array('value'=>$error_by));
 $modify_by = $session->read('Auth.User.username');
 echo $this->Form->hidden('modify_by',array('value'=>$modify_by));
 ?>
-</fieldset>
-<?php echo $this->Form->end(__('Submit', true));?>
+    </div>
+        </div> 
+                              <div class="panel panel-default">
+                                    <div class="panel-body">
+                                      <?php echo $this->Form->button('Update', array('type' => 'submit','class' =>'btn btn-info'));  ?>  
+                                    </div>
+                               </div>   
+                         </div>
+                 </div>
+         </div>
 </div>
-
+ <?php echo $this->Form->end(); ?>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxChars = $("#sessionNum");
-var max_length = maxChars.attr('maxlength');
-if (max_length > 0) {
-maxChars.bind('keyup', function(e){
-length = new Number(maxChars.val().length);
-counter = max_length-length;
-$("#sessionNum_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxChars = $("#sessionNum");
+        var max_length = maxChars.attr('maxLength');
+        if (max_length > 0) {
+            maxChars.bind('keyup', function (e) {
+                length = new Number(maxChars.val().length);
+                counter = max_length - length;
+                $("#sessionNum_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiondesc");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiondesc_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiondesc");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiondesc_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessionbullet1");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessionbullet1_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessionbullet1");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessionbullet1_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessionbullet2");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessionbullet2_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessionbullet2");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessionbullet2_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessionbullet3");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessionbullet3_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessionbullet3");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessionbullet3_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessionbullet4");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessionbullet4_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessionbullet4");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessionbullet4_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessionbullet5");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessionbullet5_counter").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessionbullet5");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessionbullet5_counter").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiongen_key1");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiongen_counter1").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiongen_key1");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiongen_counter1").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiongen_key2");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiongen_counter2").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiongen_key2");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiongen_counter2").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiongen_key3");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiongen_counter3").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiongen_key3");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiongen_counter3").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiongen_key4");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiongen_counter4").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiongen_key4");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiongen_counter4").text(counter);
+            });
+        }
+    });
 </script>
 <script type="text/javascript">
-$(document).ready(function(){
-var maxCharsdesc = $("#sessiongen_key5");
-var max_lengthdesc = maxCharsdesc.attr('maxlength');
-if (max_lengthdesc > 0) {
-maxCharsdesc.bind('keyup', function(e){
-length = new Number(maxCharsdesc.val().length);
-counter = max_lengthdesc-length;
-$("#sessiongen_counter5").text(counter);
-});
-}
-});
+    $(document).ready(function () {
+        var maxCharsdesc = $("#sessiongen_key5");
+        var max_lengthdesc = maxCharsdesc.attr('maxLength');
+        if (max_lengthdesc > 0) {
+            maxCharsdesc.bind('keyup', function (e) {
+                length = new Number(maxCharsdesc.val().length);
+                counter = max_lengthdesc - length;
+                $("#sessiongen_counter5").text(counter);
+            });
+        }
+    });
 </script>
 <script>
-$(document).ready(function(){
-    $("#hide").click(function(){
-        $("#hiderror").hide();
-    });    
-});
+    $(document).ready(function () {
+        $("#hide").click(function () {
+            $("#hiderror").hide();
+        });
+    });
 </script>

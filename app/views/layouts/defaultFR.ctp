@@ -15,7 +15,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-	$('#FranceMasterListingFile').change(function(){
+	$('#FranceProductListingImportcodeForm').change(function(){
 	$('#submit').removeAttr('disabled');
 	
 	});
@@ -27,51 +27,29 @@ $(document).ready(function(){
 });
 </script>
 <script>
-$(document).ready(function() {
-    $('#FranceMasterListingError').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-				 $('#selecctall').attr('disabled','disabled');
-            });
-        }else{
-            $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-				$('#selecctall').removeAttr('disabled','disabled');
-            });        
-        }
-    });
-   
+$(document).ready(function(){
+	$('#FranceListingFile').change(function(){
+	$('#submit').removeAttr('disabled');
+	
+	});
+	$('#submit').click(function(){
+		$('#progress').show(1000);	
+	
+	});
+    
 });
 </script>
 <script>
-$(document).ready(function() {
-    $('#selecctall').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-				 $('#FranceMasterListingError').attr('disabled','disabled');
-            });
-			 $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-            });
-        }else{
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-				$('#FranceMasterListingError').removeAttr('disabled','disabled');
-            }); 
-			$('.checkerror').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-            }); 
-        }
-    });
-   
+$(document).ready(function(){
+	$('#FranceMasterListingFile').change(function(){
+	$('#submit').removeAttr('disabled');
+	
+	});
+	$('#submit').click(function(){
+		$('#progress').show(1000);	
+	
+	});
+    
 });
 </script>
 <script type="text/javascript">

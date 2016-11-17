@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="icon" href="../../favicon.ico">
+<title>Dashboard</title>
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/dashboard.css" rel="stylesheet">
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<!-- Navigation Start -->
+<nav class="navbar navbar-default navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button aria-controls="navbar" aria-expanded="false" data-target="#navbar" data-toggle="collapse" class="navbar-toggle collapsed" type="button">
+      	<span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="index.html" class="navbar-brand"><img style="width:200px;" src="images/hs-logo.svg" alt=""></a> </div>
+    <div class="navbar-collapse collapse" id="navbar">
+      <ul class="nav navbar-nav">
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Prices Listing</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Product Code <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="product-listings.html">UK Product Code</a></li>
+            <li><a href="#">FR Product Code</a></li>
+            <li><a href="#">DE Product Code</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master UK Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Master UK Listing</a></li>
+            <li><a href="#">Update Master UK Listing</a></li>
+          </ul>
+        </li>    
+             
+        
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Amazon UK Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Amazon UK Listing</a></li>
+            <li><a href="#">Update Amazon UK Listing</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master FR Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Master FR Listing</a></li>
+            <li><a href="#">Update Master FR Listing</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Amazon FR Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Amazon FR Listing</a></li>
+            <li><a href="#">Update Amazon FR Listing</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master DE Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Master DE Listing</a></li>
+            <li><a href="#">Update Master DE Listing</a></li>
+          </ul>
+        </li>
+        <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Amazon DE Listing <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Import Amazon DE Listing</a></li>
+            <li><a href="#">Update Amazon DE Listing</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown"> <a data-toggle="dropdown" class="dropdown-toggle" href="#">My Account <b class="caret"></b></a> <span class="dropdown-arrow dropdown-arrow-inverse"></span>
+          <ul class="dropdown-menu dropdown-inverse">
+            <li><a href="users.html">Users</a></li>
+            <li class="divider"></li>
+            <li><a href="#" data-toggle="modal" data-target="#addNewuser">Add New User</a></li>
+            <li class="divider"></li>
+            <li><a href="login.html">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- / Navigation Start -->
+<div class="container-fluid">
+  <h1 class="sub-header">Edit Master Listing</h1>
+  <hr>
+  <div class="notification-helper">
+    <p class="bg-info">Sometimes contextual background classes cannot be applied due to the specificity of another selector.</p>
+  </div>
+  <div class="row">
+  <form>
+  <div class="col-lg-5 col-lg-offset-3">
+    <!--  Bullet Points Start -->
+    <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading">Bullet Points</div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="itemName"><span class="color-red">*</span>Item Name</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Item Name" id="itemName" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="productDescription"><span class="color-red">*</span>Product Description</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Product Description" class="form-control" rows="4" id="productDescription"></textarea>
+              <p class="help-block">Number of chars: 2000</p>           
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="point1"><span class="color-red">*</span>Bullet Point 1</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Bullet Point" class="form-control" rows="2" id="point1"></textarea>
+              <p class="help-block">Number of chars: 500</p>  
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="point2"><span class="color-red">*</span>Bullet Point 2</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Bullet Point" class="form-control" rows="2" id="point2"></textarea>
+              <p class="help-block">Number of chars: 500</p>  
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="point3"><span class="color-red">*</span>Bullet Point 3</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Bullet Point" class="form-control" rows="2" id="point3"></textarea>
+              <p class="help-block">Number of chars: 500</p>  
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="point4"><span class="color-red">*</span>Bullet Point 4</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Bullet Point" class="form-control" rows="2" id="point4"></textarea>
+              <p class="help-block">Number of chars: 500</p>  
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="point5"><span class="color-red">*</span>Bullet Point 5</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Bullet Point" class="form-control" rows="2" id="point5"></textarea>
+              <p class="help-block">Number of chars: 500</p>  
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  /. Bullet Points End -->
+    <!--  Keywords Start -->
+    <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading">Keywords</div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="genericKeywords"><span class="color-red">*</span>Generic Keywords 1</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Generic Keywords" class="form-control" rows="1" id="genericKeywords"></textarea>
+              <p class="help-block">Number of chars: 50</p>                
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="genericKeywords2"><span class="color-red">*</span>Generic Keywords 2</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Generic Keywords" class="form-control" rows="1" id="genericKeywords2"></textarea>
+              <p class="help-block">Number of chars: 50</p>                
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="genericKeywords3"><span class="color-red">*</span>Generic Keywords 3</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Generic Keywords" class="form-control" rows="1" id="genericKeywords3"></textarea>
+              <p class="help-block">Number of chars: 50</p>                
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="genericKeywords4"><span class="color-red">*</span>Generic Keywords 4</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Generic Keywords" class="form-control" rows="1" id="genericKeywords4"></textarea>
+              <p class="help-block">Number of chars: 50</p>                
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="genericKeywords5"><span class="color-red">*</span>Generic Keywords 5</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Generic Keywords" class="form-control" rows="1" id="genericKeywords5"></textarea>
+              <p class="help-block">Number of chars: 50</p>                
+            </div>
+          </div>
+          <hr>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="platinum"><span class="color-red">*</span>Platinum Keywords 1</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Platinum Keywords" class="form-control" rows="1" id="platinum"></textarea>         
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="platinum2"><span class="color-red">*</span>Platinum Keywords 2</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Platinum Keywords" class="form-control" rows="1" id="platinum2"></textarea>         
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="platinum3"><span class="color-red">*</span>Platinum Keywords 3</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Platinum Keywords" class="form-control" rows="1" id="platinum3"></textarea>         
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="platinum4"><span class="color-red">*</span>Platinum Keywords 4</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Platinum Keywords" class="form-control" rows="1" id="platinum4"></textarea>         
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="platinum5"><span class="color-red">*</span>Platinum Keywords 5</label>
+            <div class="col-sm-9">
+              <textarea placeholder="Platinum Keywords" class="form-control" rows="1" id="platinum5"></textarea>         
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  /. Keywords End -->
+  <!--  Vitial Start -->
+  <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading">Vitial Info</div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label for="itemsku" class="col-sm-3 control-label"><span class="color-red">*</span>Item Sku</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Item Sku" id="itemsku" class="form-control">
+            </div>
+          </div>        
+          <div class="form-group">
+            <label for="externalProductId" class="col-sm-3 control-label">External Product ID</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="External Product ID" id="externalProductId" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="externalProductIdtype" class="col-sm-3 control-label">External Product ID Type</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="External Product ID Type" id="externalProductIdtype" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="brandName" class="col-sm-3 control-label"><span class="color-red">*</span>Brand Name</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Brand Name" id="brandName" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="manufacturer" class="col-sm-3 control-label"><span class="color-red">*</span>Manufacturer</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Manufacturer" id="manufacturer" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="FeedProductType" class="col-sm-3 control-label"><span class="color-red">*</span>Feed Product Type</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Feed Product Type" id="FeedProductType" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="partNumber" class="col-sm-3 control-label"><span class="color-red">*</span>Part Number</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Part Number" id="partNumber" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="updateDelete" class="col-sm-3 control-label">Update Delete</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Update Delete" id="updateDelete" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="productSite" class="col-sm-3 control-label">Product Site Launch Date</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Product Site Launch Date" id="productSite" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="standardPrice" class="col-sm-3 control-label"><span class="color-red">*</span>Standard Price</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Standard Price" id="standardPrice" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="currency" class="col-sm-3 control-label">Currency</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Currency" id="currency" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="itemPackage" class="col-sm-3 control-label">Item Package Quantity</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Item Package Quantity" id="itemPackage" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="taxCode" class="col-sm-3 control-label">Product Tax Code</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Product Tax Code" id="taxCode" class="form-control">
+            </div>
+          </div>     
+          <div class="form-group">
+            <label for="releaseDate" class="col-sm-3 control-label">Merchant Release Date</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Merchant Release Date" id="releaseDate" class="form-control">
+            </div>
+          </div>     
+          <div class="form-group">
+            <label for="salePrice" class="col-sm-3 control-label"><span class="color-red">*</span>Sale Price</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Sale Price" id="salePrice" class="form-control">
+            </div>
+          </div>     
+          <div class="form-group">
+            <label for="saleDate" class="col-sm-3 control-label">Sale From Date</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Sale From Date" id="saleDate" class="form-control">
+            </div>
+          </div>     
+          <div class="form-group">
+            <label for="saleEnd" class="col-sm-3 control-label">Sale End Date</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Sale End Date" id="saleEnd" class="form-control">
+            </div>
+          </div>
+           <div class="form-group">
+            <label for="conditionType" class="col-sm-3 control-label"><span class="color-red">*</span>Condition Type</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Condition Type" id="conditionType" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="conditionNote" class="col-sm-3 control-label">Condition Note</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Condition Note" id="conditionNote" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="latency" class="col-sm-3 control-label">Fulfillment Latency</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Fulfillment Latency" id="latency" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="restockDate" class="col-sm-3 control-label">Restock Date</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Restock Date" id="restockDate" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="recommendedBrowse" class="col-sm-3 control-label"><span class="color-red">*</span>Recommended Browse Nodes 1</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Recommended Browse Nodes" id="recommendedBrowse" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="recommendedBrowse2" class="col-sm-3 control-label">Recommended Browse Nodes 2</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Recommended Browse Nodes" id="recommendedBrowse2" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="catalogNumber" class="col-sm-3 control-label">Catalog Number</label>
+            <div class="col-sm-9">
+            	<input type="text" placeholder="Catalog Number" id="catalogNumber" class="form-control">
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  /. Vitial End -->
+    <!--  Image Info Start -->
+    <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading">Image Info</div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="mainImage">Main Image Url</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Main Image Url" id="mainImage" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="swatchImage">Swatch Image Url</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Swatch Image" id="swatchImage" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="two">Other Image Url 2</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="two" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="three">Other Image Url 3</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="three" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="four">Other Image Url 4</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="four" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="five">Other Image Url 5</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="five" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="six">Other Image Url 6</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="six" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="seven">Other Image Url 7</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="seven" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="eight">Other Image Url 8</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Image" id="eight" class="form-control">              
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  /. Image Info End -->
+    <!--  More Details Start -->
+    <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading">More Details</div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="parentChild">Parent Child</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Parent Child" id="parentChild" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="parentSku">Parent SKU</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Parent SKU" id="parentSku" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="relationshipType">Relationship Type</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Relationship Type" id="relationshipType" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="variationTheme">Variation Theme</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Variation Theme" id="variationTheme" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="colorName">Color Name</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Color Name" id="colorName" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="colorMap">Color Map</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Color Map" id="colorMap" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="sizeName">Size Name</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Size Name" id="sizeName" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="materialType">Material Type 1</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Material Type 1" id="materialType" class="form-control">              
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-3 control-label" for="materialType2">Material Type 2</label>
+            <div class="col-sm-9">
+              <input type="text" placeholder="Material Type 2" id="materialType2" class="form-control">              
+            </div>
+          </div>
+      </div>
+    </div>
+    <!--  /. More Details End -->
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <button type="button" class="btn btn-info">Save Data</button>
+        <button type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>    
+  </div>  
+</form>
+</div>
+<hr>
+<p class="text-muted">Copyright &copy; 2016 Homescapes. All rights reserved.</p>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>

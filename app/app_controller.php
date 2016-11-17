@@ -13,7 +13,7 @@ class AppController extends Controller
         $this->Auth->logoutRedirect = array('controller' => 'users', 'action' => 'login');
         $this->Auth->loginRedirect = array('controller' => 'inventory_masters', 'action' => 'index');
         $this->Auth->Session->start();
-		$this->Session->activate();	
+        $this->Session->activate();	
        // $this->Cookie->secure = false;
        // $auth = $this->Auth->user();                                 
                     

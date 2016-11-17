@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Application model for CakePHP.
  *
@@ -28,9 +29,9 @@
  * @package       app.Model
  */
 class Stock extends AppModel {
-		var $name = 'Stock';	
-		public $useTable = false;
-		public $recursive = -1;   
 
+    var $name = 'Stock';
+    public $useTable = false;
+    public $recursive = -1;
 
 }

@@ -3,15 +3,15 @@
 $this->requestAction('/users/logout/', array('return'));
 }
 ?>
-
-
 <div class="imports form">
+<div class="grid_16">
+<h2 id="page-heading"><?php __('Amazon German Database.');?></h2>
 <?php 
 echo $this->Form->create('GermanListing',array('action' => 'import','enctype'=>'multipart/form-data'));?>
 	<fieldset>
-		<legend><?php __('Import Germany Listing'); ?></legend>
+		<legend><?php __('Import German Listing'); ?></legend>
 		<?php
-		echo $this->Form->input('file', array('label'=>'Import Germany listing','type'=>'file') );
+		echo $this->Form->input('file', array('label'=>'Import German listing','type'=>'file') );
 		echo $form->input('user_id', array('type' => 'hidden'));
 	
 		$created_by = $session->read('Auth.User.username');
@@ -20,36 +20,48 @@ echo $this->Form->create('GermanListing',array('action' => 'import','enctype'=>'
 		?> 
 		
 	</fieldset>
-	<div class='submit'>
+
+<div class='submit'>
 <?php 
 echo $this->Form->button('Import the listing', array('id'=>'submit','disabled'=>'disabled','type'=>'submit'));
-echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-echo $this->Form->button('Reset the listing', array('id'=>'reset','type'=>'reset','enable'=>'enable'));
-
 ?>
 </div>
 <?php
 echo $this->Form->end();?>
-
-
 <?php 
 if (!empty($anything)){ ?>
 <div class="errorSummary">
-<ul> 
+<ul>
 <?php
-$key = $anything['errors'];
+$key = $anything['errors']; if(!empty($key)):?>
+<table style="width:100%">
+  <tr style="background-color:#dedede">
+    <td>Error</td>    
+    <td>SKU</td>
+  </tr> 
+
+<?php endif; $str = 0;
 foreach ($key as $value){  ?>
- <li style="background-color:#dedede;color:#000;list-style-type:none;"><?php  echo $value; ?></li>
+<li style="background-color:#dedede;color: #000;list-style-type:none;">
+ <?php if(!empty($value)): ?>
+  <tr>   
+    <td><?php $res = explode(":", $value);
+	if($str !== $res[1]){echo $res[1];$str = $res[1];} ?></td>
+    <td><?php $res1 = explode("sku", $res[0]);
+	echo $res1[1]; ?></td>
+  </tr>
+  <?php endif ?>
+</li>
 <?php 
 }
 ?>
+</table>
 </ul>
 </div>
 <?php 
 } else {
 ?>
 <div id="progress" style="display: none;"><?php echo $html->image('home2.gif');?></div>
- <?php } ?>
-
-
-</div> 
+<?php } ?>
+</div>
+</div>

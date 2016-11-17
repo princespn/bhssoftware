@@ -9,11 +9,8 @@
 		<?php
 		echo $this->Html->css('cake.generic');
 		echo $this->Html->css(array('ap-scroll-top','text', 'grid', 'layout', 'nav'));
-		//echo $this->Html->script(array('jquery-1.3.2.min.js', 'jquery-ui.js', 'jquery-fluid16.js'));
-		//echo $scripts_for_layout;
-	?>
+		?>
 <?php echo $this->Html->meta('favicon.ico','/img/favicon.ico',array('type' => 'icon'));?> 
-<?php //echo $this->Html->script('ap-scroll-top');?>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script>
@@ -42,7 +39,7 @@ $(document).ready(function(){
     
 });
 </script>
- <script>
+<script>
 $(document).ready(function(){
 	$('#EnglishListingFile').change(function(){
 	$('#submit').removeAttr('disabled');
@@ -66,54 +63,6 @@ $(document).ready(function(){
 	
 	});
     
-});
-</script>
-<script>
-$(document).ready(function() {
-    $('#InventoryMasterError').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-				 $('#selecctall').attr('disabled','disabled');
-            });
-        }else{
-            $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-				$('#selecctall').removeAttr('disabled','disabled');
-            });        
-        }
-    });
-   
-});
-</script>
-<script>
-$(document).ready(function() {
-    $('#selecctall').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-				 $('#InventoryMasterError').attr('disabled','disabled');
-            });
-			 $('.checkerror').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1" 
-				 $('div.btnClick').show();
-            });
-        }else{
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-				$('#InventoryMasterError').removeAttr('disabled','disabled');
-            }); 
-			$('.checkerror').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-				$('div.btnClick').hide();
-            }); 
-        }
-    });
-   
 });
 </script>
 <script type="text/javascript">
