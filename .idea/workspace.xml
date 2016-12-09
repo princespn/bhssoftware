@@ -1,61 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="643fbd57-06c1-40b2-b3e4-3c4a34804aa2" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/inventory_masters_controller11.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/listings_controller_20oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/listings_controller_22oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/main_listings_controller11.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/main_listings_controller_20oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/main_listings_controller_22oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/bk/main_listings_controller_23Oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/main_listings_controller_old.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/master_listings_controller_8nov.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/controllers/purchase_orders_controller11.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/listing11.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/listing_21oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/main_listing_20oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/main_listing_21oct.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/main_listing_27.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/main_listing_29.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/models/bk/main_listing_30.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/admin_listings/indexpp.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/elements/admin/main_menu_old.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/elements/menus/main_menu1.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/france_product_listings/index111.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/german_product_listings/importcode_20.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/german_product_listings/index_12oct.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/layouts/defaultm.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/main_listings/index11.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/master_listings/index11.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/purchase_orders/index11.ctp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/views/purchase_orders/index_old.ctp" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/bhssoftware.iml" afterPath="$PROJECT_DIR$/.idea/bhssoftware.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/admin_listings_controller.php" afterPath="$PROJECT_DIR$/app/controllers/admin_listings_controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/main_listings_controller.php" afterPath="$PROJECT_DIR$/app/controllers/main_listings_controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/master_listings_controller.php" afterPath="$PROJECT_DIR$/app/controllers/master_listings_controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/product_listings_controller.php" afterPath="$PROJECT_DIR$/app/controllers/product_listings_controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/controllers/purchase_orders_controller.php" afterPath="$PROJECT_DIR$/app/controllers/purchase_orders_controller.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/main_listing.php" afterPath="$PROJECT_DIR$/app/models/main_listing.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/master_listing.php" afterPath="$PROJECT_DIR$/app/models/master_listing.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/models/purchase_order.php" afterPath="$PROJECT_DIR$/app/models/purchase_order.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/elements/admin/main_menu.ctp" afterPath="$PROJECT_DIR$/app/views/elements/admin/main_menu.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/german_master_listings/index.ctp" afterPath="$PROJECT_DIR$/app/views/german_master_listings/index.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/layouts/default.ctp" afterPath="$PROJECT_DIR$/app/views/layouts/default.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/main_listings/category.ctp" afterPath="$PROJECT_DIR$/app/views/main_listings/category.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/main_listings/edit.ctp" afterPath="$PROJECT_DIR$/app/views/main_listings/edit.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/main_listings/index.ctp" afterPath="$PROJECT_DIR$/app/views/main_listings/index.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/master_listings/category.ctp" afterPath="$PROJECT_DIR$/app/views/master_listings/category.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/master_listings/edit.ctp" afterPath="$PROJECT_DIR$/app/views/master_listings/edit.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/master_listings/index.ctp" afterPath="$PROJECT_DIR$/app/views/master_listings/index.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/purchase_orders/edit.ctp" afterPath="$PROJECT_DIR$/app/views/purchase_orders/edit.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/purchase_orders/index.ctp" afterPath="$PROJECT_DIR$/app/views/purchase_orders/index.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/views/purchase_orders/settings.ctp" afterPath="$PROJECT_DIR$/app/views/purchase_orders/settings.ctp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/webroot/css/dashboard.css" afterPath="$PROJECT_DIR$/app/webroot/css/dashboard.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nbproject/private/private.xml" afterPath="$PROJECT_DIR$/nbproject/private/private.xml" />
-    </list>
+    <list default="true" id="643fbd57-06c1-40b2-b3e4-3c4a34804aa2" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -419,15 +365,15 @@
       <workItem from="1480995902400" duration="11241000" />
       <workItem from="1481081856878" duration="16611000" />
       <workItem from="1481168487194" duration="13219000" />
-      <workItem from="1481254817780" duration="10381000" />
+      <workItem from="1481254817780" duration="10620000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="292078000" />
+    <option name="totallyTimeSpent" value="292317000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24304539" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
