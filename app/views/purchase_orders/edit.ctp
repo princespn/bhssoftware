@@ -20,22 +20,22 @@ $this->requestAction('/users/logout/', array('return'));
                                   <?php echo $this->Form->hidden('id',array('value'=>$this->data['PurchaseOrder']['id'])); ?>
                                   </div>
                                 </div>        
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                   <label for="<?php __('PurchaseOrderSku');?>" class="col-sm-3 control-label"><?php __('SKU');?></label>
                                   <div class="col-sm-9">
                                        <?php echo $this->Form->input('sku',array('label'=>'','readonly'=>'readonly','class'=>'form-control','value'=>$this->data['PurchaseOrder']['sku'])); ?>
                                   </div>
-                                </div>
+                                </div>-->
                                 <div class="form-group">
                                   <label for="<?php __('PurchaseOrderLinnworksCode');?>" class="col-sm-3 control-label"><?php __('Linnworks code');?></label>
                                   <div class="col-sm-9">
-                                       <?php echo $this->Form->input('linnworks_code',array('label'=>'','class'=>'form-control','value'=>$this->data['PurchaseOrder']['linnworks_code'])); ?>
+                                       <?php echo $this->Form->input('linnworks_code',array('label'=>'','readonly'=>'readonly','class'=>'form-control','value'=>$this->data['PurchaseOrder']['linnworks_code'])); ?>
                                   </div>
                                 </div>
                                 <div class="form-group">
                                   <label for="<?php __('PurchaseOrderProductName');?>" class="col-sm-3 control-label"><?php __('Product name');?></label>
                                   <div class="col-sm-9">
-                                       <?php echo $this->Form->input('product_name',array('label'=>'','class'=>'form-control','value'=>$this->data['PurchaseOrder']['product_name'])); ?>
+                                       <?php echo $this->Form->input('product_name',array('label'=>'','readonly'=>'readonly','class'=>'form-control','value'=>$this->data['PurchaseOrder']['product_name'])); ?>
                                   </div>
                                 </div>
                                 <div class="form-group">
@@ -44,12 +44,18 @@ $this->requestAction('/users/logout/', array('return'));
                                        <?php echo $this->Form->input('category',array('label'=>'','class'=>'form-control','readonly'=>'readonly','value'=>$this->data['PurchaseOrder']['category'])); ?>
                                   </div>
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                   <label for="<?php __('PurchaseOrderSupplier');?>" class="col-sm-3 control-label"><?php __('Supplier name');?></label>
                                   <div class="col-sm-9">
                                        <?php echo $this->Form->input('supplier',array('label'=>'','class'=>'form-control','readonly'=>'readonly','value'=>$this->data['PurchaseOrder']['supplier'])); ?>
                                   </div>
                                 </div>
+                                 <div class="form-group">
+                                  <label for="<?php __('PurchaseOrderLatestInvoice');?>" class="col-sm-3 control-label"><?php __('Latest Invoice');?></label>
+                                  <div class="col-sm-9">
+                                       <?php //echo $this->Form->input('latest_invoice',array('label'=>'','class'=>'form-control','value'=>$this->data['PurchaseOrder']['latest_invoice'])); ?>
+                                  </div>
+                                </div>-->
                                 <div class="form-group">
                                   <label for="<?php __('PurchaseOrderPriceGbp');?>" class="col-sm-3 control-label"><?php __('GBP RRP Price');?></label>
                                   <div class="col-sm-9">

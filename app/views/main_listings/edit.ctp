@@ -79,13 +79,12 @@ $this->requestAction('/users/logout/', array('return'));
                                   <div class="col-sm-9">
                                        <?php echo $this->Form->input('sale_price_de',array('label'=>'','class'=>'form-control','value'=>$this->data['MainListing']['sale_price_de'])); ?>
                                   </div>
-                                </div>
-                           
+                                </div>                     
                               
                               <div class="panel panel-default">
                                     <div class="panel-body">
                                       <?php echo $this->Form->button('Update', array('type' => 'submit','class' =>'btn btn-info'));  ?>  
-                                    </div>
+                               </div>
                                </div>   
                          </div>
                  </div>

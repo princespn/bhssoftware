@@ -56,12 +56,7 @@ $this->requestAction('/users/logout/', array('return'));
                                        <?php echo $this->Form->input('sale_price_uk',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['sale_price_uk'])); ?>
                                   </div>
                                 </div>
-                              <div class="form-group">
-                                  <label for="<?php __('MasterListingSalePriceUk');?>" class="col-sm-3 control-label"><?php __('Prime Price UK');?></label>
-                                  <div class="col-sm-9">
-                                       <?php echo $this->Form->input('prime_price_uk',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['prime_price_uk'])); ?>
-                                  </div>
-                                </div>
+                              
                                <div class="form-group">
                                   <label for="<?php __('MasterListingPriceFr');?>" class="col-sm-3 control-label"><?php __('Price FR');?></label>
                                   <div class="col-sm-9">
@@ -74,12 +69,7 @@ $this->requestAction('/users/logout/', array('return'));
                                        <?php echo $this->Form->input('sale_price_fr',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['sale_price_fr'])); ?>
                                   </div>
                                 </div>
-                                <div class="form-group">
-                                  <label for="<?php __('MasterListingSalePriceFr');?>" class="col-sm-3 control-label"><?php __('Prime Price FR');?></label>
-                                  <div class="col-sm-9">
-                                       <?php echo $this->Form->input('prime_price_fr',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['prime_price_fr'])); ?>
-                                  </div>
-                                </div>
+                              
                               <div class="form-group">
                                   <label for="<?php __('MasterListingPriceDe');?>" class="col-sm-3 control-label"><?php __('Price DE');?></label>
                                   <div class="col-sm-9">
@@ -92,14 +82,7 @@ $this->requestAction('/users/logout/', array('return'));
                                        <?php echo $this->Form->input('sale_price_de',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['sale_price_de'])); ?>
                                   </div>
                                 </div>
-                              <div class="form-group">
-                                  <label for="<?php __('MasterListingSalePriceDe');?>" class="col-sm-3 control-label"><?php __('Prime Price DE');?></label>
-                                  <div class="col-sm-9">
-                                       <?php echo $this->Form->input('prime_price_de',array('label'=>'','class'=>'form-control','value'=>$this->data['MasterListing']['prime_price_de'])); ?>
-                                  </div>
-                                </div>
-                           
-                              
+                             
                               <div class="panel panel-default">
                                     <div class="panel-body">
                                       <?php echo $this->Form->button('Update', array('type' => 'submit','class' =>'btn btn-info'));  ?>  

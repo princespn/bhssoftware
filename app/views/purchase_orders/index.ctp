@@ -5,7 +5,7 @@ $this->requestAction('/users/logout/', array('return'));
 }
 
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
-$mapping = array('sku','linnworks_code','product_name','category','invoice_value','supplier','invoice_currency','price_gbp','sale_price_gbp','price_euro','sale_price_euro','error');
+$mapping = array('sku','linnworks_code','product_name','category','invoice_value','latest_invoice','invoice_currency','price_gbp','sale_price_gbp','price_euro','sale_price_euro','error');
 echo $csv->addRow($mapping);
 
 foreach ($purchase_orders as $purchase_order):    
@@ -14,7 +14,7 @@ $line_code = array($purchase_order['PurchaseOrder']['linnworks_code']);
 $line_name = array($purchase_order['PurchaseOrder']['product_name']);
 $line_cate = array($purchase_order['PurchaseOrder']['category']);
 $line_value = array($purchase_order['PurchaseOrder']['invoice_value']);
-$sup_name = array($purchase_order['PurchaseOrder']['supplier']);
+$sup_name = array($purchase_order['PurchaseOrder']['latest_invoice']);
 $invoice_curr = array($purchase_order['PurchaseOrder']['invoice_currency']);
 $uk_gbp = array($purchase_order['PurchaseOrder']['price_gbp']);
 $sale_price_gbp = array($purchase_order['PurchaseOrder']['sale_price_gbp']);
@@ -28,11 +28,46 @@ $filename='code_purchase_orders';
 echo $csv->render($filename);
 }else{	
 echo $this->Session->flash(); ?>
-<hr>
-<?php  echo $form->create('PurchaseOrder',array('action'=>'index','id'=>'saveForm')); ?>
+ <hr>
+ <?php  echo $form->create('PurchaseOrder',array('action'=>'index','id'=>'saveForm')); ?>
 <h1 class="sub-header"><?php __('Cost Calculator');?></h1>
+<div class="row">
+                <div class="col-sm-6 col-md-6">
+                            <label>Select Category </label>
+                    <select id="category" name="data[PurchaseOrder][category]">
+                    <option value='category'><?php __('Please select category.');?></option>
+                    <?php foreach ($categories as $category): ?>
+                    <?php if((!empty($options)) && ($options===$category->CategoryName)){$select='selected=selected';}else {$select='';} ?>
+                    <?php echo '<option'.' '.$select.' '.'value='. rawurlencode($category->CategoryName) .'>'. $category->CategoryName .'</option>'; ?>
+                    <?php endforeach; ?>
+                     </select>
+                </div>
+		<div class="col-sm-4 col-md-6">
+			<table class="table-responsive table-striped text-center table table-bordered">
+				<tr>				
+                                <th><?php __('Sale/Base Currency');?></th>
+                                <th><?php __('Invoice Currency');?></th>
+                                <th><?php __('Exchange Rate');?></th>          
+                                <th><?php __('Exchange Rate Use API');?></th>
+				</tr>
+				 <?php foreach ($getCost as $exchange_rate): ?>
+                                    <tr>
+                                    <td><?php echo $exchange_rate['CostSetting']['sale_base_currency']; ?></td>
+                                    <td><?php echo $exchange_rate['CostSetting']['invoice_currency']; ?></td>
+                                    <td><?php echo $exchange_rate['CostSetting']['exchange_rate']; ?></td>
+                                    <td><?php       $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency']; $to =  $exchange_rate['CostSetting']['sale_base_currency'];
+                                                         $url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
+                                                         $data = file_get_contents($url);
+                                                          preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
+                                                          $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
+                                                          $ExRate = round($converted, 2); if($ExRate =='0'){echo "1";}else {echo $ExRate;}?></td>
+                                      </tr>
+                                 <?php endforeach; ?> 
+			</table>
+		</div>
+	</div>
 <div class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-body">       
       <div class="row">     
         <div class="col-md-8 mobile-bottomspace">
         <?php echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php echo $this->Paginator->sort('Sort by update', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>
@@ -62,8 +97,11 @@ echo $this->Session->flash(); ?>
           <th></th>
           <th></th>  
           <th></th> 
-          <th colspan="7" class="text-center text-uppercase color-white gbp-bg"><?php __('GBP');?></th>          
-          <th colspan="6" class="text-center text-uppercase color-white eur-bg"><?php __('EUR');?></th>          
+          <th colspan="6" class="text-center text-uppercase color-white gbp-bg"><?php __('GBP');?></th> 
+          <th></th> 
+          <th colspan="6" class="text-center text-uppercase color-white eur-bg"><?php __('EUR');?></th> 
+          <th></th> 
+          <th></th> 
         </tr>
         <tr> 
           <th class="wid-20"><input name="selecctall" id="selecctall" type="checkbox"></th>
@@ -76,76 +114,125 @@ echo $this->Session->flash(); ?>
           <th class="wid-20"><?php __('Landed Price');?></th>
           <th class="wid-20"><?php __('S.P.1');?></th>
           <th class="wid-20"><?php __('S.P.2');?></th>
-          <th class="wid-20"><?php __('S.P.3');?></th>
-          <th><?php __('Web Price');?></th> 
+          <th class="wid-20"><?php __('S.P.3');?></th>       
           <th><?php __('Selling Price');?></th>        
           <th class="pink-price"><?php __('RRP');?></th>
+          <th><?php __('Web Price');?></th>
           <th class="wid-20"><?php __('Landed Price');?></th>
           <th class="wid-20"><?php __('S.P.1');?></th>
           <th class="wid-20"><?php __('S.P.2');?></th>
           <th class="wid-20"><?php __('S.P.3');?></th>
-          <th><?php __('Selling Price');?></th>        
+          <th><?php __('Selling Price');?></th> 
           <th class="pink-price"><?php __('RRP');?></th>
+          <th><?php __('Web Price');?></th>
           <th class="wid-20"><?php __('Action');?></th>      
         </tr>
       </thead>
       <tbody>
       <?php foreach ($purchase_orders as $purchase_order): ?>
-          <tr>
+         <tr>
+        <?php //if(($purchase_order['CostSetting']['sale_base_currency']==='GBP')){ ?>
+        
          <td><?php $pid = $purchase_order['PurchaseOrder']['id']; if(!empty($purchase_order['PurchaseOrder']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
          echo $this->Form->input('PurchaseOrder.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$pid,'name'=>'checkid[]', 'type'=>'checkbox')); ?> <?php if(!empty($purchase_order['PurchaseOrder']['error'])){echo "&#8595;";} ?></td>
           <td><?php echo $purchase_order['PurchaseOrder']['linnworks_code']; ?></td>
           <td><?php echo $purchase_order['PurchaseOrder']['product_name']; ?></td>
-          <td><?php echo $purchase_order['PurchaseOrder']['invoice_value']; ?></td>
-         <td><?php //echo $purchase_order['PurchaseOrder']['latest_invoice']; ?></td>
-          <td><?php echo $purchase_order['PurchaseOrder']['supplier']; ?></td>
+          <?php if(($purchase_order['PurchaseOrder']['latest_invoice']) === ($purchase_order['PurchaseOrder']['invoice_value'])) { ?>
+          <td><div class="btn-update"><?php echo $purchase_order['PurchaseOrder']['invoice_value']; ?></div></td> 
+          <td><?php echo $purchase_order['PurchaseOrder']['latest_invoice']; ?></td> 
+         <?php  } else { ?>
+            <td class="red-info"><div class="btn-update"><span id="btn-update<?php echo $purchase_order['PurchaseOrder']['id']; ?>"><?php echo $purchase_order['PurchaseOrder']['invoice_value']; ?></span></div><div id="update-btn<?php echo $purchase_order['PurchaseOrder']['id']; ?>" style="display:none;"><span class="btn-edit"><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-bell"></i>',array('controller'=>'purchase_orders','action'=>'update_invoice',$purchase_order['PurchaseOrder']['id'],'#answers'),array('class'=> 'edit-btn','escape'=>false)); ?></span></div></td>
+                <script type="text/javascript">
+                  $(document).ready(function() {
+                      $("#btn-update<?php echo $purchase_order['PurchaseOrder']['id']; ?>").hover(
+                      function() {
+                          $("#update-btn<?php echo $purchase_order['PurchaseOrder']['id']; ?>").show();
+                      });
+                  });
+           </script>
+          <td><?php echo $purchase_order['PurchaseOrder']['latest_invoice']; ?></td> 
+         <?php } ?>
+          <td><?php echo $purchase_order['SupplierMultiplier']['supplier']; ?></td>
           <td><?php echo $purchase_order['PurchaseOrder']['invoice_currency']; ?></td>
-          <td><?php // Currency Master Information in GBP---
+          <td><?php // Currency Master Information in GBP---                   
+                       foreach ($getCost as $exchange_rate){
+                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')) {
                      $invoice = $purchase_order['PurchaseOrder']['invoice_value'];
-                     $SMull = $purchase_order['PurchaseOrder']['multiplier'];
-                     $ExchangeRate = $purchase_order['PurchaseOrder']['exchange_rate'];
-                     if((($purchase_order['PurchaseOrder']['invoice_currency'])==='GBP')){$LandPrice = $SMull*$invoice*1;}else{$LandPrice = $SMull*$invoice*$ExchangeRate;}           
-                         
-                    $amount = "1"; $from = "GBP"; $to = $purchase_order['PurchaseOrder']['invoice_currency'];
-                    $url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
-                     $data = file_get_contents($url);
-                     preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
-                     $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
-                     $ExRate = round($converted, 2);                   
-                     if((($purchase_order['PurchaseOrder']['invoice_currency'])==='GBP')){ $landPR = $SMull*$invoice*1;}else{$landPR = $SMull*$invoice*$ExRate; }           
-                     echo $LandPrice; echo "/"; echo $landPR;                       
+                     $SMull = $purchase_order['SupplierMultiplier']['multiplier'];      
+                     $ExchangeRate = $exchange_rate['CostSetting']['exchange_rate'];
+                      
+                 
+                     $LandPrice = ($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['SupplierMultiplier']['multiplier'])*($exchange_rate['CostSetting']['exchange_rate']);
+                      $amount = "1"; 
+                        $from = $exchange_rate['CostSetting']['invoice_currency']; 
+                        $to = 'GBP';
+                        $url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
+                        $data = file_get_contents($url);
+                         preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
+                         $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
+                        $ExRate = round($converted, 2);  
+                        if($ExRate =='0'){$landPR = $SMull*$invoice*1;  }else {$landPR = $SMull*$invoice*$ExRate;}         
+                     echo "<div><span class=blue>". $LandPrice ."</span><span class=green>".$landPR."</span></div>";                      
+                      }
+                       }
                      ?></td>
-             <td><?php $sp1 = $purchase_order['PurchaseOrder']['sp1_multiplier'];  echo $LandPrice*$sp1; echo "/";  echo $landPR*$sp1;  ?></td>
-             <td><?php $sp2 = $purchase_order['PurchaseOrder']['sp2_multiplier'];  echo $LandPrice*$sp2; echo "/";  echo $landPR*$sp2;  ?></td>
-             <td><?php $sp3 = $purchase_order['PurchaseOrder']['sp3_multiplier'];  echo $LandPrice*$sp3; echo "/";  echo $landPR*$sp3;  ?></td>
-             <td><?php //echo $purchase_order['PurchaseOrder']['web_price']; ?></td>
+             <td><?php $sp1 = $purchase_order['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>". $LandPrice*$sp1 ."</span><span class=green>".$landPR*$sp1."</span></div>";    //echo $LandPrice*$sp1; echo "/";  echo $landPR*$sp1;  ?></td>
+             <td><?php $sp2 = $purchase_order['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". $LandPrice*$sp2 ."</span><span class=green>".$landPR*$sp2."</span></div>";  //echo $LandPrice*$sp2; echo "/";  echo $landPR*$sp2;  ?></td>
+             <td><?php $sp3 = $purchase_order['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". $LandPrice*$sp3 ."</span><span class=green>".$landPR*$sp3."</span></div>";  //echo $LandPrice*$sp3; echo "/";  echo $landPR*$sp3;  ?></td>
+         
              <td><?php echo $purchase_order['PurchaseOrder']['sale_price_gbp']; ?></td>
              <td><?php echo $purchase_order['PurchaseOrder']['price_gbp']; ?></td>
+             <?php    foreach ($Webprices as $Webprice){
+                      if(((!empty($Webprice['AdminListing']['linnworks_code'])) && (!empty($purchase_order['PurchaseOrder']['linnworks_code']))) && (($Webprice['AdminListing']['linnworks_code'])===($purchase_order['PurchaseOrder']['linnworks_code']))) {
+                     ?>
+               <td><?php echo $Webprice['AdminListing']['web_sale_price_uk']; ?></td>
+                      <?php }  
+             }
+             ?>
              <td><?php  // Currency Master Information in EURO---
                     
-                        $inv_value = $purchase_order['PurchaseOrder']['invoice_value'];
-                        $SaleMull = $purchase_order['PurchaseOrder']['multiplier'];
-                        $Exch_Rate = $purchase_order['PurchaseOrder']['exchange_rate'];
-                        $invoice = $purchase_order['PurchaseOrder']['invoice_value'];
-                        if((($purchase_order['PurchaseOrder']['invoice_currency'])==='EUR')){ $landedPrice = $SaleMull*$inv_value*1;}else{$landedPrice = $SaleMull*$inv_value*$Exch_Rate; } 
-                            $amount = "1"; $from = "EUR";$to =  $purchase_order['PurchaseOrder']['invoice_currency'];
-                             $url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
-                             $data = file_get_contents($url);
-                              preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
-                              $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
-                              $ExRate = round($converted, 2);
-                              $invoice = $purchase_order['PurchaseOrder']['invoice_value'];
-                              $SMull = $purchase_order['PurchaseOrder']['multiplier'];
-                              if((($purchase_order['PurchaseOrder']['invoice_currency'])==='EUR')){$landP = $SMull*$invoice*1;}else{$landP = $SMull*$invoice*$ExRate;} 
-                             echo $landedPrice; echo "/";  echo $landP;
-                            ?></td>
-                 <td><?php $sp1 = $purchase_order['PurchaseOrder']['sp1_multiplier'];  echo $landedPrice*$sp1; echo "/";  echo $landP*$sp1;  ?></td>
-                 <td><?php $sp2 = $purchase_order['PurchaseOrder']['sp2_multiplier'];  echo $landedPrice*$sp2; echo "/";  echo $landP*$sp2;  ?></td>
-                 <td><?php $sp3 = $purchase_order['PurchaseOrder']['sp3_multiplier'];  echo $landedPrice*$sp3; echo "/";  echo $landP*$sp3;  ?></td>
+                      
+                                          
+                                
+                      foreach ($getCost as $exchange_rate){
+                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')) {
+                            $inv_value = $purchase_order['PurchaseOrder']['invoice_value'];
+                            $SaleMull = $purchase_order['SupplierMultiplier']['multiplier'];      
+                            $Exch_Rate = $exchange_rate['CostSetting']['exchange_rate'];                     
+                    
+                                $landedPrice = $SaleMull*$inv_value*$Exch_Rate;                                     
+                                  $amount = "1"; 
+                                 $from = $purchase_order['PurchaseOrder']['invoice_currency'];
+                                 $to = 'EUR';
+                                 $url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
+                                 $data = file_get_contents($url);
+                                 preg_match("/<span class=bld>(.*)<\/span>/",$data, $converted);
+                                 $converted = preg_replace("/[^0-9.]/", "", $converted[1]);
+                                  $ExRate = round($converted, 2);  
+                                   if($ExRate =='0'){$landP = $SaleMull*$inv_value*1;  }else {$landP = $SaleMull*$inv_value*$ExRate;}
+                                
+                                    
+                            echo "<div><span class=blue>". $landedPrice ."</span><span class=green>".$landP."</span></div>";   //echo $landedPrice; echo "/";  echo $landP;
+                              }
+                       }
+                       
+                       ?></td>
+                 <td><?php $sp1 = $purchase_order['SupplierMultiplier']['sp1_multiplier'];  echo "<div><span class=blue>". $landedPrice*$sp1 ."</span><span class=green>".$landP*$sp1."</span></div>"; //echo $landedPrice*$sp1; echo "/";  echo $landP*$sp1;  ?></td>
+                 <td><?php $sp2 = $purchase_order['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". $landedPrice*$sp2 ."</span><span class=green>".$landP*$sp2."</span></div>"; //echo $landedPrice*$sp2; echo "/";  echo $landP*$sp2;  ?></td>
+                 <td><?php $sp3 = $purchase_order['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". $landedPrice*$sp3 ."</span><span class=green>".$landP*$sp3."</span></div>"; //echo $landedPrice*$sp3; echo "/";  echo $landP*$sp3;  ?></td>
                  <td><?php echo $purchase_order['PurchaseOrder']['sale_price_euro']; ?></td>
                  <td><?php echo $purchase_order['PurchaseOrder']['price_euro']; ?></td>
+                  <?php    foreach ($Webprices as $Webprice){
+                      if(((!empty($Webprice['AdminListing']['linnworks_code'])) && (!empty($purchase_order['PurchaseOrder']['linnworks_code']))) && (($Webprice['AdminListing']['linnworks_code'])===($purchase_order['PurchaseOrder']['linnworks_code']))) {
+                     ?>
+               <td><?php echo $Webprice['AdminListing']['web_sale_price_de']; ?></td>
+                      <?php }  
+             }
+             ?>
                  <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'purchase_orders','action'=>'edit', $pid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'purchase_orders','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $purchase_order['PurchaseOrder']['sku']));  ?></td>
-             </tr>
+                 <?php // } ?>
+            </tr>
+         
          <?php endforeach; ?>            
       </tbody>
     </table>
@@ -163,7 +250,7 @@ echo $this->Session->flash(); ?>
          <li><?php echo $this->Paginator->numbers();?></li>
          <li><?php echo $this->Paginator->next(__('Next', true) . ' >>', array(), null, array('class' => 'disabled'));?></li>
      </ul>
-</nav>
+ </nav>
 <script type="text/javascript">
 $(document).ready(function() {
     $('#PurchaseOrderError').click(function(event) {  //on click
@@ -211,5 +298,12 @@ $(document).ready(function() {
     });
    
 });
-</script>    
+</script>
+<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST'];?>
+<script type="text/javascript">
+document.getElementById("category").onchange = function() {
+var selectedOption = $(this).find('option:selected').text();
+window.location.href = "<?php echo  $actual_link ; ?>/purchase_orders/category/" + selectedOption;
+}
+</script>
 <?php } 

@@ -3,61 +3,72 @@ class MasterListingsController extends AppController {
 
 	var $name = 'MasterListings';
         var $components = array('Acl', 'Auth', 'Session', 'RequestHandler');
-        var $helpers = array('Session', 'Html', 'Form', 'Ajax', 'Javascript', 'Js', 'Csv');       
+        var $helpers = array('Session', 'Html', 'Form', 'Ajax', 'Javascript', 'Js', 'Csv');
 
-  
+
 
     function beforeFilter() {
         parent::beforeFilter();
-         $this->Auth->allow(array('categories', 'index_prices', 'index','importcode','category','edit','delete'));	
-	}
+        $this->Auth->allow(array('categories', 'index_prices', 'index','importcode','category','edit','delete'));
+    }
 
-        
-        
-        
-         function index() {
-             
+
+
+
+    function index() {
+
+        ini_set('memory_limit','-1');
+
         $this->set('title', 'Master listing database.');
-           
-        
-               
+
+        $this->loadModel('MasterListing');
+
+        $Amazonuk	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_de')));
+        $Amazonde	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_uk')));
+        $Amazonfr	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_fr')));
+
+
+
+
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['MasterListing']['all_item']))) {
-            
+
             $string = explode(",", trim($this->data['MasterListing']['all_item']));
             $prsku = $string[0];
             if (!empty($string[1])) {$prname = $string[1];}
             if ((!empty($prsku)) && (!empty($prname))) {
-
                 $conditions = array('MasterListing.linnworks_code LIKE' => '%' . $prname . '%', 'MasterListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MasterListing.amazon_sku LIKE' => '%' . $prsku . '%');
-                $this->MasterListing->recursive = 1;
-                $this->paginate = array('limit' => 1000, 'group' => 'MasterListing.linnworks_code', 'conditions' => $conditions);
+                $this->MasterListing->recursive = -1;
+                $this->paginate = array('limit' => 300, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id', 'conditions' => $conditions);
             }
-            
+
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('MasterListing.linnworks_code LIKE' => "%$prsku%", 'MasterListing.linnworks_code LIKE' => "%$prsku%", 'MasterListing.amazon_sku LIKE' => "%$prsku%"));
-               $this->MasterListing->recursive = 1;
-               $this->paginate = array('limit' => 1000, 'group' => 'MasterListing.linnworks_code', 'conditions' => $conditions);
+                $this->MasterListing->recursive = -1;
+                $this->paginate = array('limit' => 300, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id', 'conditions' => $conditions);
             }
 
+            $this->MasterListing->recursive = -1;
+            Configure::write('debug', '0');
             $this->set('code_listings', $this->paginate());
+            $this->set(compact('Amazonuk','Amazonde','Amazonfr'));
         }
-        
-       /* else if((!empty($this->data['MasterListing']['uk_min_price'])) && (!empty($this->data['MasterListing']['uk_max_price'])) && (!empty($this->data['MasterListing']['category'])) && (!empty($_POST['Apply']))){
-            
-        // print_r($this->data['MasterListing']['category']);die(); 
-         $catename = $this->data['MasterListing']['category'];
-         $Minvalue = $this->data['MasterListing']['uk_min_price'];
-         $Maxvalue = $this->data['MasterListing']['uk_max_price'];
-         $MinDevalue = $this->data['MasterListing']['de_min_price'];
-         $MaxDevalue = $this->data['MasterListing']['de_max_price'];
-         $conditions = array('MasterListing.category LIKE' => '%' . $catename . '%');
-         $this->MasterListing->recursive = 1;
-         $this->paginate = array('limit' => 7000, 'order' => 'MasterListing.amazon_sku', 'conditions' => $conditions);
-         $this->set('code_listings', $this->paginate());
-         $this->set(compact('Minvalue','Maxvalue','MaxDevalue','MinDevalue'));        
-        } 
-        */
+
+        /* else if((!empty($this->data['MasterListing']['uk_min_price'])) && (!empty($this->data['MasterListing']['uk_max_price'])) && (!empty($this->data['MasterListing']['category'])) && (!empty($_POST['Apply']))){
+
+         // print_r($this->data['MasterListing']['category']);die();
+          $catename = $this->data['MasterListing']['category'];
+          $Minvalue = $this->data['MasterListing']['uk_min_price'];
+          $Maxvalue = $this->data['MasterListing']['uk_max_price'];
+          $MinDevalue = $this->data['MasterListing']['de_min_price'];
+          $MaxDevalue = $this->data['MasterListing']['de_max_price'];
+          $conditions = array('MasterListing.category LIKE' => '%' . $catename . '%');
+          $this->MasterListing->recursive = 1;
+          $this->paginate = array('limit' => 7000, 'order' => 'MasterListing.amazon_sku', 'conditions' => $conditions);
+          $this->set('code_listings', $this->paginate());
+          $this->set(compact('Minvalue','Maxvalue','MaxDevalue','MinDevalue'));
+         }
+         */
         else if ((!empty($_POST['checkid'])) && (!empty($_POST['exports']))) {
             $checkboxid = $_POST['checkid'];
             App::import("Vendor", "parsecsv");
@@ -71,37 +82,38 @@ class MasterListingsController extends AppController {
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
-            $this->MasterListing->recursive = 1;
-            $this->paginate = array('limit' => 1000, 'group' => 'MasterListing.linnworks_code');
+            $this->MasterListing->recursive = -1;
+            Configure::write('debug', '0');
+            $this->paginate = array('limit' => 300, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id');
             $this->set('code_listings', $this->paginate());
+            $this->set(compact('Amazonuk','Amazonde','Amazonfr'));
         }
 
-	}
-        
-         function index_prices() {
-             
-	$this->set('title', 'Amazon Prices  Inventory Database.');
+    }
 
+
+    function index_prices() {
+
+        $this->set('title', 'Amazon Prices  Inventory Database.');
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['MasterListing']['all_item']))) {
-
             $string = explode(",", trim($this->data['MasterListing']['all_item']));
             $prsku = $string[0];
-            
+
             if (!empty($string[1])){$prname = $string[1];}
-            
+
             if ((!empty($prsku)) && (!empty($prname))) {
 
                 $conditions = array('MasterListing.linnworks_code LIKE' => '%' . $prname . '%', 'MasterListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MasterListing.amazon_sku LIKE' => '%' . $prsku . '%');
                 $this->MasterListing->recursive = 1;
                 $this->paginate = array('limit' => 1000, 'order' => 'MasterListing.amazon_sku', 'conditions' => $conditions);
             }
-            
+
             if ((!empty($prsku))) {
 
                 $conditions = array(
                     'OR' => array('MasterListing.linnworks_code LIKE' => "%$prsku%", 'MasterListing.linnworks_code LIKE' => "%$prsku%", 'MasterListing.amazon_sku LIKE' => "%$prsku%"));
-               $this->MasterListing->recursive = 1;
-               $this->paginate = array('limit' => 1000, 'order' => 'MasterListing.amazon_sku', 'conditions' => $conditions);
+                $this->MasterListing->recursive = 1;
+                $this->paginate = array('limit' => 1000, 'order' => 'MasterListing.amazon_sku', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
@@ -122,13 +134,14 @@ class MasterListingsController extends AppController {
             $this->set('code_listings', $this->paginate());
         }
 
-	}
-        
-        
-        
-        public function importcode() {
+    }
+
+
+
+
+    function importcode() {
 		
-	    $this->set('title', 'Linnwork codes and SKU Mapping information.');
+	$this->set('title', 'Linnwork codes and SKU Mapping information.');
 
         if (!empty($this->data)) {
             $filename = $this->data['MasterListing']['file']['name'];
@@ -169,19 +182,34 @@ class MasterListingsController extends AppController {
             
           $catname = urldecode($catn);
               // print_r(urldecode($catname));die();
-        
-        if (empty($catname)) {
+            ini_set('memory_limit','-1');
+
+            $this->loadModel('MasterListing');
+
+            $Amazonuk	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_de')));
+
+
+            $Amazonde	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_uk')));
+
+
+            $Amazonfr	=	$this->MasterListing->find('all',array('fields' => array('MasterListing.linnworks_code','MasterListing.amazon_sku','MasterListing.sale_price_fr')));
+
+
+
+            if (empty($catname)) {
             $this->Session->setFlash(__('Please select valid category.', true));
             $this->redirect(array('controller' => 'master_listings', 'action' => 'index'));
         } else {
             
                 $this->MasterListing->recursive = 1;
                 $conditions = array('MasterListing.category LIKE' => '%' . $catname . '%');                
-                $this->paginate = array('limit' => 1000, 'group' => 'MasterListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 500, 'group' => 'MasterListing.linnworks_code', 'conditions' => $conditions);
+                $this->set(compact('Amazonuk','Amazonde','Amazonfr'));
             
         }
         $this->MasterListing->recursive = 1;
         $this->set('code_listings', $this->paginate());
+       $this->set(compact('Amazonuk','Amazonde','Amazonfr'));
     }
     
     public function edit($id = null) {

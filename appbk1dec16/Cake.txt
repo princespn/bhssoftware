@@ -1,0 +1,723 @@
+
+(1) What is Cakephp? 
+Ans-CakePHP is a free, open-source, rapid development framework for PHP.
+It’s a foundational structure for programmers to create web applications.
+CakePHP goal is to enable developers to work in a structured and rapid manner–without loss of flexibility.
+CakePHP takes the monotony out of web development.
+
+
+(2) When CakePHP was developed?
+Ans-CakePHP started in April 2005.
+When a Polish programmer Michal Tatarynowicz wrote a minimal version of a Rapid Application Framework in PHP, dubbing it Cake.
+CakePHP version 1.0 released in May 2006.  (source:http://en.wikipedia.org/wiki/CakePHP)
+
+
+(3) What is the current stable version of CakePHP?
+Ans-3.0 (on date 2015-06-12).
+
+
+(4) What is MVC in CakePHP?
+Ans-Model view controller (MVC) is an architectural pattern used in software engineering.
+Model      : Database functions exist in the model
+View        : Design parts written here
+Controller : Business Logic goes here
+
+
+
+(5) Server requirements for CakePHP.
+Here are the requirements for setting up a server to run CakePHP:
+An HTTP server (like Apache) with the following enabled: sessions, mod_rewrite (not absolutely necessary but preferred)
+PHP 4.3.2 or greater. Yes, CakePHP works great in either PHP 4 or 5.
+A database engine (right now, there is support for MySQL 4+, PostgreSQL and a wrapper for ADODB).
+
+
+(6) How to install CakePHP?
+step1: Go to cakephp.org and download the latest version of cakephp.
+step2: Cakephp comes in a .zip file,so unzip it.
+step3: Extract the files in the localhost in the desired folder (for example:cakephp).
+step4: Open the browser and run the URL localhost/cakephp
+step5: Just Follow the instructions display on the page.
+
+
+(7) What is the folder structure of CakePHP?
+
+cakephp/
+app/
+Config/
+Console/
+Controller/
+Lib/
+  Locale/
+  Model/
+  Plugin/
+  Test/
+  tmp/
+  Vendor/
+  View/
+  webroot/
+    .htaccess
+  index.php
+  
+ lib/
+ plugins/
+ vendors/
+ .htaccess/
+ index.php/
+ README.md/
+
+(8) What is the name of Cakephp database configuration file name and its location?
+Default file name is database.php.default.
+Its located at "/app/config/database.php.default".To connect with database it should be renamed to database.php
+
+
+(9) What is the first file that gets loaded when you run a application using cakephp?can you change that file?
+bootstrap.php
+yes it can be changed.Either through index.php , or through .htaccess
+
+(10) What is the use of Security.salt and Security.cipherSeed in cakephp? How to change its default value?
+- The Security.salt is used for generating hashes.we can change the default Security.salt value in /app/Config/core.php.  
+- The Security.cipherseed is used for encrypt/decrypt strings.We can change the default Security.cipherSeed value by editing /app/Config/core.php. 
+
+
+(11) What are controllers?
+A controller is used to manage the logic for a part of your application. Most commonly, controllers are used to manage the logic for a single model. Controllers can include any number of methods which are usually referred to as actions. Actions are controller methods used to display views. An action is a single method of a controller.
+
+
+(12) What is default function for a controller?
+index() function
+
+
+(13) Which function is executed before every action in the controller?
+function beforeFilter()
+
+
+(14) List some of the features in CakePHP
+
+    Compatible with versions 4 and 5 of PHP
+    MVC architecture
+    Built-in validations
+    Caching
+    Scaffolding
+    Access Control Lists and Authentication.
+    CSRF protection via Security Component.
+
+
+
+(15) Using cakephp, what all are drawbacks.
+It loads full application before it starts your task. It's not recommended for small projects because of its resource-heavy structure.
+
+
+(16) What is the naming convention in cakephp?
+Table names are plural and lowercased,model names are singular and CamelCased: ModelName, model filenames are singular and underscored: model_name.php, controller names are plural and CamelCased with *Controller* appended: ControllerNamesController, controller filenames are plural and underscored with *controller* appended: controller_names_controller.php,
+
+
+(17) What is Scaffolding in Cakephp? 
+Scaffolding is a technique that allows a developer to define and create a basic application that can create, retrieve, update and delete objects.
+
+
+(18) How to add Scaffolding in your application?
+To add scaffolding to your application,just add the $scaffold variable in the controller,
+
+<?php
+class PostsController extends AppController {
+    var $scaffold;
+}
+?>
+
+Assuming you’ve created Post model class file (in /app/Model/post.php), you’re ready to go. Visit http://example.com/posts to see your new scaffold.
+
+
+(19) What is a Component in cakephp?
+Components are packages of logic that are shared between controllers. They are useful when a common logic or code is required between different controllers.
+
+(20) What are commonly used components of cakephp?
+
+    Security
+    Sessions
+    Access control lists
+    Emails
+    Cookies
+    Authentication
+    Request handling
+    Scaffolding
+
+
+
+(21) What is a Helper?
+Helpers in CakePHP are associated with Presentation layers of application.Helpers mainly contain presentational logic which is available to share between many views, elements, or layouts
+
+
+(22) What are commonly used helpers of cakephp?
+
+    FormHelper
+    HtmlHelper
+    JsHelper
+    CacheHelper
+    NumberHelper
+    Paginator
+    RSS
+    SessionHelper
+    TextHelper
+    TimeHelper
+
+
+(23) What is a Behavior?
+Behaviors in CakePHP are associated with Models.Behaviors are used to change the way models behaves and enforcing model to act as something else.
+
+
+(24) What is the difference between Component, Helper, Behavior?
+Component is a Controller extension, Helpers are View extensions, Behavior is a Model Extension.
+
+
+(25) What is a Element?
+Element in cakephp are smaller and reusable bits of view code. Elements are usually rendered inside views.
+
+
+(26) What is a layout?
+Layout in cakephp are used to display the views that contain presentational code. In simple views are rendered inside a layout
+
+
+(27) How to set layout in the controller?
+var $layout = ‘layout_name’;
+to overwrite for a specific action use below code in that action
+$this->layout =”layout_name”;
+
+
+(28) How to include helpers in controller ?
+public $helpers = array(‘Form’, ‘Html’, ‘Js’, ‘Time’);
+to in specific action use below code in that action
+$this->helper[] =”helper_name”;
+
+
+(29) How to include components in controller ?
+
+public $components = array(‘Emails’, ‘ImageUploader’, ‘Sms’);
+
+
+(30) How to write, read and delete the Session in cakephp?
+
+$this->Session->write(‘Bird.Color’, ‘Black’);
+$black = $this->Session->read(‘Bird.Color’);
+$this->Session->delete(‘Bird’); 
+
+
+(31) What is the use of $this->set();
+The set() method is used for creating a variable in the view file.Say for example if we write,
+$this->set('posts',$posts); in controller fie, then the variable $posts will be available to use in the view template file for that action.
+
+
+(32) What is the use of $this->set(compact());
+Using $this->set(compact()) , we can pass multiple parameters to access into the view file.
+
+For example,
+$this->set(compact('posts','users','reports'));
+Now all these variables will be available in respective view file.
+
+
+(33) What are the advantages of each?which would you use and why?
+An advantage with first case $this->set('posts', $posts); is that it allows two different names for the view file and controller file. For example, you could write something like $this->set('postData', $posts);. Now the variable name in the view file would be $postData.
+
+The advantage with the second approach $this->set(compact()); is easier to write, and useful especially when we are setting several variables to the view.No need to add separate line for each variable as we have with $this->set();
+For example,
+$this->set(compact('posts','users','reports'));
+
+
+(34) Is it possible to have Multiple validation Rules per Field in cakephp?
+Yes its possible.
+
+
+(35) What is wrong with the below validation rule?
+
+'email' => array(
+    'rule' => array(
+        'rule' => 'notEmpty',
+        'message' => 'Please Enter Email address.'
+    ),
+    'rule' => array(
+        'rule' => 'email',
+        'message' => 'Entered Email address is invalid.'
+    )
+)
+
+The problem is the first rule notEmpty will never be called because email rule will overwrite it.While using multiple validation rules for the same field you must keep the rule key "unique". In this case if we want to use multiple rules then, we can simple change the rule key names like,
+
+'email' => array(
+    'rule1' => array(
+        'rule' => 'notEmpty',
+        'message' => 'Please Enter Email address.'
+    ),
+    'rule2' => array(
+        'rule' => 'email',
+        'message' => 'Entered Email address is invalid.'
+    )
+)
+
+(36) What is the difference between required and notEmpty in cakephp?
+Difference between required and notEmpty
+
+
+
+(37) How to Get current URL in CakePHP?
+To get current url in cakephp use, 
+
+echo Router::url($this->here, true);
+
+This will give full URL with hostname.If you want to get relative path instead of full URL,then use the following code:
+
+echo $this->here;
+
+This will produce absolute URL excluding hostname i.e. /controller/abc/xyz/
+
+
+(38) How can you make urls search engine friendly while using cakephp?
+It's an automatic task that is done by cakephp.
+
+
+(39) Can you list some database related functions in cakephp?
+find, findAll , findAllBy , findBy , findNeighbours and query.
+
+(40) Which methods are used to create and destroy model associations on the fly?
+The bindModel() and unbindModel() Model methods are used to create and destroy model associations on the fly. 
+
+
+(41) What is the use of requestAction method? 
+The method requestAction is used to call a controller’s action from any location and returns data from the action.
+
+
+(42) What is recursive in cakephp? 
+To understand this topic follow this post :
+Recursive in cakephp
+
+
+(43) How can we use ajax in cakephp?
+By calling ajax helper and then using it in controller for rendering.
+
+
+(44) What is habtm?
+
+Has and belongs to many is a kind of associations that can be defined in models for retrieving associated data across different entities.
+
+
+(45) How cakephp URL looks in address bar?
+
+http://example.com/controller/action/param1/param2/param3
+
+
+
+(46) How can you include a javascript menu throughout the site. Give steps.
+By adding the javascript files in webroot and call them in default views if needed everywhere or just in the related veiws.
+
+
+(47) Why cakephp have two vendor folder?what is the difference between two vendors folder available in cakephp?
+There will be two vendor folders available in cakephp frame work.
+one in ” app ” folder and one in root folder
+
+The vendor folder in the app folder is used to place the third-party libraries which are application specific.
+The vendor folder in the root folder is used to place the third-party libraries which are used for multiple applications.
+
+
+(48) What is the default extension of view files in cakephp?can we change it?if yes then how?
+default extension of view files is '.ctp'.
+yes we can change it by writing public $ext = '.yourext'; in AppController.If you want to change it for particular controller then add it into that controller only.You can also change it for the specific action of the controller by putting it in that action of controller.
+
+public $ext = '.yourext'; in AppController
+ - you can change all the views extentions.
+
+ public $ext = '.yourext';  in specific controller like, PostsController
+- you can change all the views extentions of PostsController.
+
+public $ext = '.yourext';  in specific controller action like, index()
+- you can change the view extention of index.ctp 
+
+Note: You cannot specify multiple extensions, however it seems like there is a fall back to .ctp if no .php file is found.
+
+
+(49) How can you set custom page title for the static page?
+To set a custom page title, copy-paste following code anywhere in your static page (.ctp) file:
+$this->set("title_for_layout", "My page title");
+
+
+(50) How to display the schema of the model?
+If you want to display the schema of particular model then you just need to add the following single line of code.For example we have “Posts” Controller.
+
+pr($this->Post->schema());
+
+
+What’s wrong with this multiple Model Validation rule? Will both, one, or neither rule be executed and why? How might this code be fixed?
+
+'email' => array(
+    'rule' => array(
+        'rule' => 'notEmpty',
+        'message' => 'Email address is required.'
+    ),
+    'rule' => array(
+        'rule' => 'email',
+        'message' => 'The email address you entered is invalid.'
+    )
+)
+
+Ans-The key 'rule' needs to be unique when calling multiple validation rules. In the case above, the notEmpty rule will never be called, as the email rule will simply overwrite it (since the multidimensional array has the same key).
+
+Each key should be unique, e.g:
+
+'email' => array(
+    'rule-1' => array(
+        'rule' => 'notEmpty',
+        'message' => 'Email address is required.
+    ),
+    'rule-2' => array(
+        'rule' => 'email',
+        'message' => 'The email address you entered is invalid.'
+    )
+)
+
+What is the purpose of $this->set(); when used in the Controller actions, e.g:
+
+$this->set('articles', $articles);
+
+Also, compare the above line of code to the following:
+
+$this->set(compact('articles'));
+
+What are the relative advantages of each? Which would you use and why?
+
+
+Ans-The set() method is used to create a variable in the view file. In the example above, the variable $articles will then be available to use in the view template file for that action.
+
+An advantage of the first example (i.e., $this->set('articles', $articles); is that it allows the variable name on the view to be different from the variable name on the controller. For example, if you wanted them to be different, you could do something like $this->set('articlesData', $articles);. The variable on the view file would then be $articlesData.
+
+The advantage of the second approach (i.e., $this->set(compact('articles'));, on the other hand, is that it is somewhat neater, and it also is arguably a bit less error-prone. It is also shorter and easier to write, especially where we are setting several variables to the view.
+
+
+In the following line of code, how could the Containable behavior be used to optimize the find query so that only the region data is returned (i.e., without any model associations):
+
+$this->Region->find('all');
+
+Ans-The Containable behavior allows the developer to specify which associated models (if any) are retrieved from the find query.
+
+So to ensure that no other associated models are returned in the above example, it could simply be re-written as:
+
+$this->Region->find('all', array('contain' => false));
+
+A current alternative to the Containable behavior is to use the recursive function. Why is the use of the recursive function below incorrect in a case where we want to only retrieve the region data without any model associations?
+
+$this->Region->find('all', array('recursive' => 0));
+
+Ans-The use of recursive is incorrect in the above example (if we don’t want to pull any associated data) since recursive works as follows:
+
+    -1 – No associated data is retrieved with the find query.
+    0 – Retrieves any BelongsTo associated data.
+    1 – Retrieves any directly related associations (i.e., BelongsTo, HasMany, HasOne, HasAndBelongsToMany).
+    2 – Retrieves any directly related associations, and their associations’ associations.
+
+So in the above, example, -1 should have been used (rather than 0) to avoid pulling any associated data.
+
+It is also important to note that recursive is slated to be phased out in CakePHP 3 and replaced solely with the Containable behavior.
+
+What is the difference between a Component, a Behavior, and a Helper? Provide an example of where and when each might be used.
+
+All 3 are similar because they act to extend existing CakePHP functionality, but the differ on what they extend:
+
+    A Component is used to extend a Controller
+    A Behavior is used to extend a Model
+    A Helper is used to extend a View.
+
+For example:
+
+    A shopping cart Component might offer functionality that can be used and shared across multiple Controllers.
+    A custom upload Behavior could be used to extend a Model, such as this example for uploading images. Another common example of a Behavior would be to add extra validation functionality beyond that which CakePHP offers by default.
+    A Helper can be used to assist with View functionality. A good example here would be the CK Editor helper that makes it easy to display a CK Editor.
+
+
+
+
+Q-5 What are component, helper and why are they used?
+Ans. A component is an independent piece of code written for specific task that can be used(Eg Email, Ajax, RequestHandler and Session).
+A helper is used for helping cakephp in rendering the data to be shown to user with views(Eg Form, HTML etc).
+
+Q-6 What are commonly used components of cakephp?
+Ans.
+Security
+Sessions
+ACL(Access control lists)
+Auth(Authentication)
+Emails
+Cookies
+RequestHandling
+MVC architecture
+Built-in validations
+Caching
+scaffolding
+
+Q-7 What is default function and default controller of cakephp which is called automatically?
+Ans. Default controller is indexController.php and Default function is index.
+
+Q-8 How cakephp URL looks in address bar?
+Ans. http://example.com/controller/action/param1/param2/param3
+
+Q-9 Why cakephp have two vendor folder?
+Ans. There is two vendor folder, one folder in root and another is in “app” folder
+
+Q-10 List some database related functions in cakephp.
+Ans. find, findAll , findAllBy , findBy , findNeighbours and query.
+
+Q-11 List some of the features in Cakephp
+Ans. Following are some feature of Cakephp.
+MVC architecture
+Built-in validations
+Caching
+scaffolding
+
+Q-12 can you remember what is the directory structure when you download cakephp?
+Ans. app/
+o config/
+o controllers/
+o models/
+o plugins/
+o tmp/
+o vendors/
+o views/
+o webroot/
+* cake/
+o config/
+o docs/
+o libs/
+* vendors/
+
+Q-13 List some of the features in Cake php.
+Ans.
+1. Compatible with versions 4 and 5 of PHP
+2. MVC architecture
+3. Built-in validations
+4. Caching
+5. scaffolding
+
+Q-14 What is the naming convention in cakephp?
+Ans. Table names are plural and lowercased,model names are singular and CamelCased: ModelName, model filenames are singular and underscored: model_name.php, controller names are plural and CamelCased with *Controller* appended: ControllerNamesController, controller filenames are plural and underscored with *controller* appended: controller_names_controller.php,
+
+Q-15 How can we use ajax in cakephp?
+Ans. By calling ajax helper and then using it in controller for rendering.
+
+Q-16 What is a component,helper and why are they used, is there other way we can do same thing, what is better.
+Ans. A component is an independent piece of code written for specific task that can be used by calling in controllers (example : email component), helper is used for helping cakephp in rendering the data to be shown to user with views, these only adds to modularity in code otherwise same coding can be implemented in conrollers.
+
+Q-17 If you have to validate a registration module for a user, what all can be possible ways , which one is the best?
+Ans. can be done on submission in controller, or using javascript/ajax while user is still filling the data. second option is better.
+
+Q-18 How can you include a javascript menu throughout the site. Give steps.
+Ans. By adding the javascript files in webroot and call them in default views if needed everywhere or just in the related veiws.
+
+Q-19 What is a Component in cakephp?
+Ans. Components are packages of logic that are shared between controllers. They are useful when a common logic or code is required between different controllers.
+
+Q-20 What are commonly used components of cakephp?
+Ans.
+1. Security
+2. Sessions
+3. Access control lists
+4. Emails
+5. Cookies
+6. Authentication
+7. Request handling
+
+Question – How many different type of Cache CakePHP Supports?
+
+    FileCache
+    ApcCache
+    Wincache
+    XcacheEngine
+    MemcacheEngine
+    RedisEngine
+
+FileEngine is always the default cache engine
+
+For more information on caching go to Cake Caching Docs
+
+Question – What are Hooks in CakePHP  ?
+
+Hooks are the functions that we can call before and after doing any task in Models ( database related ). Like after finding data, before saving data etc.
+
+e.g beforeSave(), afterSave(), beforeFind(), afterFind() etc.
+
+For more information on Hooks go to Cake Hook Docs
+
+Question – How internally CakePHP work with database ?
+
+This question shows how much you know about internal structure of CakePHP and also your PHP knowledge.
+
+Question – How associations work in CakePHP ?
+
+For information on Associations see asknsay.com CakePhp Association With Example
+
+Question – Explain Validation Model in CakePHP .
+
+CakePHP provide a very powerful validation model so that you can easily manage your data validation. CakePHP Model compoment is responsible for data validation as it deals with database.To do validation in CakePHP you just need to declare a $validate array in your model class for required fields. Below is small example.
+Validation Array
+PHP
+public $validate = array(
+	'email' => array(
+		'rule'       => 'email',
+		'message'    => 'Enter a valid Email.',
+		'required'   => true
+	),
+	'mobile' => array(
+		'rule'    => array('minLength', '10'),
+		'message'    => 'Enter a valid Mobile No.',
+		'allowEmpty'   => true
+	)
+);
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+
+public $validate = array(
+ 'email' => array(
+ 'rule'       => 'email',
+ 'message'    => 'Enter a valid Email.',
+ 'required'   => true
+ ),
+ 'mobile' => array(
+ 'rule'    => array('minLength', '10'),
+ 'message'    => 'Enter a valid Mobile No.',
+ 'allowEmpty'   => true
+ )
+);
+
+
+Question – What is a Behavior in CakePHP ?
+
+Behaviors are used with CakePHP Model component to seperate and reuse the logic. They act like ” Component in Controller ” so that you can reuse your logic and no need to have same logic in different models.
+e.g FileUpload behavior can be use to handle file uploaing logic that can integrate with any number of model classes.
+For more information on Behavior go to Cake Behavior Docs
+
+Question – What is difference between beforeRender and beforeFilter function ?
+
+beforeFilter function is executed before every action in the controller ( i.e when request comes to controller ). You can use this fuction for authentication.
+beforeRender function is executed before the view is rendered ( i.e when request goes to view from controller ).
+
+Question – How Routing work in CakePHP ?
+
+For information on Routing see asknsay.com Cake PHP Url Rewriting
+Some basic questions you can find everywhere are listed below.
+
+    What is directory structure of CakePHP ?
+    MVC in CakePHP ?
+    Where are the configuration and database files?
+    How to use ajax in CakePHP ?
+    Which controller component is use for ajax request.
+
+     1.What is meant by MVC?
+    model view controller, it is a software architecture, used to isolates business logic from presentation logic. cakephp is based on mvc pattern.
+    2.What are 3 important parts of MVC?
+    1. The Model represents the application data
+    2. The View renders a presentation of model data
+    3. The Controller handles and routes requests made by the client
+    3.list some of the features in Cake php
+    1. Compatible with versions 4 and 5 of PHP
+    2. MVC architecture
+    3. Built-in validations
+    4. Caching
+    5. scaffolding
+    4.what is the name of Cake’s database configuration file?
+    by default it is database.php.default, you can find it in /app/config/database.php.default
+    for connecting to database, it should be renamed to database.php
+    5.What is default function for a controller?
+    index() function
+
+    What are 3 important parts of MVC?
+
+        The Model represents the application data
+        The View renders a presentation of model data
+        The Controller handles and routes requests made by the client
+
+
+    list some of the features in Cake php
+
+        Compatible with versions 4 and 5 of PHP
+        MVC architecture
+        Built-in validations
+        Caching
+        scaffolding
+
+    what is the name of Cake's database configuration file?by default it is database.php.default, you can find it in /app/config/database.php.default
+    for connecting to database, it should be renamed to database.php
+
+
+    What are controllers?
+    A controller is used to manage the logic for a part of your application. Most commonly, controllers are used to manage the logic for a single model. Controllers can include any number of methods which are usually referred to as actions. Actions are controller methods used to display views. An action is a single method of a controller.
+
+    What is default function for a controller?
+    index() function
+
+
+    What is a Component in cakephp?
+    Components are packages of logic that are shared between controllers. They are useful when a common logic or code is required between different controllers.
+
+
+    What are commonly used components of cakephp?
+    * Security
+    * Sessions
+    * Access control lists
+    * Emails
+    * Cookies
+    * Authentication
+    * Request handling
+
+    what is cakephp
+    Cakephp is a rapid development framework for PHP that provides an extensible architecture for developing, maintaining, and deploying applications. it uses commonly known design patterns like MVC,ORM within the convention over configuration paradigm, It also reduces development costs and helps developers write less code.
+
+    what is the directory structure when you download cakephp?
+    * app/
+    o config/
+    o controllers/
+    o models/
+    o plugins/
+    o tmp/
+    o vendors/
+    o views/
+    o webroot/
+    * cake/
+    o config/
+    o docs/
+    o libs/
+    * vendors/
+
+    what is the name of Cake's database configuration file?
+    by default it is database.php.default, you can find it in /app/config/database.php.default
+    for connecting to database, it should be renamed to database.php
+
+    what is the first file that gets loaded when you run a application using cakephp? can you change that file.
+
+    bootstrap.php , yes it can be changed , either through index.php , or through htaccess
+
+
+    why cakephp, and why not any other framework.
+    it has been for years in the market with strong support in the form of communities and online documentation, it supports php 4/5
+
+    using cakephp, what all are drawbacks.
+    The learning curve, and it loads full application before it starts your task. Its not recommended for small projects because of its resource heavy structure.
+
+    what is the naming convention in cakephp?
+    Table names are plural and lowercased,model names are singular and CamelCased: ModelName, model filenames are singular and underscored: model_name.php, controller names are plural and CamelCased with *Controller* appended: ControllerNamesController, controller filenames are plural and underscored with *controller* appended: controller_names_controller.php,
+
+    what is habtm.
+    has and belongs to many is a kind of associations that can be defined in models for retrieving associated data across different entities.
+
+    how can we use ajax in cakephp.
+    By calling ajax helper and then using it in controller for rendering.
+
+    can you list some database related functions in cakephp.
+    find, findAll , findAllBy , findBy , findNeighbours , query
+
+
+
+

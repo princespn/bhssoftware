@@ -87,4 +87,17 @@ class PurchaseOrder extends AppModel {
         //fclose($handle);
     }
 
+
+
+    var $hasOne = array(
+        'SupplierMultiplier' => array(
+            'className' => 'SupplierMultiplier',
+            'foreignKey' => false,
+            'conditions' => 'PurchaseOrder.category = SupplierMultiplier.category'
+        )
+
+    );
+
+
+
 }

@@ -13,9 +13,8 @@
       <?php if($session->read('Auth.User.group_id')=='1') { ?>
         <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master Prices<span class="caret"></span></a>
           <ul class="dropdown-menu">
-               <li><?php echo $this->Html->link(__('Master Prices', true), array('controller' => 'master_listings', 'action' => 'index')); ?></li>
-                <li><?php echo $this->Html->link(__('Website Prices', true), array('controller' => 'admin_listings', 'action' => 'index')); ?></li>
-                <li><?php echo $this->Html->link(__('Amazon Prices', true), array('controller' => 'master_listings', 'action' => 'index_prices')); ?></li>
+               <li><?php echo $this->Html->link(__('Master Prices', true), array('controller' => 'admin_listings', 'action' => 'index')); ?></li>
+                <li><?php echo $this->Html->link(__('Amazon Prices', true), array('controller' => 'master_listings', 'action' => 'index')); ?></li>
                  <li><?php echo $this->Html->link(__('Cost Calculator', true), array('controller' => 'purchase_orders', 'action' => 'index')); ?></li>
                    <li><?php echo $this->Html->link(__('Cost Settings', true), array('controller' => 'purchase_orders', 'action' => 'settings')); ?></li>
             </ul>

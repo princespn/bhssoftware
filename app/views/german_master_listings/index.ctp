@@ -63,9 +63,9 @@ echo $csv->render($filename);
         </tr>
       </thead>
       <tbody>
-    <?php $output = $this->requestAction('/german_listings/saleprice');  $keywords = preg_split("/[\n]+/", $output); ?>
-    <?php foreach ($german_listings as $german_listing): ?>
-    <?php $wordlist = split ("\_", $german_listing['GermanListing']['item_sku']); ?>
+    <?php $output = $this->requestAction('/german_master_listings/saleprice'); $keywords = preg_split("/[\n]+/", $output); ?>
+    <?php foreach ($german_master_listings as $german_master_listing): ?>
+    <?php  $wordlist = split ("\_", $german_master_listing['GermanMasterListing']['item_sku']); ?>
     <tr>
     <td><?php $productid = $german_master_listing['GermanMasterListing']['id'];if(!empty($german_master_listing['GermanMasterListing']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
 echo $this->Form->input('GermanMasterListing.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?><?php if(!empty($german_master_listing['GermanMasterListing']['error'])){echo "&#8595;";} ?></td>

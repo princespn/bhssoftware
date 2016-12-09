@@ -1,20 +1,20 @@
 <?php
 class AdminListingsController extends AppController {
 
-	var $name = 'AdminListings';
-        var $components = array('Acl', 'Auth', 'Session', 'RequestHandler');
-        var $helpers = array('Session', 'Html', 'Form', 'Ajax', 'Javascript', 'Js', 'Csv');       
+    var $name = 'AdminListings';
+    var $components = array('Acl', 'Auth', 'Session', 'RequestHandler');
+    var $helpers = array('Session', 'Html', 'Form', 'Ajax', 'Javascript', 'Js', 'Csv');
 
-  
 
-         function beforeFilter() {
-                parent::beforeFilter();         
-                $this->Auth->allow(array('delete', 'logout', 'index','importcode','edit'));	
-                }
-        
-       
-        function index() {
-		$this->set('title', 'Website Prices Inventory Database.');
+
+    function beforeFilter() {
+        parent::beforeFilter();
+        $this->Auth->allow(array('delete', 'logout', 'index','importcode','edit'));
+    }
+
+
+    function index() {
+        $this->set('title', 'Website Prices Inventory Database.');
 
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['AdminListing']['all_item']))) {
 
@@ -29,7 +29,7 @@ class AdminListingsController extends AppController {
                 $this->AdminListing->recursive = 1;
                 $this->paginate = array('limit' => 1000, 'order' => 'AdminListing.id  ASC', 'conditions' => $conditions);
             }
-            
+
             if ((!empty($prsku))) {
 
                 $conditions = array(
@@ -55,23 +55,24 @@ class AdminListingsController extends AppController {
             $this->set('price_listings', $this->paginate());
         }
 
-	}
+    }
 
-        
-        function importcode() {
-		
-	$this->set('title', 'Import Product code information.');
+
+
+    function importcode() {
+
+        $this->set('title', 'Import Product code information.');
 
         if (!empty($this->data)) {
             $filename = $this->data['AdminListing']['file']['name'];
             $fileExt = explode(".", $filename);
             $fileExt2 = end($fileExt);
-			//print_r($$filename);die();
+            //print_r($$filename);die();
             if ($fileExt2 == 'csv') {
                 if (move_uploaded_file($this->data['AdminListing']['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' . $this->data['AdminListing']['file']['name']))
-                $messages = $this->AdminListing->importcode($filename);
+                    $messages = $this->AdminListing->importcode($filename);
                 $this->Session->setFlash(__('Product Code Imports successfully.', true));
-                
+
                 if (!empty($messages)) {
                     $this->set('anything', $messages);
                     Configure::write('debug', '2');
@@ -85,8 +86,8 @@ class AdminListingsController extends AppController {
             //$messages = Product Code($filename);
         }
     }
-    
-     public function edit($id = null) {
+
+    public function edit($id = null) {
 
 
         $this->set('title', 'Edit Website Price AdminListing.');
@@ -110,8 +111,8 @@ class AdminListingsController extends AppController {
             $this->data = $this->AdminListing->read(null, $id);
         }
     }
-    
-        function delete($id = null) {
+
+    function delete($id = null) {
         if (!$id) {
             $this->Session->setFlash(__('Invalid UK Listing ID in database.', true));
             $this->redirect(array('controller' => 'admin_listings', 'action' => 'index'));
@@ -126,10 +127,10 @@ class AdminListingsController extends AppController {
         $this->Session->setFlash(__('ERROR!! The Amazon Listing could not be deleted!', true));
         $this->redirect(array('controller' => 'admin_listings', 'action' => 'index'));
     }
-    
 
-        
-	
+
+
+
 }
 
 
