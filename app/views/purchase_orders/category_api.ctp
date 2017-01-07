@@ -175,7 +175,20 @@ echo $this->Session->flash(); ?>
                 foreach ($getCost as $exchange_rate):
                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')):
                       $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
-                      echo "<div><span class=blue>". round($GbpLP, 2) ."</span></div>";                      
+                      //echo $GbpLP;
+                      //Exchange Rate with API
+                      
+                                           $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency'];
+                                            $to =  "GBP";
+                                            $url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
+                                            $data = file_get_contents($url);
+                                            $yummy = json_decode($data);
+                                            $converted = $yummy->{'Rate'};
+                                           $ApiRate = round($converted, 3);                                           
+                           //echo $ApiRate; 
+                        if($ApiRate =='0'){$GbpLPApi = (($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']));  }else {$GbpLPApi = ($ApiRate)*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);}  
+                      
+                    echo "<div><span class=blue>". round($GbpLP, 2) ."</span><span class=green>".round($GbpLPApi, 2) ."</span></div>";                      
                          
                      
                    ?></td> 
@@ -183,9 +196,9 @@ echo $this->Session->flash(); ?>
            <?php foreach ($getsupp as $getsupps):
            if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')): ?>
               
-             <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($GbpLP*$sp1, 2)."</span></div>";    ?></td>
-             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp2, 2)."</span></div>";   ?></td>
-             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp3, 2) ."</span></div>";    ?></td>
+             <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($GbpLP*$sp1, 2)."</span><span class=green>".round($GbpLPApi*$sp1, 2)."</span></div>";    ?></td>
+             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp2, 2)."</span><span class=green>".round($GbpLPApi*$sp2, 2)."</span></div>";   ?></td>
+             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp3, 2) ."</span><span class=green>".round($GbpLPApi*$sp3, 2)."</span></div>";    ?></td>
              <?php $salegbp = $purchase_order['PurchaseOrder']['sale_price_gbp'];
              if(($salegbp > $GbpLP*$sp1) && ($salegbp < $GbpLP*$sp3)){ ?>
              <td><?php echo $purchase_order['PurchaseOrder']['sale_price_gbp']; ?></td>
@@ -206,14 +219,25 @@ echo $this->Session->flash(); ?>
                       $EurMull = $purchase_order['Multiplier']['multiplier']; 
                       $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
                         //echo $EurLP;
-                    echo "<div><span class=blue>". round($EurLP, 2) ."</span></div>";                      
+                     // Exchange Rate with API
+                      
+                                   $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency'];
+                                            $to =  "EUR";
+                                              $url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
+                                            $data = file_get_contents($url);
+                                            $yummy = json_decode($data);
+                                            $converted = $yummy->{'Rate'};
+                                           $ApiRate = round($converted, 3);
+                       
+                                    if($ApiRate =='0'){$EurLPApi = (($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']));  }else {$EurLPApi = ($ApiRate)*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);}  
+                   echo "<div><span class=blue>". round($EurLP, 2) ."</span><span class=green>".round($EurLPApi, 2)."</span></div>";                      
                     ?></td> 
             <?php  break; endif; endforeach; ?>
             <?php foreach ($getsupp as $getsupps):
            if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')): ?>
-                <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($EurLP*$sp1, 2) ."</span></div>";    ?></td>
-             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp2, 2) ."</span></div>";   ?></td>
-             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp3, 2) ."</span></div>";    ?></td>
+                <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($EurLP*$sp1, 2) ."</span><span class=green>".round($EurLPApi*$sp1, 2)."</span></div>";    ?></td>
+             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp2, 2) ."</span><span class=green>".round($EurLPApi*$sp2, 2)."</span></div>";   ?></td>
+             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp3, 2) ."</span><span class=green>".round($EurLPApi*$sp3, 2)."</span></div>";    ?></td>
             <?php $saleeur = $purchase_order['PurchaseOrder']['sale_price_euro'];
              if(($saleeur > $EurLP*$sp1) && ($saleeur < $EurLP*$sp3)){ ?>
              <td><?php echo $purchase_order['PurchaseOrder']['sale_price_euro']; ?></td>
