@@ -209,7 +209,13 @@ class MasterListing extends AppModel {
             'className' => 'AdminListing',
             'foreignKey' => false,
             'conditions' => 'MasterListing.linnworks_code = AdminListing.linnworks_code'
-        )
+        ),
+     
+     /*'Shipping' => array(
+            'className' => 'Shipping',
+            'foreignKey' => false,
+            'conditions' => 'MasterListing.category = Shipping.category'
+        )*/
                
     );
     

@@ -193,11 +193,7 @@ class MainListing extends AppModel {
             'foreignKey' => false,
             'conditions' => 'MainListing.linnworks_code = Listing.linnworks_code'
         ),
-         'AdminListing' => array(
-             'className' => 'AdminListing',
-             'foreignKey' => false,
-             'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
-         ),
+     
        'Shipping' => array(
             'className' => 'Shipping',
             'foreignKey' => false,

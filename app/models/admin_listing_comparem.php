@@ -99,7 +99,13 @@ class AdminListing extends AppModel {
             'foreignKey' => false,
             'conditions' => 'AdminListing.linnworks_code = MasterListing.linnworks_code'
         ),
-       
+         
+       'PurchaseOrder' => array(
+             'className' => 'PurchaseOrder',
+             'foreignKey' => false,
+             'conditions' => 'AdminListing.linnworks_code = PurchaseOrder.linnworks_code'
+         )
+         
                
     );
     

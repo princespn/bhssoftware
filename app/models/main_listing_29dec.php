@@ -192,21 +192,10 @@ class MainListing extends AppModel {
             'className' => 'Listing',
             'foreignKey' => false,
             'conditions' => 'MainListing.linnworks_code = Listing.linnworks_code'
-        ),
-         'AdminListing' => array(
-             'className' => 'AdminListing',
-             'foreignKey' => false,
-             'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
-         ),
-       'Shipping' => array(
-            'className' => 'Shipping',
-            'foreignKey' => false,
-            'conditions' => 'MainListing.category = Shipping.category'
         )
                
     );
-               
-  
+    
    /*var $belongsTo = array(
         'Listing' => array(
             'className' => 'Listing',

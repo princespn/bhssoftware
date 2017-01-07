@@ -19,14 +19,4 @@ class SupplierMultiplier extends AppModel {
     );
 //pr($this->SupplierMultiplier->schema());
 
-
-    var $hasOne = array(
-        'PurchaseOrder' => array(
-            'className' => 'PurchaseOrder',
-            'foreignKey' => false,
-            'conditions' => 'SupplierMultiplier.category = PurchaseOrder.category'
-        )
-    );
-
-
 }

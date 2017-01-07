@@ -3,19 +3,13 @@ class PurchaseOrder extends AppModel {
 
     var $name = 'PurchaseOrder';
     var $validate = array(
-        'sku' => array(
+        'linnworks_code' => array(
             'Unique-1' => array(
                 'rule' => 'notempty',
-                'message' => 'Amazon SKU is required.'
+                'message' => 'Linnworks code is required.'
             ),
         ),
-        
-        'linnworks_code' => array(
-            'Unique-2' => array(
-                'rule' => 'notempty',
-                'message' => 'linnworks code is required.'
-            ),
-        ),
+
       );
     
     
@@ -48,7 +42,7 @@ class PurchaseOrder extends AppModel {
             $id = isset($row[0]) ? $row[0] : 0;
             if (!empty($id)) {
 
-                $pcodes = $this->find('all', array('conditions' => array('PurchaseOrder.sku' => $id)));
+                $pcodes = $this->find('all', array('conditions' => array('PurchaseOrder.linnworks_code' => $id)));
                 if ((!empty($pcodes))) {
                     $apiConfig = (isset($pcodes[0]['PurchaseOrder']) && is_array($pcodes[0]['PurchaseOrder'])) ? ($pcodes[0]['PurchaseOrder']) : array();
                     $data['PurchaseOrder'] = (isset($data['PurchaseOrder']) && is_array($data['PurchaseOrder'])) ? ($data['PurchaseOrder']) : array();
@@ -73,7 +67,7 @@ class PurchaseOrder extends AppModel {
                 if (!empty($id)) {
                     $err = implode("\n", $erritem);
                    // $this->saveField('error', $err, array($this->sku = $id));
-                    if (!empty($err)) {$this->saveField('error', $err, array($this->sku = $id));} else {$this->saveField('error','', array($this->sku = $id));}
+                    if (!empty($err)) {$this->saveField('error', $err, array($this->linnworks_code = $id));} else {$this->saveField('error','', array($this->linnworks_code = $id));}
 
                 } else {
                     $err = implode("\n", $erritem);
@@ -90,13 +84,19 @@ class PurchaseOrder extends AppModel {
 
 
     var $hasOne = array(
-        'SupplierMultiplier' => array(
-            'className' => 'SupplierMultiplier',
+        'AdminListing' => array(
+            'className' => 'AdminListing',
             'foreignKey' => false,
-            'conditions' => 'PurchaseOrder.category = SupplierMultiplier.category'
+            'conditions' => 'PurchaseOrder.linnworks_code = AdminListing.linnworks_code'
+        ),
+        'Multiplier' => array(
+            'className' => 'Multiplier',
+            'foreignKey' => false,
+            'conditions' => array('PurchaseOrder.category = Multiplier.category','PurchaseOrder.supplier = Multiplier.supplier')
         )
-
+       
     );
+    
 
 
 
