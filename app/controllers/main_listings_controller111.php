@@ -28,19 +28,40 @@ class MainListingsController extends AppController {
 
                 $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MainListing.amazon_sku LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
                 $conditions = array(
                    'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.amazon_sku LIKE' => "%$prsku%"));
                    $this->MainListing->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
         }
-          
+        
+        else if((!empty($this->data['MainListing']['uk_prime_min'])) && (!empty($this->data['MainListing']['eu_prime_max'])) && (!empty($this->data['MainListing']['eu_prime_min'])) && (!empty($this->data['MainListing']['uk_prime_max'])) && (!empty($this->data['MainListing']['category'])) && (!empty($_POST['Apply']))){
+            
+        //print_r($this->data['MainListing']['category']);die(); 
+         $foo = $this->data['MainListing']['category'];
+         $Minvalue = $this->data['MainListing']['uk_prime_min'];
+         $Maxvalue = $this->data['MainListing']['uk_prime_max'];
+         $MinDevalue = $this->data['MainListing']['eu_prime_min'];
+         $MaxDevalue = $this->data['MainListing']['eu_prime_max'];
+         $Width = $this->data['MainListing']['width'];
+         $Height = $this->data['MainListing']['height'];
+         $Length = $this->data['MainListing']['length'];
+         $Shipping = $this->data['MainListing']['shipping'];
+         
+         $conditions = array('MainListing.category LIKE' => '%' . $foo . '%');
+         $this->MainListing->recursive = 1;
+         $this->paginate = array('limit' => 7000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
+         $this->set('code_listings', $this->paginate());
+         if((!empty($this->data['MainListing']['width'])) && (!empty($this->data['MainListing']['height'])) && (!empty($this->data['MainListing']['length']))) {
+         $this->set(compact('foo','Minvalue','Maxvalue','MaxDevalue','MinDevalue','Width','Height','Length','Shipping')); }else{ $this->set(compact('foo','Minvalue','Maxvalue','MaxDevalue','MinDevalue')); }     
+         } 
+        
         else if ((!empty($_POST['checkid'])) && (!empty($_POST['exports']))) {
             $checkboxid = $_POST['checkid'];
             App::import("Vendor", "parsecsv");
@@ -55,7 +76,7 @@ class MainListingsController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->MainListing->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code');
+            $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku');
             $this->set('code_listings', $this->paginate());
         }
 
@@ -76,7 +97,7 @@ class MainListingsController extends AppController {
 
                 $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MainListing.amazon_sku LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
@@ -84,7 +105,7 @@ class MainListingsController extends AppController {
                 $conditions = array(
                     'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.amazon_sku LIKE' => "%$prsku%"));
                $this->MainListing->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
@@ -101,7 +122,7 @@ class MainListingsController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->MainListing->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'MainListing.id');
+            $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku');
             $this->set('code_listings', $this->paginate());
         }
 
@@ -146,9 +167,7 @@ class MainListingsController extends AppController {
         
     }
     
-       
-    
-    public function category($catn) {
+        function category($catn) {
 
         $this->set('title', 'Linnwork codes and SKU Mapping Inventory Database.');   
             
@@ -162,7 +181,7 @@ class MainListingsController extends AppController {
             
                 $this->MainListing->recursive = 1;
                 $conditions = array('MainListing.category LIKE' => '%' . $catname . '%');                
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.amazon_sku', 'conditions' => $conditions);
             
         }
         $this->MainListing->recursive = 1;
@@ -194,7 +213,7 @@ class MainListingsController extends AppController {
         }
     }
     
-    public function delete($id = null) {
+    function delete($id = null) {
         if (!$id) {
             $this->Session->setFlash(__('Invalid UK Listing ID in database.', true));
             $this->redirect(array('controller' => 'main_listings', 'action' => 'index_prices'));

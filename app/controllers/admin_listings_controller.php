@@ -27,7 +27,7 @@ class AdminListingsController extends AppController {
 
                 $conditions = array('AdminListing.linnworks_code LIKE' => '%' . $prname . '%', 'AdminListing.web_sku LIKE' => '%' . $prsku . '%', 'AdminListing.linnworks_code LIKE' => '%' . $prsku . '%');
                 $this->AdminListing->recursive = 1;
-                $this->paginate = array('limit' => 1000, 'order' => 'AdminListing.id  ASC', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'AdminListing.id  ASC', 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
@@ -35,7 +35,7 @@ class AdminListingsController extends AppController {
                 $conditions = array(
                     'OR' => array('AdminListing.web_sku LIKE' => "%$prsku%", 'AdminListing.linnworks_code LIKE' => "%$prsku%", 'AdminListing.web_sku LIKE' => "%$prsku%"));
                 $this->AdminListing->recursive = 1;
-                $this->paginate = array('limit' => 1000, 'order' => 'AdminListing.id  ASC', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'AdminListing.id  ASC', 'conditions' => $conditions);
             }
             $this->AdminListing->recursive = 1;
             $this->set('price_listings', $this->paginate());
@@ -51,7 +51,7 @@ class AdminListingsController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->AdminListing->recursive = 1;
-            $this->paginate = array('limit' => 1000, 'order' => 'AdminListing.id  ASC');
+            $this->paginate = array('limit' => 100, 'order' => 'AdminListing.id  ASC');
             $this->set('price_listings', $this->paginate());
         }
 

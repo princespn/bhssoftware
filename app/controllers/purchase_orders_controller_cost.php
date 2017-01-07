@@ -132,14 +132,14 @@ class PurchaseOrdersController extends AppController {
 
                 $conditions = array('PurchaseOrder.linnworks_code LIKE' => '%' . $prname . '%', 'PurchaseOrder.category LIKE' => '%' . $prsku . '%');
                 $this->PurchaseOrder->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('PurchaseOrder.category LIKE' => "%$prsku%", 'PurchaseOrder.linnworks_code LIKE' => "%$prsku%", 'PurchaseOrder.supplier LIKE' => "%$prsku%"));
                $this->PurchaseOrder->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
             }
            $this->PurchaseOrder->recursive = 1;
             $this->set('purchase_orders', $this->paginate());
@@ -175,7 +175,7 @@ class PurchaseOrdersController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->PurchaseOrder->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id');
+            $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id');
             $this->set('purchase_orders', $this->paginate());
             $this->set(compact('categories','getCost','getsupp'));
         }
@@ -191,6 +191,9 @@ class PurchaseOrdersController extends AppController {
         $this->loadModel('CostSetting');
         $getCost    =   $this->CostSetting->find('all');
 
+
+
+
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['PurchaseOrder']['all_item']))) {
 
             $string = explode(",", trim($this->data['PurchaseOrder']['all_item']));
@@ -199,17 +202,17 @@ class PurchaseOrdersController extends AppController {
             if ((!empty($prsku)) && (!empty($prname))) {
 
                 $conditions = array('PurchaseOrder.linnworks_code LIKE' => '%' . $prname . '%', 'PurchaseOrder.category LIKE' => '%' . $prsku . '%');
-                $this->PurchaseOrder->recursive = 0;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->PurchaseOrder->recursive = 1;
+                $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('PurchaseOrder.category LIKE' => "%$prsku%", 'PurchaseOrder.linnworks_code LIKE' => "%$prsku%", 'PurchaseOrder.supplier LIKE' => "%$prsku%"));
-                $this->PurchaseOrder->recursive = 0;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->PurchaseOrder->recursive = 1;
+                $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
             }
-            $this->PurchaseOrder->recursive = 0;
+            $this->PurchaseOrder->recursive = 1;
             $this->set('purchase_orders', $this->paginate());
             $this->set(compact('categories','getCost'));
         }
@@ -220,15 +223,15 @@ class PurchaseOrdersController extends AppController {
             $csv = new parseCSV();
             $filepath = "C:\Users\Administrator\Downloads" . "code_purchase_orders.csv";
             $csv->auto($filepath);
-            $this->PurchaseOrder->recursive = 0;
+            $this->PurchaseOrder->recursive = 1;
             $this->set('purchase_orders',$this->PurchaseOrder->find('all', array('fields' => array('PurchaseOrder.linnworks_code','PurchaseOrder.product_name','PurchaseOrder.invoice_value','PurchaseOrder.latest_invoice','PurchaseOrder.category','PurchaseOrder.supplier','PurchaseOrder.invoice_currency','AdminListing.web_sale_price_uk','PurchaseOrder.sale_price_gbp','AdminListing.web_sale_price_de','PurchaseOrder.sale_price_euro','PurchaseOrder.error'),'conditions' => array('PurchaseOrder.id' => $checkboxid))));
             //$this->set('purchase_orders', $this->PurchaseOrder->find('all', array('PurchaseOrder.id ASC', 'conditions' => array('PurchaseOrder.id' => $checkboxid))));
             $this->layout = null;
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
-            $this->PurchaseOrder->recursive = 0;
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id');
+            $this->PurchaseOrder->recursive = 1;
+            $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id');
             $this->set('purchase_orders', $this->paginate());
             $this->set(compact('categories','getCost'));
         }
@@ -259,7 +262,7 @@ class PurchaseOrdersController extends AppController {
 
             $this->PurchaseOrder->recursive = 1;
             $conditions = array('PurchaseOrder.category LIKE' => '%' . $options . '%');
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+            $this->paginate = array('limit' => 200, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
 
         }
         $this->PurchaseOrder->recursive = 1;
@@ -321,15 +324,15 @@ class PurchaseOrdersController extends AppController {
                  if (!empty($download)) {
 
                                 $conditions = array('SupplierMultiplier.category LIKE' => '%' . $download . '%');
-                                $this->paginate = array('limit' => 500, 'order' => 'SupplierMultiplier.category', 'conditions' => $conditions);
+                                $this->paginate = array('limit' => 1000, 'order' => 'SupplierMultiplier.category', 'conditions' => $conditions);
                                  $getSupplier = $this->paginate('SupplierMultiplier');
                                  
                                  $cond = array('Multiplier.category LIKE' => '%' . $download . '%');
-                                 $this->paginate = array('limit' => 500, 'order' => 'Multiplier.category', 'conditions' => $cond);
+                                 $this->paginate = array('limit' => 1000, 'order' => 'Multiplier.category', 'conditions' => $cond);
                                  $getMultiplier = $this->paginate('Multiplier');  
                                  
                                  $condition = array('Shipping.category LIKE' => '%' . $download . '%');
-                                 $this->paginate = array('limit' => 500, 'order' => 'Shipping.category', 'conditions' => $condition);
+                                 $this->paginate = array('limit' => 1000, 'order' => 'Shipping.category', 'conditions' => $condition);
                                  $getShipping = $this->paginate('Shipping'); 
                                  
                                 $this->set(compact('categories','suppname','getCost','getSupplier','getMultiplier','countryname'));
@@ -420,7 +423,7 @@ class PurchaseOrdersController extends AppController {
         }
 
         $this->PurchaseOrder->recursive = 1;
-        $this->paginate = array('limit' => 500, 'order' => 'PurchaseOrder.id');
+        $this->paginate = array('limit' => 1000, 'order' => 'PurchaseOrder.id');
         $this->set('purchase_orders', $this->paginate());
         $this->set(compact('categories','invoiceid','getCost','Webprices'));
     }
