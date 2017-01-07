@@ -72,8 +72,8 @@ echo $csv->render($filename);
         <tr>
           <td><?php $productid = $price_listing['AdminListing']['id']; echo $this->Form->input('AdminListing.id',array('class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?></td>
           <td><?php echo $price_listing['AdminListing']['linnworks_code']; ?></td>
-          <td><?php echo $price_listing['MasterListing']['amazon_sku']; ?></td>
-          <td><?php echo $price_listing['MasterListing']['category']; ?></td>
+          <td><?php //echo $price_listing['MasterListing']['amazon_sku']; ?></td>
+          <td><?php //echo $price_listing['MasterListing']['category']; ?></td>
           <td><?php echo $price_listing['AdminListing']['web_sku']; ?></td>
           <td><?php echo $price_listing['AdminListing']['web_price_uk']; ?></td>
           <td><?php echo $price_listing['AdminListing']['web_sale_price_uk']; ?></td>
