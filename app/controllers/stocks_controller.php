@@ -9,7 +9,7 @@ class StocksController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
         //$this->layout = 'defaultm';
-        $this->Auth->allow(array('login', 'logout', 'index', 'update', 'category', 'tokenkey'));       
+        $this->Auth->allow(array('login', 'logout', 'index', 'update', 'category', 'tokenkey'));
         $this->Session->activate();
         
     }
@@ -184,8 +184,12 @@ class StocksController extends AppController {
         $categories = $this->category();
         if ((!empty($catname)) && (substr_count(rawurlencode($catname), ' '))) {
             $keyword = substr(trim(rawurlencode($catname)), 0, 3);
-        } else if ((!empty($catname))) {
+        } else if ((!empty($catname)) && (substr_count(rawurlencode($catname), ' ') == 0)) {
             $keyword = substr(trim(rawurlencode($catname)), 0, 5);
+        } else if ((!empty($catname)) && (substr_count(rawurlencode($catname), ' ') <= 3)) {
+            $keyword = substr(trim(rawurlencode($catname)), 0, 3);
+        } else if ((!empty($catname)) && (substr_count(rawurlencode($catname), ' ') >= 4)) {
+            $keyword = substr(trim(rawurlencode($catname)), 0, 4);
         } else if ((!empty($this->data['Stock']['keyword'])) && (is_numeric($this->data['Stock']['keyword']))) {
 
             $keyword = trim($this->data['Stock']['keyword']);

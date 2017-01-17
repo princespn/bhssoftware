@@ -12,11 +12,62 @@ class MainListingsController extends AppController {
         parent::beforeFilter();
          $this->Auth->allow(array('categories', 'index_prices', 'index','importcode','category','edit','delete'));	
 	}
-        
-        
-         function index() {
+
+    public function token_value(){
+
+        $auth_data = array(
+            'applicationId' =>'b72fc47a-ef82-4cb3-8179-2113f09c50ff',
+            'applicationSecret' =>'e727f554-7d27-4fd2-bcaf-dad3e0079821',
+            'token' =>'cd431b31abd667bbb1e947be42077e9d');
+        $header = array("POST:https://api.linnworks.net//api/Auth/AuthorizeByApplication HTTP/1.1","Host:api.linnworks.net","Connection: keep-alive","Accept: application/json, text/javascript, ; q=0.01","Origin: https://www.linnworks.net","Accept-Language: en","User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36","Content-Type: application/x-www-form-urlencoded; charset=UTF-8","Referer: https://www.linnworks.net/","Accept-Encoding: gzip, deflate");
+        $url = 'https://api.linnworks.net//api/Auth/AuthorizeByApplication?applicationId='.$auth_data['applicationId'].'&applicationSecret='.$auth_data['applicationSecret'].'&token='.$auth_data['token'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $auth_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        //curl_setopt($ch, CURLOPT_USERPWD,$some_data['userName'].':'.$some_data['password']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        $yummy = json_decode($result);
+        curl_close($ch);
+        //print_r($yummy);die();
+        $Token = $yummy->{'Token'};
+        if(!empty($Token)){return $Token ;}else{throw new MissingWidgetHelperException('Token not authorized to view this page.', 401);}
+    }
+
+
+
+    public function categname() {
+        $userkey = $this->token_value();
+        $some_data = array('token' => $userkey);
+        $header = array("POST:https://eu1.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+        $url = 'https://eu1.linnworks.net//api/Inventory/GetCategories';
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $some_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        //curl_setopt($ch, CURLOPT_USERPWD,$some_data['userName'].':'.$some_data['password']);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        $catgory = json_decode($result);
+        curl_close($ch);
+        //print_r($catgory);die();
+        return $catgory;
+    }
+
+
+
+    function index() {
              
         $this->set('title', 'Diagnosis Linnwork codes and SKU Mapping Inventory Database.');
+        $categories = $this->categname();
            
          
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['MainListing']['all_item']))) {
@@ -28,17 +79,18 @@ class MainListingsController extends AppController {
 
                 $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MainListing.amazon_sku LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
                 $conditions = array(
                    'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.amazon_sku LIKE' => "%$prsku%"));
                    $this->MainListing->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
+            $this->set(compact('categories'));
         }
           
         else if ((!empty($_POST['checkid'])) && (!empty($_POST['exports']))) {
@@ -55,8 +107,9 @@ class MainListingsController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->MainListing->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code');
+            $this->paginate = array('limit' => 100, 'order' => 'MainListing.id');
             $this->set('code_listings', $this->paginate());
+            $this->set(compact('categories'));
         }
 
 	}
@@ -76,7 +129,7 @@ class MainListingsController extends AppController {
 
                 $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MainListing.amazon_sku LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
@@ -84,7 +137,7 @@ class MainListingsController extends AppController {
                 $conditions = array(
                     'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.amazon_sku LIKE' => "%$prsku%"));
                $this->MainListing->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
@@ -150,7 +203,8 @@ class MainListingsController extends AppController {
     
     public function category($catn) {
 
-        $this->set('title', 'Linnwork codes and SKU Mapping Inventory Database.');   
+        $this->set('title', 'Linnwork codes and SKU Mapping Inventory Database.');
+        $categories = $this->categname();
             
           $catname = urldecode($catn);
               // print_r(urldecode($catname));die();
@@ -162,11 +216,12 @@ class MainListingsController extends AppController {
             
                 $this->MainListing->recursive = 1;
                 $conditions = array('MainListing.category LIKE' => '%' . $catname . '%');                
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.linnworks_code', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             
         }
         $this->MainListing->recursive = 1;
         $this->set('code_listings', $this->paginate());
+        $this->set(compact('categories'));
     }
     
     public function edit($id = null) {
