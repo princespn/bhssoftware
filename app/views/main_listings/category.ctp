@@ -77,11 +77,10 @@ echo $this->Session->flash(); ?>
            <!--<th class="wid-20"><?php __('Amazon SKU');?></th>-->
           <th><ul class="select-drop">
               <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Category <span class="caret"></span></a>
-               <?php $Catname = $this->requestAction('/main_listings/categories'); // print_r($option); die(); ?>
-                  <ul class="dropdown-menu">
-                    <?php foreach ($Catname as $key => $Catna): ?>
-                    <li><a href="<?php echo  $actual_link ; ?>/main_listings/category/<?php echo rawurlencode($Catna); ?>" target="_self"><?php echo $Catna; ?></a></li>
-                  <?php endforeach; ?>
+                <ul class="dropdown-menu">
+                    <?php foreach ($categories as $category): ?>                     
+                    <li><a href="<?php echo  $actual_link ; ?>/main_listings/category/<?php echo rawurlencode($category->CategoryName); ?>" target="_self"><?php echo $category->CategoryName; ?></a></li>
+                  <?php endforeach; ?> 
                 </ul>
               </li>
             </ul>
@@ -162,9 +161,7 @@ echo $this->Session->flash(); ?>
              <td><?php //echo 'NA';?></td>
              <?php //} ?>-->
              
-            <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (($code_listing['Shipping']['country'] === 'GB') && ($code_listing['MainListing']['category'] === $code_listing['Shipping']['category']) && (!empty($code_listing['MainListing']['sale_price_uk'])) && (!empty($code_listing['AdminListing']['web_sale_price_uk']))) && ((int)$code_listing['MainListing']['sale_price_uk'] !==(int)$code_listing['AdminListing']['web_sale_price_uk']+(int)$code_listing['Shipping']['shipping_cost'])){  ?>
-            <td class="red-info" title="<?php  echo "Amazon Prime (".$code_listing['MainListing']['sale_price_uk'].") = Master Web Price (".$code_listing['AdminListing']['web_sale_price_uk'].") + Shipping cost  ".$code_listing['Shipping']['shipping_cost']; ?>"><?php echo $code_listing['MainListing']['sale_price_uk']; ?></td>
-            <?php } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
+             <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
             <td><?php  echo $code_listing['MainListing']['sale_price_uk']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
@@ -216,9 +213,7 @@ echo $this->Session->flash(); ?>
              <td><?php //echo 'NA';?></td>
              <?php //} ?>-->
              
-            <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (($code_listing['Shipping']['country'] === 'DE') && ($code_listing['MainListing']['category'] === $code_listing['Shipping']['category']) && (!empty($code_listing['MainListing']['sale_price_de'])) && (!empty($code_listing['Listing']['web_sale_price_de']))) && ((int)$code_listing['MainListing']['sale_price_uk'] !==(int)$code_listing['Listing']['web_sale_price_de']+(int)$code_listing['Shipping']['shipping_cost'])){  ?>
-            <td class="red-info" title="<?php  echo "Amazon Prime DE (".$code_listing['MainListing']['sale_price_de'].") = Web Price DE (".$code_listing['Listing']['web_sale_price_de'].") + Shipping cost  ".$code_listing['Shipping']['shipping_cost']; ?>"><?php echo $code_listing['MainListing']['sale_price_de']; ?></td>
-            <?php } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
+           <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
             <td><?php  echo $code_listing['MainListing']['sale_price_de']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
@@ -245,9 +240,7 @@ echo $this->Session->flash(); ?>
              <td><?php echo 'NA';?></td>
              <?php } ?>
              
-             <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (($code_listing['Shipping']['country'] === 'DE') && ($code_listing['MainListing']['category'] === $code_listing['Shipping']['category']) && (!empty($code_listing['MainListing']['sale_price_fr'])) && (!empty($code_listing['Listing']['web_sale_price_fr']))) && ((int)$code_listing['MainListing']['sale_price_fr'] !==(int)$code_listing['Listing']['web_sale_price_fr']+(int)$code_listing['Shipping']['shipping_cost'])){  ?>
-            <td class="red-info" title="<?php  echo "Amazon Prime FR (".$code_listing['MainListing']['sale_price_fr'].") = Web Price FR (".$code_listing['Listing']['web_sale_price_fr'].") + Shipping cost  ".$code_listing['Shipping']['shipping_cost']; ?>"><?php echo $code_listing['MainListing']['sale_price_fr']; ?></td>
-            <?php } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_fr']))){?>        
+          <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_fr']))){?>        
             <td><?php  echo $code_listing['MainListing']['sale_price_fr']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
