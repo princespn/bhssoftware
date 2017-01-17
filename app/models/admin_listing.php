@@ -92,16 +92,28 @@ class AdminListing extends AppModel {
         return $return;
         //fclose($handle);
     }
-   
-     var $hasOne = array(
+
+    var $hasOne = array(
         'MasterListing' => array(
             'className' => 'MasterListing',
             'foreignKey' => false,
             'conditions' => 'AdminListing.linnworks_code = MasterListing.linnworks_code'
         ),
-       
-               
+        'MainListing' => array(
+            'className' => 'MainListing',
+            'foreignKey' => false,
+            'conditions' => 'AdminListing.linnworks_code = MainListing.linnworks_code'
+        ),
+        'PurchaseOrder' => array(
+            'className' => 'PurchaseOrder',
+            'foreignKey' => false,
+            'conditions' => 'AdminListing.linnworks_code = PurchaseOrder.linnworks_code'
+        )
+
+
     );
-    
+
+
+
       
 }

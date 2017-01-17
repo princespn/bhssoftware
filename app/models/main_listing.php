@@ -187,25 +187,22 @@ class MainListing extends AppModel {
     }
    
     
- var $hasOne = array(
+
+
+    var $hasOne = array(
         'Listing' => array(
             'className' => 'Listing',
             'foreignKey' => false,
             'conditions' => 'MainListing.linnworks_code = Listing.linnworks_code'
         ),
-         'AdminListing' => array(
-             'className' => 'AdminListing',
-             'foreignKey' => false,
-             'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
-         ),
-       'Shipping' => array(
-            'className' => 'Shipping',
+        'AdminListing' => array(
+            'className' => 'AdminListing',
             'foreignKey' => false,
-            'conditions' => 'MainListing.category = Shipping.category'
+            'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
         )
-               
+
     );
-               
+
   
    /*var $belongsTo = array(
         'Listing' => array(
