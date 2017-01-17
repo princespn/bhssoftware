@@ -17,10 +17,11 @@ $this->requestAction('/users/logout/', array('return'));
             </div>
           
           <div class="col-md-12 mobile-bottomspace">          
-                 <div class="col-md-3"><?php $base_currency = array('GBP'=>'GBP','EUR'=>'EUR'); echo $this->Form->input('sale_base_currency',array('placeholder'=>'Sale Base Currency..','options'=>$base_currency)); ?></div>
-                 <div class="col-md-3"><?php $invoice_currency = array('GBP'=>'GBP','EUR'=>'EUR','USD'=>'USD','INR'=>'INR'); echo $this->Form->input('invoice_currency',array('placeholder'=>'Invoice Currency..','options'=>$invoice_currency)); ?></div>
+                 <div class="col-md-2"><?php $base_currency = array('GBP'=>'GBP','EUR'=>'EUR'); echo $this->Form->input('sale_base_currency',array('placeholder'=>'Sale Base Currency..','options'=>$base_currency)); ?></div>
+                 <div class="col-md-2"><?php $invoice_currency = array('GBP'=>'GBP','EUR'=>'EUR','USD'=>'USD','INR'=>'INR'); echo $this->Form->input('invoice_currency',array('placeholder'=>'Invoice Currency..','options'=>$invoice_currency)); ?></div>
                  <div class="col-md-3"><?php echo $this->Form->input('exchange_rate',array('placeholder'=>'Exchange Rate')); ?></div>
-                 <div class="col-md-3"><?php echo $this->Form->button('Submit', array('value'=>'submit','name'=>'submit','id'=>'submit','class'=>'btn btn-primary','type'=>'submit')); ?></div>       
+                 <div class="col-md-3"><?php echo $this->Form->input('variation',array('placeholder'=>'Dynamic variation')); ?></div>
+                 <div class="col-md-2"><?php echo $this->Form->button('Submit', array('value'=>'submit','name'=>'submit','id'=>'submit','class'=>'btn btn-primary','type'=>'submit')); ?></div>       
          </div>       
        <?php echo $this->Form->end();?>      
       </div>
@@ -33,9 +34,9 @@ $this->requestAction('/users/logout/', array('return'));
           <th></th>
           <th><?php __('Sale/Base Currency');?></th>
           <th><?php __('Invoice Currency');?></th>
-          <th><?php __('Exchange Rate');?></th>
-          <th></th> 
+          <th><?php __('Exchange Rate');?></th>         
           <th><?php __('Exchange Rate Use API');?></th>
+          <th><?php __('Dynamic variation');?></th>
         </tr>
       </thead>
       <tbody>
@@ -45,7 +46,7 @@ $this->requestAction('/users/logout/', array('return'));
            <td><?php echo $exchange_rate['CostSetting']['sale_base_currency']; ?></td>
           <td><?php echo $exchange_rate['CostSetting']['invoice_currency']; ?></td>
           <td><?php echo $exchange_rate['CostSetting']['exchange_rate']; ?></td>
-          <td></td>
+         
            <td><?php  $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency']; $to =  $exchange_rate['CostSetting']['sale_base_currency'];
                                     //$url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
                                    $url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
@@ -54,8 +55,8 @@ $this->requestAction('/users/logout/', array('return'));
                                    $converted = $yummy->{'Rate'};
                                    $ExRate = round($converted, 3);                          
                                    if($ExRate =='0'){echo "1";}else {echo $ExRate;}                                 
-                                   ?></td>
-           
+                                   ?></td> 
+            <td><?php echo $exchange_rate['CostSetting']['variation']; ?></td>
           </tr>
           <?php endforeach; ?>  
       </tbody>
@@ -265,4 +266,3 @@ $this->requestAction('/users/logout/', array('return'));
     </table>
  </div>
 <!-- sales price multipliers -->
-

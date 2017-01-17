@@ -57,11 +57,11 @@ echo $this->Session->flash(); ?>
                                    $converted = $yummy->{'Rate'};
                                    $ApiRate = round($converted, 3); ?>
                                                                        
-                                          <?php $normalrate = $ApiRate*5/100;
+                                          <?php $normalrate = $ApiRate*($exchange_rate['CostSetting']['variation'])/100;
                                              if(($ApiRate !='0') && ($normalRate >= ($ApiRate+$normalrate))){ ?>
-                                            <td class="red-info" title="<?php echo "Nornal Exchange Rate 5 % (". $normalrate . ") More compare to API Rate"?>"><?php echo $normalRate; ?></td>
+                                            <td class="red-info" title="<?php echo "Nornal Exchange Rate ".$exchange_rate['CostSetting']['variation']."% (". $normalrate . ") More compare to API Rate"?>"><?php echo $normalRate; ?></td>
                                             <?php } else if(($ApiRate !='0') && ($ApiRate >= ($normalRate+$normalrate))){ ?>
-                                            <td class="red-info" title="<?php echo "Nornal Exchange Rate 5 % (". $normalrate . ")  Less compare to API Rate"?>"><?php echo $normalRate; ?></td>
+                                            <td class="red-info" title="<?php echo "Nornal Exchange Rate ". $exchange_rate['CostSetting']['variation'] ."% (". $normalrate . ")  Less compare to API Rate"?>"><?php echo $normalRate; ?></td>
                                             <?php } else { ?>
                                             <td><?php echo $normalRate; ?></td>
                                             <?php } ?>                                                                        

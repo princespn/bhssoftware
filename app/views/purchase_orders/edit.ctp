@@ -81,8 +81,7 @@ $this->requestAction('/users/logout/', array('return'));
                                   </div>
                                 </div>
                                <?php $update = 'This Price update for sku'.$this->data['PurchaseOrder']['sku'];
-                                echo $this->Form->hidden('error',array('value'=>$update));	
-                         
+                                echo $this->Form->hidden('error',array('value'=>$update));	          
                                 ?>
 
                               <div class="panel panel-default">
