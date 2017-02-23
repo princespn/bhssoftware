@@ -11,8 +11,8 @@ echo $csv->addRow($mapping);
 
 foreach ($code_listings as $code_listing):
 $line_code = array($code_listing['MainListing']['linnworks_code']);
-$line_cate = array($code_listing['MainListing']['category']);
-$line_name = array($code_listing['MainListing']['product_name']);
+$line_cate = array($code_listing['InventoryCode']['category']);
+$line_name = array($code_listing['InventoryCode']['product_name']);
 $line_ams = array($code_listing['MainListing']['amazon_sku']);
 $line_sku = array($code_listing['Listing']['web_sku']);
 $web_uk_rp = array($code_listing['Listing']['web_price_uk']);
@@ -49,14 +49,15 @@ echo $this->Session->flash(); ?>
          <?php echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php echo $this->Paginator->sort('Error', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>
          <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'main_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
-         </div>
+              <?php echo $this->Html->link(__('Replace Or Del sku', true), array('controller' => 'main_listings', 'action' => 'repdelcode'),array('class' => 'btn btn-info btn-sm')); ?>
+        </div>
         <div class="col-md-4">
          <div class="form-group margin-bottom-0">
            <div class="input-group">
             <span class="search-icon"><i aria-hidden="true" class="fa fa-search"></i></span>
             <?php echo $this->Form->input('all_item',array('label'=>'','placeholder'=>'Search Linnworks Code...', 'class'=>'form-control pa-left')); ?>
             <div class="input-group-btn"><?php echo $this->Form->button('Search', array('value'=>'submit','name'=>'submit','id'=>'submit','class'=>'btn btn-primary','type'=>'submit')); ?></div>
-            </div>
+       </div>
           </div>
         </div>
       </div>
@@ -67,15 +68,14 @@ echo $this->Session->flash(); ?>
       <thead>
         <tr id="head-table">
          <th colspan="5"><?php echo $this->Paginator->counter(array('format' => __('Page %page% of %pages%, showing %current% records out of %count% total, starting on record %start%, ending on %end%', true)));  ?></th>
-          <th colspan="5" class="text-center text-uppercase color-white gbp-bg"><?php __('Sale Price (GBP)');?></th>
+          <th colspan="6" class="text-center text-uppercase color-white gbp-bg"><?php __('Sale Price (GBP)');?></th>
           <th></th>
-          <th colspan="6" class="text-center text-uppercase color-white eur-bg"><?php __('Sale Price (EUR)');?></th>         
+          <th colspan="7" class="text-center text-uppercase color-white eur-bg"><?php __('Sale Price (EUR)');?></th>         
         </tr>
        <tr>
         <th class="wid-20"><input name="selecctall" id="selecctall" type="checkbox"></th>
          <th><?php __('Linnworks code');?></th>
-           <!--<th class="wid-20"><?php __('Amazon SKU');?></th>-->
-          <th><ul class="select-drop">
+           <th><ul class="select-drop">
               <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Category <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <?php foreach ($categories as $category): ?>                     
@@ -91,38 +91,36 @@ echo $this->Session->flash(); ?>
           <th><?php __('Tesco');?></th>
           <th><?php __('Amazon UK');?></th>
           <th><?php __('Amazon UK Prime');?></th>
-          <th><?php __('Daily Mail');?></th>       
+          <th><?php __('Daily Mail');?></th> 
+          <th><?php __('EBay');?></th>  
           <th class="<?php __('pink-price');?>"><?php __('RRP');?></th>
           <th><?php __('Web DE');?></th>
           <th><?php __('Amazon DE');?></th>
           <th><?php __('Amazon DE Prime');?></th>
           <th><?php __('Web FR');?></th>
           <th><?php __('Amazon FR');?></th>
-          <th><?php __('Amazon FR Prime');?></th>        
+          <th><?php __('Amazon FR Prime');?></th> 
+          <th><?php __('CDiscount');?></th>  
         </tr>
       </thead>
       <tbody>
 <?php foreach ($code_listings as $code_listing): ?>
         <tr>
-         <td><?php $productid = $code_listing['MainListing']['id']; if(!empty($code_listing['MainListing']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
-         echo $this->Form->input('MainListing.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?> <?php if(!empty($code_listing['MainListing']['error'])){echo "&#8595;";} ?></td>
-          <td class="wid-20"><?php echo $code_listing['MainListing']['linnworks_code']; ?></td>
-          <!--<td><?php echo $code_listing['MainListing']['amazon_sku']; ?></td>-->
-          <td><?php echo $code_listing['MainListing']['category']; ?></td>
-          <td><?php echo $code_listing['MainListing']['product_name']; ?></td>
-          <?php $desku = split ("\_", $code_listing['MainListing']['amazon_sku']); ?>
-          <?php $frsku = split ("\-", $code_listing['MainListing']['amazon_sku']);  ?>  
-          
-              
-          <?php if(!empty($code_listing['MainListing']['price_uk'])){  ?>
-          <td class="pink-price"><?php  echo $code_listing['MainListing']['price_uk']; ?></td>
-          <?php }else if (!empty($code_listing['Listing']['web_price_uk'])){ ?>
-          <td class="pink-price"><?php  echo $code_listing['Listing']['web_price_uk']; ?></td>
-          <?php }else { ?>
-          <td class="pink-price"><?php echo 'NA';?></td>
-          <?php } ?>  
-          
-         <?php if(((!empty($code_listing['Listing']['web_sale_price_uk'])) && (!empty($code_listing['AdminListing']['web_sale_price_uk']))) && (($code_listing['Listing']['web_sale_price_uk']) !==($code_listing['AdminListing']['web_sale_price_uk']))){  ?>
+            <td><?php $productid = $code_listing['MainListing']['id']; if(!empty($code_listing['MainListing']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
+            echo $this->Form->input('MainListing.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?> <?php if(!empty($code_listing['MainListing']['error'])){echo "&#8595;";} ?></td>
+            <td class="wid-20"><?php echo $code_listing['MainListing']['linnworks_code']; ?></td>
+            <td><?php echo $code_listing['InventoryCode']['category']; ?></td>
+            <td><?php echo $code_listing['InventoryCode']['product_name']; ?></td>  
+
+            <?php  if((!empty($code_listing['MainListing']['price_uk'])) && ($code_listing['MainListing']['channel_id']=='1')) { ?>
+            <td class="pink-price"><?php  echo $code_listing['MainListing']['price_uk']; ?></td>   
+            <?php } else if(!empty($code_listing['Listing']['web_price_uk'])) { ?>
+            <td class="pink-price"><?php  echo $code_listing['Listing']['web_price_uk']; ?></td>  
+            <?php }else { ?>
+            <td class="pink-price"><?php echo 'NA';?></td>
+            <?php } ?>
+
+          <?php if(((!empty($code_listing['Listing']['web_sale_price_uk'])) && (!empty($code_listing['AdminListing']['web_sale_price_uk']))) && (($code_listing['Listing']['web_sale_price_uk']) !==($code_listing['AdminListing']['web_sale_price_uk']))){  ?>
          <td class="red-info" title="<?php Echo "Web UK :: ".$code_listing['Listing']['web_sale_price_uk']." Master Web UK  :: ".$code_listing['AdminListing']['web_sale_price_uk']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['Listing']['web_sale_price_uk']; ?></td> 
          <?php } else if(!empty($code_listing['Listing']['web_sale_price_uk'])) { ?>
           <td><?php  echo $code_listing['Listing']['web_sale_price_uk']; ?></td>
@@ -136,17 +134,6 @@ echo $this->Session->flash(); ?>
            <?php } else { ?><td><?php echo 'NA';?></td><?php } ?>
            
            
-          <?php  //if(!empty($code_listing['Listing']['web_sale_price_tesco'])) { ?>
-          <!--<td><?php // echo $code_listing['Listing']['web_sale_price_tesco']; ?></td>
-           <?php //} else { ?><td><?php //echo 'NA';?></td><?php //} ?>
-           
-           <?php  //if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
-            <td><?php  //echo $code_listing['MainListing']['sale_price_uk']; ?></td>       
-             <?php //} else { ?>
-             <td><?php //echo 'NA';?></td>
-             <?php //} ?>-->
-            
-             
             <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && ((!empty($code_listing['MainListing']['sale_price_uk'])) && (!empty($code_listing['AdminListing']['web_sale_price_uk']))) && (($code_listing['MainListing']['sale_price_uk']) !==($code_listing['AdminListing']['web_sale_price_uk']))){  ?>
              <td class="red-info" title="<?php Echo "Master Web UK :: ".$code_listing['AdminListing']['web_sale_price_uk']." Amazon UK ".$code_listing['MainListing']['sale_price_uk']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['MainListing']['sale_price_uk']; ?></td> 
             <?php  } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
@@ -154,97 +141,89 @@ echo $this->Session->flash(); ?>
              <?php } else { ?>
              <td><?php echo 'NA';?></td>
              <?php } ?>
-        
-            <!--<?php  //if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
-            <td><?php  //echo $code_listing['MainListing']['sale_price_uk']; ?></td>       
-             <?php //} else { ?>
-             <td><?php //echo 'NA';?></td>
-             <?php //} ?>-->
              
-             <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_uk']))){?>        
+           
+
+            <?php if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_uk']))) { ?>
             <td><?php  echo $code_listing['MainListing']['sale_price_uk']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
             <?php } ?>
-       
-            <!--<?php //if(!empty($code_listing['Listing']['web_sale_price_dm'])) { ?>         
-           <td><?php //echo $code_listing['Listing']['web_sale_price_dm']; ?></td>                      
-            <?php  //} else { ?><td><?php //echo 'NA';?></td>
-            <?php //} ?>--> 
-            
-            <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && ((!empty($code_listing['MainListing']['sale_price_uk'])) && (!empty($code_listing['Listing']['web_sale_price_dm']))) && (($code_listing['MainListing']['sale_price_uk']) !==($code_listing['Listing']['web_sale_price_dm']))){  ?>
+
+           <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && ((!empty($code_listing['MainListing']['sale_price_uk'])) && (!empty($code_listing['Listing']['web_sale_price_dm']))) && (($code_listing['MainListing']['sale_price_uk']) !==($code_listing['Listing']['web_sale_price_dm']))){  ?>
             <td class="red-info" title="<?php echo "Web DM :: ".$code_listing['Listing']['web_sale_price_dm']." Amazon Prime UK ".$code_listing['MainListing']['sale_price_uk']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['Listing']['web_sale_price_dm']; ?></td> 
             <?php } else if(!empty($code_listing['Listing']['web_sale_price_dm'])) { ?>         
            <td><?php echo $code_listing['Listing']['web_sale_price_dm']; ?></td>                      
             <?php  } else { ?><td><?php echo 'NA';?></td>
             <?php } ?>
 
-            <?php if(!empty($code_listing['Listing']['web_price_fr'])){ ?>
-            <td  class="pink-price"><?php  echo $code_listing['Listing']['web_price_fr']; ?></td>
-            <?php }else if(!empty($code_listing['Listing']['web_price_de'])) { ?>
-            <td  class="pink-price"><?php  echo $code_listing['Listing']['web_price_de']; ?></td>
-            <?php  } else { ?><td><?php echo 'NA';?></td>
+            <?php if(!empty($code_listing['MainListing']['sale_price_ebay'])) { ?>
+            <td><?php  echo $code_listing['MainListing']['sale_price_ebay']; ?></td>  
+            <?php }else { ?>
+            <td><?php echo 'NA';?></td>
             <?php } ?>
-        
+                 
+            <?php  if((!empty($code_listing['MainListing']['price_de'])) && ($code_listing['MainListing']['channel_id']=='3')){  ?>         
+            <td  class="pink-price"><?php  echo $code_listing['MainListing']['price_de']; ?></td>
+            <?php } else if((!empty($code_listing['MainListing']['price_fr'])) && ($code_listing['MainListing']['channel_id']=='2')){  ?>
+            <td  class="pink-price"><?php  echo $code_listing['MainListing']['price_fr']; ?></td>
+            <?php } else { ?>
+            <td  class="pink-price"><?php  echo $code_listing['AdminListing']['web_sale_price_de']; ?></td>         
+            <?php } ?> 
+
             <?php if(((!empty($code_listing['Listing']['web_sale_price_de'])) && (!empty($code_listing['AdminListing']['web_sale_price_de']))) && (($code_listing['Listing']['web_sale_price_de']) !==($code_listing['AdminListing']['web_sale_price_de']))){  ?>
             <td class="red-info" title="<?php Echo "Web DE :: ".$code_listing['Listing']['web_sale_price_de']." Master Web DE  :: ".$code_listing['AdminListing']['web_sale_price_de']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['Listing']['web_sale_price_de']; ?></td> 
             <?php } else if(!empty($code_listing['Listing']['web_sale_price_de'])) { ?>         
             <td><?php echo $code_listing['Listing']['web_sale_price_de']; ?></td>                      
             <?php  } else { ?><td><?php echo 'NA';?></td>
-            <?php } ?>
-        
-           <!--<?php  //if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
-            <td><?php  //echo $code_listing['MainListing']['sale_price_de']; ?></td>       
-             <?php //} else { ?>
-             <td><?php //echo 'NA';?></td>
-             <?php //} ?>-->
-             
-            <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && ((!empty($code_listing['MainListing']['sale_price_de'])) && (!empty($code_listing['AdminListing']['web_sale_price_de']))) && (($code_listing['MainListing']['sale_price_de']) !==($code_listing['AdminListing']['web_sale_price_de']))){  ?>
+            <?php } ?> 
+
+           <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && ((!empty($code_listing['MainListing']['sale_price_de'])) && (!empty($code_listing['AdminListing']['web_sale_price_de']))) && ((($code_listing['MainListing']['channel_id']) === '3') && ($code_listing['MainListing']['sale_price_de']) !==($code_listing['AdminListing']['web_sale_price_de']))){  ?>
             <td class="red-info" title="<?php Echo "Master Web DE :: ".$code_listing['AdminListing']['web_sale_price_de']." Amazon DE ".$code_listing['MainListing']['sale_price_de']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['MainListing']['sale_price_de']; ?></td>
             <?php  } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
             <td><?php  echo $code_listing['MainListing']['sale_price_de']; ?></td>       
              <?php } else { ?>
              <td><?php echo 'NA';?></td>
              <?php } ?>
-         
-            <!--<?php  //if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
-            <td><?php  //echo $code_listing['MainListing']['sale_price_de']; ?></td>       
-             <?php //} else { ?>
-             <td><?php //echo 'NA';?></td>
-             <?php //} ?>-->
-             
-           <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_de']))){?>        
+
+                   
+             <?php if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_de']))) { ?>
             <td><?php  echo $code_listing['MainListing']['sale_price_de']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
-             <?php } ?>
-             
-            <?php if(((!empty($code_listing['Listing']['web_sale_price_fr'])) && (!empty($code_listing['AdminListing']['web_sale_price_fr']))) && (($code_listing['Listing']['web_sale_price_fr']) !==($code_listing['AdminListing']['web_sale_price_fr']))){  ?>
+            <?php } ?>
+            
+            
+           <?php if(((!empty($code_listing['Listing']['web_sale_price_fr'])) && (!empty($code_listing['AdminListing']['web_sale_price_fr']))) && (($code_listing['Listing']['web_sale_price_fr']) !==($code_listing['AdminListing']['web_sale_price_fr']))){  ?>
             <td class="red-info" title="<?php Echo "Web Fr :: ".$code_listing['Listing']['web_sale_price_fr']." Master Web FR  :: ".$code_listing['AdminListing']['web_sale_price_fr']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['Listing']['web_sale_price_fr']; ?></td> 
             <?php } else if(!empty($code_listing['Listing']['web_sale_price_fr'])) { ?>         
             <td><?php echo $code_listing['Listing']['web_sale_price_fr']; ?></td>                      
             <?php  } else { ?><td><?php echo 'NA';?></td>
             <?php } ?> 
-            
-            <!--<?php // if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_fr']))){?>        
-            <td><?php  //echo $code_listing['MainListing']['sale_price_fr']; ?></td>       
-             <?php //} else { ?>
-             <td><?php //echo 'NA';?></td>
-             <?php //} ?>-->
-             
-            <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && ((!empty($code_listing['MainListing']['sale_price_fr'])) && (!empty($code_listing['AdminListing']['web_sale_price_fr']))) && (($code_listing['MainListing']['sale_price_fr']) !==($code_listing['AdminListing']['web_sale_price_fr']))){  ?>
+               
+             <?php if((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && ((!empty($code_listing['MainListing']['sale_price_fr'])) && (!empty($code_listing['AdminListing']['web_sale_price_fr']))) && (($code_listing['MainListing']['sale_price_fr']) !==($code_listing['AdminListing']['web_sale_price_fr']))){  ?>
             <td class="red-info" title="<?php Echo "Master Web FR :: ".$code_listing['AdminListing']['web_sale_price_fr']." Amazon FR ".$code_listing['MainListing']['sale_price_fr']." Sale Price Mismatch."; ?>"><?php  echo $code_listing['MainListing']['sale_price_fr']; ?></td>
             <?php  } else if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') === false) && (!empty($code_listing['MainListing']['sale_price_fr']))){?>        
             <td><?php  echo $code_listing['MainListing']['sale_price_fr']; ?></td>       
              <?php } else { ?>
              <td><?php echo 'NA';?></td>
              <?php } ?>
-             
-          <?php  if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_fr']))){?>        
+
+                       
+              <?php if ((strpos($code_listing['MainListing']['amazon_sku'], 'FBA') !== false) && (!empty($code_listing['MainListing']['sale_price_fr']))) { ?>
             <td><?php  echo $code_listing['MainListing']['sale_price_fr']; ?></td>       
             <?php } else { ?>
             <td><?php echo 'NA';?></td>
-             <?php } ?>          
+            <?php } ?>
+            
+            <?php if(!empty($code_listing['MainListing']['sale_price_cdiscount'])) { ?>
+            <td><?php  echo $code_listing['MainListing']['sale_price_cdiscount']; ?></td>  
+            <?php }else { ?>
+            <td><?php echo 'NA';?></td>
+            <?php } ?>
+
+        
+                 
      </tr>
     <?php endforeach; ?>
     <?php echo $this->Form->end();?>
@@ -312,15 +291,5 @@ $(document).ready(function() {
    
 });
 </script>
-<script type="text/javascript">
-$(document).ready(function(){
-$("#MainListingCategory").change(function () {
-            if ($(this).val() === "furniture") {
-                $("#dvPassport").show();
-            } else {
-                $("#dvPassport").hide();
-            }
-        });
-});
-</script>
+
 <?php } 

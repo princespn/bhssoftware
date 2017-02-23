@@ -1,23 +1,24 @@
 <?php
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+
+if($session->read('Auth.User.group_id')!='1')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
 ?>
 <?php echo $this->Session->flash(); ?><hr>
-<h1 class="sub-header"><?php __('Amazon Compare Inventory');?></h1>
+<h1 class="sub-header"><?php __('Amazon Replace or Delete Amazon SKU');?></h1>
 <hr>
 
  <div class="panel panel-info import-panel">
       <div class="panel-heading">
-        <h3 class="panel-title"><?php __('Import Amazon Compare Inventory');?></h3>
+        <h3 class="panel-title"><?php __('Replace or Delete Amazon SKU');?></h3>
       </div>
       <div class="panel-body">
-        <?php echo $this->Form->create('MainListing',array('action' => 'importcode','enctype'=>'multipart/form-data'));?>
+        <?php echo $this->Form->create('MainListing',array('action' => 'repdelcode','enctype'=>'multipart/form-data'));?>
           <div class="form-group">          
-            <?php echo $this->Form->input('file', array('label'=>'Import Amazon Compare Inventory','type'=>'file') );?> 
+            <?php echo $this->Form->input('file', array('label'=>'Replace Amazon SKU','type'=>'file') );?> 
           </div>
-      <?php echo $this->Form->button('Import listing', array('id'=>'submit','class'=>'btn btn-primary btn-sm','disabled'=>'disabled','type'=>'submit'));
+      <?php echo $this->Form->button('Update listing', array('id'=>'submit','class'=>'btn btn-primary btn-sm','disabled'=>'disabled','type'=>'submit'));
 ?> <?php echo $this->Form->end();?>
       </div>
  </div>
