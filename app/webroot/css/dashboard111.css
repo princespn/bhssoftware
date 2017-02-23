@@ -5,26 +5,22 @@ body {font-family:Arial, Helvetica, sans-serif; font-size:12px; color:#34495e;}
 .wid-70 {width:70px;}
 .wid-100 {width:120px;}
 .wid-200 {width:200px;}
-.col-md-12.margin-bottom-0.mobile-bottomspace{margin-top:17px;}
+.margin-bottom-0 {margin-bottom:0;}
 .margin-0 {margin:0 0 30px;}
 .color-white {color:#fff;}
-.color-black {color:#000000;}
 .gbp-bg {background:#00a0b0;}
-.green-bg {background:#00b300;}
-.last-bg {background:#e6ac00;}
-.yellow-bg {background:#ffff1a;}
 .eur-bg {background:#6a4a3d;}
 .pink-price {background:#ffebee !important;}
 .message {border-radius: 3px;padding: 12px;background-color: #dff0d8;}
 .color-red {color:#f44336;}
 
-.sub-header {font-weight:700; font-size:16px;padding-bottom:20px;}
+.sub-header {font-weight:700; font-size:21px;}
 .search-icon {color:#acacac; font-size:14px; left:8px; position:absolute; top:7px; z-index:4;}
 .pa-left {padding-left:28px;}
 
 .table-striped > tbody > tr:nth-child(2n) > td, .table-striped > tbody > tr:nth-child(2n) > th {background-color: transparent;}
 tr#head-table th {border:2px solid #fff; border-bottom:2px solid #eef0f0;}
-.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr.selected-row > td, .table-striped > tbody > tr:nth-child(2n+1) > th, .table-striped > tbody > tr.selected-row >
+.table-striped > tbody > tr:nth-child(2n+1) > td, .table-striped > tbody > tr.selected-row > td, .table-striped > tbody > tr:nth-child(2n+1) > th, .table-striped > tbody > tr.selected-row > th {background-color: #f2f5f8;}
 .table-bordered > thead > tr th, .table-bordered > tbody > tr th, .table-bordered > tfoot > tr th, .table-bordered > thead > tr td, .table-bordered > tbody > tr td, .table-bordered > tfoot > tr td {border: 1px solid #e8ebeb; padding-bottom: 5px; padding-top: 5px; vertical-align: middle;}
 
 .edit-btn, .delete-btn {color:#111; font-size:14px; font-weight:700; width:12px; height:12px; line-height:12px; text-align:center; margin:0 4px; display:inline-block;}
@@ -158,32 +154,4 @@ margin: 10px 0px;
 padding:15px 10px 15px 50px;
 background-repeat: no-repeat;
 background-position: 10px center;
-}
-.blue{background-color:#286090;
-color: #fff;
-	display: block;
-	padding: 5px 0px;
-	text-align: center;
-}
-.green{background-color:#449d44;
-	display: block;
-	padding: 5px 0px;
-	text-align: center;
-color: #fff;
-}
-.btn-update {
-display: block;
-padding: 5px 0px;
-text-align: center;
-}
-.btn-edit {
-	display: block;
-	padding: 5px 0px;
-	text-align: center;
-}
-.invoicevalue{
-width: 41px;
-display: block;
-text-align: center;
-    
 }
