@@ -6,19 +6,19 @@ $this->requestAction('/users/logout/', array('return'));
 }
 ?>
 <?php echo $this->Session->flash(); ?><hr>
-<h1 class="sub-header"><?php __('Master Amazon Compare Inventory');?></h1>
+<h1 class="sub-header"><?php __('Master Amazon deleted old Amazon SKU');?></h1>
 <hr>
 
  <div class="panel panel-info import-panel">
       <div class="panel-heading">
-        <h3 class="panel-title"><?php __('Master Import Amazon Compare Inventory');?></h3>
+        <h3 class="panel-title"><?php __('Daleted Old Amazon SKU');?></h3>
       </div>
       <div class="panel-body">
-        <?php echo $this->Form->create('MasterListing',array('action' => 'importcode','enctype'=>'multipart/form-data'));?>
+        <?php echo $this->Form->create('MasterListing',array('action' => 'deletecode','enctype'=>'multipart/form-data'));?>
           <div class="form-group">          
-            <?php echo $this->Form->input('file', array('label'=>'Import Amazon Compare Inventory','type'=>'file') );?> 
+            <?php echo $this->Form->input('file', array('label'=>'Delete Amazon SKU','type'=>'file') );?> 
           </div>
-      <?php echo $this->Form->button('Import listing', array('id'=>'submit','class'=>'btn btn-primary btn-sm','disabled'=>'disabled','type'=>'submit'));
+      <?php echo $this->Form->button('Delete listing', array('id'=>'submit','class'=>'btn btn-primary btn-sm','disabled'=>'disabled','type'=>'submit'));
 ?> <?php echo $this->Form->end();?>
       </div>
  </div>
@@ -29,8 +29,8 @@ $this->requestAction('/users/logout/', array('return'));
        <thead>        
         <tr>
           <th class="wid-20">#</th>
-          <th class="wid-200">Error Types</th>
-          <th>SKU Name</th>
+          <th class="wid-200">SKU</th>
+          <th>Error</th>
         </tr>
       </thead>
 
