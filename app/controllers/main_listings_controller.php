@@ -10,7 +10,7 @@ class MainListingsController extends AppController {
     function beforeFilter() {
         
         parent::beforeFilter();
-         $this->Auth->allow(array('categories', 'index_prices', 'index','importcode','category','edit','delete'));	
+         $this->Auth->allow(array('categories','repdelcode', 'index_prices', 'index','importcode','category','edit','delete'));	
 	}
 
     public function token_value(){
@@ -62,6 +62,36 @@ class MainListingsController extends AppController {
         return $catgory;
     }
 
+ public function repdelcode(){
+
+        $this->set('title', 'Linnwork  Replace or delete Old Amazon SKU.');
+
+        if (!empty($this->data)) {
+            $filename = $this->data['MainListing']['file']['name'];
+            $fileExt = explode(".", $filename);
+            $fileExt2 = end($fileExt);
+            //print_r($this->data['MainListing']['file']['tmp_name']); die();
+
+            if ($fileExt2 == 'csv') {
+                if (move_uploaded_file($this->data['MainListing']['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' . $this->data['MainListing']['file']['name']))
+                    // $messages = $this->MainListing->importcode($filename);
+                    $messages = $this->MainListing->repdelcode($filename);
+                $this->Session->setFlash(__('Linnwork Amazon SKU delete successfully.', true));
+
+                if (!empty($messages)) {
+                    $this->set('anything', $messages);
+                    Configure::write('debug', '2');
+                }
+            } else {
+
+                $this->Session->setFlash(__('File format not supported,Please upload .CSV file format only.', true));
+            }
+        } else {
+            //$filename = 'Product Code.csv';
+            //$messages = Product Code($filename);
+        }
+        
+    }
 
 
     function index() {
@@ -77,14 +107,14 @@ class MainListingsController extends AppController {
             if (!empty($string[1])) {$prname = $string[1];}
             if ((!empty($prsku)) && (!empty($prname))) {
 
-                $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%', 'MainListing.amazon_sku LIKE' => '%' . $prsku . '%');
+                $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
                 $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
                 $conditions = array(
-                   'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.amazon_sku LIKE' => "%$prsku%"));
+                   'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%"));
                    $this->MainListing->recursive = 1;
                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
             }
@@ -100,7 +130,7 @@ class MainListingsController extends AppController {
             $filepath = "C:\Users\Administrator\Downloads" . "code_listings.csv";
             $csv->auto($filepath);
             $this->MainListing->recursive = 1;
-            $this->set('code_listings',$this->MainListing->find('all', array('fields' => array('MainListing.linnworks_code','MainListing.category','MainListing.product_name','MainListing.amazon_sku','Listing.web_sku','Listing.web_price_uk','Listing.web_price_dm','MainListing.price_uk','Listing.web_sale_price_uk','Listing.web_sale_price_tesco','Listing.web_sale_price_dm','MainListing.sale_price_uk','Listing.web_price_de','MainListing.price_de','Listing.web_price_fr','MainListing.price_fr','Listing.web_sale_price_de','MainListing.sale_price_de','Listing.web_sale_price_fr','MainListing.sale_price_fr','MainListing.error'),'conditions' => array('MainListing.id' => $checkboxid))));
+            $this->set('code_listings',$this->MainListing->find('all', array('fields' => array('MainListing.linnworks_code','InventoryCode.category','InventoryCode.product_name','MainListing.channel_sku','Listing.web_sku','Listing.web_price_uk','Listing.web_price_dm','MainListing.price_uk','Listing.web_sale_price_uk','Listing.web_sale_price_tesco','Listing.web_sale_price_dm','MainListing.sale_price_uk','Listing.web_price_de','MainListing.price_de','Listing.web_price_fr','MainListing.price_fr','Listing.web_sale_price_de','MainListing.sale_price_de','Listing.web_sale_price_fr','MainListing.sale_price_fr','MainListing.error'),'conditions' => array('MainListing.id' => $checkboxid))));
             //$this->set('code_listings', $this->MainListing->find('all', array('MainListing.id ASC', 'conditions' => array('MainListing.id' => $checkboxid))));
             $this->layout = null;
             $this->autoLayout = false;
@@ -192,12 +222,12 @@ class MainListingsController extends AppController {
         }
     }   
     
-    public function categories(){
+    /*public function categories(){
         
         $procategory = $this->MainListing->find('list', array('fields' => 'category', 'group' => 'category', 'recursive' => 0));
         return $procategory;      
         
-    }
+    }*/
     
        
     
@@ -215,8 +245,8 @@ class MainListingsController extends AppController {
         } else {
             
                 $this->MainListing->recursive = 1;
-                $conditions = array('MainListing.category LIKE' => '%' . $catname . '%');                
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
+                $conditions = array('InventoryCode.category LIKE' => '%' . $catname . '%');                
+                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.id', 'conditions' => $conditions);
             
         }
         $this->MainListing->recursive = 1;
@@ -248,6 +278,7 @@ class MainListingsController extends AppController {
             $this->data = $this->MainListing->read(null, $id);
         }
     }
+    
     
     public function delete($id = null) {
         if (!$id) {
