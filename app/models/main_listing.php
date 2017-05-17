@@ -133,7 +133,7 @@ class MainListing extends AppModel {
             $cid = isset($row[1]) ? $row[1] : 1;           
             if ((!empty($id)) && (!empty($cid))) {
 
-                $pcodes = $this->find('all', array('conditions' => array('MainListing.amazon_sku' => $id,'MainListing.channel_id' => $id)));
+                $pcodes = $this->find('all', array('conditions' => array('MainListing.amazon_sku' => $id,'MainListing.channel_id' => $cid)));
                 $lincode = $pcodes[0]['MainListing']['linnworks_code'];                
                 $Webcodes = $this->AdminListing->find('all', array('conditions' => array('AdminListing.linnworks_code' => $lincode)));
                 $WebList = $this->Listing->find('all', array('conditions' => array('Listing.linnworks_code' => $lincode)));
@@ -156,7 +156,8 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                    //$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                     }
 
                                 else if(((!empty($WebListConfig['web_sale_price_uk'])) && (!empty($WebConfig['web_sale_price_uk']))) && (($WebConfig['web_sale_price_uk'])!==($WebListConfig['web_sale_price_uk']))) {
@@ -164,7 +165,8 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                   // $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 }
 
                                else if(((!empty($WebListConfig['web_sale_price_tesco'])) && (!empty($WebConfig['web_sale_price_uk']))) && (($WebConfig['web_sale_price_uk'])!==($WebListConfig['web_sale_price_tesco']))) {
@@ -172,7 +174,8 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                    //$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 }
 
 
@@ -181,7 +184,8 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                    //$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 }
 
                                 else if(((strpos($apiConfig['amazon_sku'], 'FBA') !== false) && (!empty($data['MainListing']['sale_price_uk'])) && (!empty($WebListConfig['web_sale_price_dm']))) && (($WebListConfig['web_sale_price_dm'])!==($data['MainListing']['sale_price_uk']))) {
@@ -189,7 +193,8 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                   $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                   //$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 }
 
                                 else if(((strpos($apiConfig['amazon_sku'], 'FBA') === false) && (!empty($data['MainListing']['sale_price_de'])) && (!empty($WebConfig['web_sale_price_de']))) && (($WebConfig['web_sale_price_de'])!==($data['MainListing']['sale_price_de']))) {
@@ -197,14 +202,16 @@ class MainListing extends AppModel {
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                    //$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 }
                                 else if(((strpos($apiConfig['amazon_sku'], 'FBA') === false) && (!empty($data['MainListing']['sale_price_fr'])) && (!empty($WebConfig['web_sale_price_fr']))) && (($WebConfig['web_sale_price_fr'])!==($data['MainListing']['sale_price_fr']))) {
                                     $limit = 'Master Web FR and Amazon FR Price Mismatch.';
                                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                                     $err = implode("\n", $erritem);
-                                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                                   // $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                  }else {      /* echo "Welcome";       */ }                               
                                                            
                     
@@ -222,7 +229,8 @@ class MainListing extends AppModel {
                     $return['errors'][] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                     $erritem[] = __(sprintf("Listing  error on line %d and Amazon sku $id :$limit.", $i), true);
                     $err = implode("\n", $erritem);
-                    $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
+                    $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                   // $db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));
                                 
                 }
             }
@@ -231,7 +239,8 @@ class MainListing extends AppModel {
             if (($this->saveAll($data, $validate = false)) && (!empty($id))) {
                 
                     $err = implode("\n", $erritem);
-                     if (!empty($err)) {$db = $this->getDataSource(); $value = $db->value($err, 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id )); } else {   $db = $this->getDataSource(); $value = $db->value('', 'string'); $this->updateAll(array('MainListing.error' => $value),array('MainListing.amazon_sku' => $id ));}
+                        $this->saveField('error', $err, array($this->id = $apiConfig['id']));
+                     if (!empty($err)) {    $this->saveField('error', $err, array($this->id = $apiConfig['id']));}
                      
               }
         }
@@ -245,15 +254,9 @@ class MainListing extends AppModel {
 
 
    
-    var $hasOne = array(
-        'AdminListing' => array(
-            'className' => 'AdminListing',
-            'foreignKey' => false,
-            'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
-        ),
-         
+    var $hasOne = array(           
         'Listing' => array(
-            'className' => 'AdminListing',
+            'className' => 'Listing',
             'foreignKey' => false,
             'conditions' => 'MainListing.linnworks_code = Listing.linnworks_code'
         ),       
@@ -262,6 +265,12 @@ class MainListing extends AppModel {
             'className' => 'SalesChannel',
             'foreignKey' => false,
             'conditions' => 'MainListing.channel_id = SalesChannel.id'
+        ),
+        
+        'AdminListing' => array(
+            'className' => 'AdminListing',
+            'foreignKey' => false,
+            'conditions' => 'MainListing.linnworks_code = AdminListing.linnworks_code'
         ),
        
         'InventoryCode' => array(

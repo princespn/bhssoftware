@@ -63,18 +63,12 @@ class PurchaseOrder extends AppModel {
                     $erritem[] = __(sprintf("Listing  error on line %d and Item sku $id :$limit.", $i), true);
                 }
             }
-            if ($this->saveAll($data, $validate = false)) {
-                if (!empty($id)) {
-                    $err = implode("\n", $erritem);
-                   // $this->saveField('error', $err, array($this->sku = $id));
-                    if (!empty($err)) {$this->saveField('error', $err, array($this->linnworks_code = $id));} else {$this->saveField('error','', array($this->linnworks_code = $id));}
+           if (($this->saveAll($data, $validate = false)) && (!empty($id))) {
+           
+                    $value = date("Y-m-d");                   
+                   $this->saveField('import_dates', $value, array($this->linnworks_code = $id));
 
-                } else {
-                    $err = implode("\n", $erritem);
-                    //$this->saveField('error', $err, array($this->id = $i));
-                    if (!empty($err)) {$this->saveField('error', $err, array($this->id = $i));} else { $this->saveField('error','', array($this->id = $i));}
-
-                }
+               
             }
         }
         return $return;

@@ -2,8 +2,8 @@
 
 class AdminListing extends AppModel {
 
-    var $name = 'AdminListing';
-     var $validate = array(
+    var $name = 'AdminListing';   
+      var $validate = array(
         'web_sku' => array(
             'Unique-1' => array(
                 'rule' => 'notempty',
@@ -94,16 +94,12 @@ class AdminListing extends AppModel {
     }
 
     var $hasOne = array(
-        'MasterListing' => array(
-            'className' => 'MasterListing',
-            'foreignKey' => false,
-            'conditions' => 'AdminListing.linnworks_code = MasterListing.linnworks_code'
-        ),
-        'InventoryCode' => array(
+            'InventoryCode' => array(
             'className' => 'InventoryCode',
             'foreignKey' => false,
             'conditions' => 'AdminListing.linnworks_code = InventoryCode.linnworks_code'
         )
+           
 
 
     );

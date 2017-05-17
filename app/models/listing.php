@@ -126,7 +126,13 @@ class Listing extends AppModel {
             'className' => 'MainListing',
             'foreignKey' => false,
             'conditions' => 'Listing.linnworks_code = MainListing.linnworks_code'
-        )
+        ),
+        'InventoryCode' => array(
+            'className' => 'InventoryCode',
+            'foreignKey' => false,
+            'conditions' => 'Listing.linnworks_code = InventoryCode.linnworks_code'
+        ) 
+        
                
     );
     

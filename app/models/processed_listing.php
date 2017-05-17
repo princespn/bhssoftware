@@ -28,21 +28,14 @@
  *
  * @package       app.Model
  */
-class ProcessedOrder extends AppModel {
+class ProcessedListing extends AppModel {
 
-    var $name = 'ProcessedOrder';
-    var $validate = array(
-    'order_id' => array(
-            'Unique-1' => array(
-                'rule' => 'notempty',
-                'message' => 'Order id is required'
-            ),
-        ),       
-  
-    );
-    
-    
-    public function importprocessed($filename){
+    var $name = 'ProcessedListing';
+      public $useTable = "processed_listings";
+      //public $recursive = 1;
+      
+      
+      public function importcategory($filename){
         
         $i = null;
         $error = null;
@@ -64,31 +57,31 @@ class ProcessedOrder extends AppModel {
                     $h = explode('.', $head);
                     $data[$h[0]][$h[1]] = (isset($row[$k])) ? $row[$k] : '';
                 } else {
-                    $data['ProcessedOrder'][$head] = (isset($row[$k])) ? $row[$k] : '';
+                    $data['ProcessedListing'][$head] = (isset($row[$k])) ? $row[$k] : '';
                 }
             }
 
             $id = isset($row[0]) ? $row[0] : 0;
             if (!empty($id)) {
 
-                $pcodes = $this->find('all', array('conditions' => array('ProcessedOrder.order_id' => $id)));
-                $lincode = $pcodes[0]['ProcessedOrder']['order_id'];    
+                /*$pcodes = $this->find('all', array('conditions' => array('ProcessedListing.order_number' => $id,'ProcessedListing.order_number' => $id,'ProcessedListing.order_number' => $id,'ProcessedListing.order_number' => $id)));
+                $lincode = $pcodes[0]['ProcessedListing']['order_number'];    
                 if ((!empty($pcodes))) {
-                    $apiConfig = (isset($pcodes[0]['ProcessedOrder']) && is_array($pcodes[0]['ProcessedOrder'])) ? ($pcodes[0]['ProcessedOrder']) : array();
-                    $data['ProcessedOrder'] = (isset($data['ProcessedOrder']) && is_array($data['ProcessedOrder'])) ? ($data['ProcessedOrder']) : array();
-                    $data['ProcessedOrder'] = array_merge($apiConfig, $data['ProcessedOrder']);
+                    $apiConfig = (isset($pcodes[0]['ProcessedListing']) && is_array($pcodes[0]['ProcessedListing'])) ? ($pcodes[0]['ProcessedListing']) : array();
+                    $data['ProcessedListing'] = (isset($data['ProcessedListing']) && is_array($data['ProcessedListing'])) ? ($data['ProcessedListing']) : array();
+                    $data['ProcessedListing'] = array_merge($apiConfig, $data['ProcessedListing']);
                     
-                    if(((!empty($apiConfig['order_id'])) && (!empty($lincode))) && ($apiConfig['order_id'] === $lincode)) {                        
+                    if(((!empty($apiConfig['order_number'])) && (!empty($lincode))) && ($apiConfig['order_number'] === $lincode)) {                        
                         $limit = 'Order Id Already Exist in Database.';
                         $return['errors'][] = __(sprintf("Listing  error on line %d and Order Id $id :$limit.", $i), true);
                         $erritem[] = __(sprintf("Listing  error on line %d and Order Id $id :$limit.", $i), true);
                         $err = implode("\n", $erritem);
-                        $this->saveField('error', $err, array($this->order_id = $i));
+                        $this->saveField('error', $err, array($this->id = $i));
                         }
                     
                 } else {
                     $this->id = $id;
-                }
+                }*/
             } else {
                 $this->create();
             }
@@ -112,7 +105,8 @@ class ProcessedOrder extends AppModel {
         }
         return $return;
         //fclose($handle);
-    }        
-       
+    }
+
+   
 
 }
