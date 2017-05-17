@@ -109,14 +109,14 @@ class MainListingsController extends AppController {
 
                 $conditions = array('MainListing.linnworks_code LIKE' => '%' . $prname . '%', 'MainListing.linnworks_code LIKE' => '%' . $prsku . '%');
                 $this->MainListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'MainListing.error DESC', 'conditions' => $conditions);
             }
             
             if ((!empty($prsku))) {
                 $conditions = array(
                    'OR' => array('MainListing.linnworks_code LIKE' => "%$prsku%", 'MainListing.linnworks_code LIKE' => "%$prsku%"));
                    $this->MainListing->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'MainListing.id', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 100, 'order' => 'MainListing.error DESC', 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
@@ -130,14 +130,14 @@ class MainListingsController extends AppController {
             $filepath = "C:\Users\Administrator\Downloads" . "code_listings.csv";
             $csv->auto($filepath);
             $this->MainListing->recursive = 1;
-            $this->set('code_listings',$this->MainListing->find('all', array('fields' => array('MainListing.linnworks_code','InventoryCode.category','InventoryCode.product_name','MainListing.channel_sku','Listing.web_sku','Listing.web_price_uk','Listing.web_price_dm','MainListing.price_uk','Listing.web_sale_price_uk','Listing.web_sale_price_tesco','Listing.web_sale_price_dm','MainListing.sale_price_uk','Listing.web_price_de','MainListing.price_de','Listing.web_price_fr','MainListing.price_fr','Listing.web_sale_price_de','MainListing.sale_price_de','Listing.web_sale_price_fr','MainListing.sale_price_fr','MainListing.error'),'conditions' => array('MainListing.id' => $checkboxid))));
+            $this->set('code_listings',$this->MainListing->find('all', array('fields' => array('MainListing.linnworks_code','InventoryCode.category','InventoryCode.product_name','MainListing.amazon_sku','Listing.web_sku','Listing.web_price_uk','Listing.web_price_dm','MainListing.price_uk','Listing.web_sale_price_uk','Listing.web_sale_price_tesco','Listing.web_sale_price_dm','MainListing.sale_price_uk','Listing.web_price_de','MainListing.price_de','Listing.web_price_fr','MainListing.price_fr','Listing.web_sale_price_de','MainListing.sale_price_de','Listing.web_sale_price_fr','MainListing.sale_price_fr','MainListing.error'),'conditions' => array('MainListing.id' => $checkboxid))));
             //$this->set('code_listings', $this->MainListing->find('all', array('MainListing.id ASC', 'conditions' => array('MainListing.id' => $checkboxid))));
             $this->layout = null;
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
             $this->MainListing->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'MainListing.id');
+            $this->paginate = array('limit' => 100, 'order' => 'MainListing.error DESC');
             $this->set('code_listings', $this->paginate());
             $this->set(compact('categories'));
         }
@@ -178,7 +178,8 @@ class MainListingsController extends AppController {
             $filepath = "C:\Users\Administrator\Downloads" . "amazon_price_listings.csv";
             $csv->auto($filepath);
             $this->MainListing->recursive = 1;
-            $this->set('code_listings',$this->MainListing->find('list', array('fields' => array('MainListing.linnworks_code','listings.web_sku'), 'joins' => array(array('table' => 'listings', 'type' => 'LEFT','conditions' => array('MainListing.id' => $checkboxid))))));
+            //$this->set('code_listings',$this->MainListing->find('list', array('fields' => array('MainListing.linnworks_code','listings.web_sku'), 'joins' => array(array('table' => 'listings', 'type' => 'LEFT','conditions' => array('MainListing.id' => $checkboxid))))));
+             $this->set('code_listings',$this->MainListing->find('all', array('fields' => array('MainListing.linnworks_code','MainListing.amazon_sku','MainListing.price_uk','MainListing.sale_price_uk','MainListing.sale_price_de','MainListing.price_fr','MainListing.sale_price_fr','MainListing.price_de','InventoryCode.product_name','InventoryCode.category'),'conditions' => array('MainListing.id' => $checkboxid))));
             $this->layout = null;
             $this->autoLayout = false;
             Configure::write('debug', '2');
@@ -246,10 +247,11 @@ class MainListingsController extends AppController {
             
                 $this->MainListing->recursive = 1;
                 $conditions = array('InventoryCode.category LIKE' => '%' . $catname . '%');                
-                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 1000, 'order' => 'MainListing.error DESC', 'conditions' => $conditions);
             
         }
         $this->MainListing->recursive = 1;
+         $this->paginate = array('limit' => 100, 'order' => 'MainListing.error DESC');
         $this->set('code_listings', $this->paginate());
         $this->set(compact('categories'));
     }

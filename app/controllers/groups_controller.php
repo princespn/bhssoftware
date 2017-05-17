@@ -9,7 +9,7 @@ class GroupsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->userModel = 'Group';
-        $this->Auth->allow(array('login', 'logout', 'index', 'edit', 'view'));
+        $this->Auth->allow(array('login', 'logout', 'index', 'view'));
         //$this->Auth->allow('*');  
         $this->Session->activate();
     }

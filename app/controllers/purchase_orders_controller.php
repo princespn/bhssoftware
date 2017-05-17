@@ -132,14 +132,14 @@ class PurchaseOrdersController extends AppController {
 
                 $conditions = array('PurchaseOrder.linnworks_code LIKE' => '%' . $prname . '%', 'PurchaseOrder.category LIKE' => '%' . $prsku . '%');
                 $this->PurchaseOrder->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC', 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('PurchaseOrder.category LIKE' => "%$prsku%", 'PurchaseOrder.linnworks_code LIKE' => "%$prsku%", 'PurchaseOrder.supplier LIKE' => "%$prsku%"));
                $this->PurchaseOrder->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC', 'conditions' => $conditions);
             }
            $this->PurchaseOrder->recursive = 1;
             $this->set('purchase_orders', $this->paginate());
@@ -167,17 +167,64 @@ class PurchaseOrdersController extends AppController {
             $csv = new parseCSV();
             $filepath = "C:\Users\Administrator\Downloads" . "code_purchase_orders.csv";
             $csv->auto($filepath);
-            $this->PurchaseOrder->recursive = 1;
-            $this->set('purchase_orders',$this->PurchaseOrder->find('all', array('fields' => array('PurchaseOrder.linnworks_code','PurchaseOrder.product_name','PurchaseOrder.invoice_value','PurchaseOrder.latest_invoice','PurchaseOrder.category','PurchaseOrder.supplier','PurchaseOrder.invoice_currency','AdminListing.web_sale_price_uk','PurchaseOrder.sale_price_gbp','AdminListing.web_sale_price_de','PurchaseOrder.sale_price_euro','PurchaseOrder.error'),'conditions' => array('PurchaseOrder.id' => $checkboxid))));
+           $this->PurchaseOrder->recursive = 1;
+            $this->set('purchase_orders',$this->PurchaseOrder->find('all', array('fields' => array('PurchaseOrder.linnworks_code','PurchaseOrder.product_name','PurchaseOrder.invoice_value','PurchaseOrder.latest_invoice','PurchaseOrder.category','PurchaseOrder.supplier','PurchaseOrder.invoice_currency','PurchaseOrder.landed_price_gbp','PurchaseOrder.sp1_value_gbp','PurchaseOrder.sp2_value_gbp','PurchaseOrder.sp3_value_gbp','AdminListing.web_sale_price_uk','PurchaseOrder.sale_price_gbp','PurchaseOrder.landed_price_eur','PurchaseOrder.sp1_value_eur','PurchaseOrder.sp2_value_eur','PurchaseOrder.sp3_value_eur','AdminListing.web_sale_price_de','PurchaseOrder.sale_price_euro','PurchaseOrder.error'),'conditions' => array('PurchaseOrder.id' => $checkboxid))));
             //$this->set('purchase_orders', $this->PurchaseOrder->find('all', array('PurchaseOrder.id ASC', 'conditions' => array('PurchaseOrder.id' => $checkboxid))));
             $this->layout = null;
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
             $this->PurchaseOrder->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id');
-            $this->set('purchase_orders', $this->paginate());
-            $this->set(compact('categories','getCost','getsupp'));
+            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC');
+           // $this->set('purchase_orders', $this->paginate());
+            //$this->set(compact('categories','getCost','getsupp'));
+            
+            /* Add Sp1 and Sp2,Sp3 in DB  */
+             $purchase_orders = $this->paginate();            
+            $this->set(compact('purchase_orders','categories','getCost','getsupp'));
+            //print_r($purchase_orders); die();
+            
+                        foreach ($purchase_orders as $purchase_order){
+                            
+                                     foreach ($getCost as $exchange_rate){
+                                        if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')){
+                                        $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                                            break;                                        
+                                        }
+                                       
+                                     }
+                                     foreach ($getCost as $exchange_rate){
+                                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')){
+                                        $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                                            break;                                        
+                                        }
+                                     }
+                                     
+                                     foreach ($getsupp as $getsupps){
+                                         if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')){
+                                             
+                                             $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];
+                                             $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];
+                                             $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];
+                                              break;
+                                                 }                                             
+                                            }
+                                            
+                                        foreach ($getsupp as $getsupps){
+                                      if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')){
+                                             
+                                             $Eursp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];
+                                             $Eursp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];
+                                             $Eursp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];
+                                              break;
+                                                 }
+                                            }
+                                            
+                                                 
+                 $this->PurchaseOrder->updateAll(array('PurchaseOrder.landed_price_gbp' => round($GbpLP, 2),'PurchaseOrder.sp1_value_gbp' =>round($GbpLP*$sp1, 2),'PurchaseOrder.sp2_value_gbp' =>round($GbpLP*$sp2, 2),'PurchaseOrder.sp3_value_gbp' =>round($GbpLP*$sp3, 2),'PurchaseOrder.landed_price_eur' =>round($EurLP, 2),'PurchaseOrder.sp1_value_eur' =>round($EurLP*$Eursp1, 2),'PurchaseOrder.sp2_value_eur' =>round($EurLP*$Eursp2, 2),'PurchaseOrder.sp3_value_eur' =>round($EurLP*$Eursp3, 2)), array('PurchaseOrder.linnworks_code' => $purchase_order['PurchaseOrder']['linnworks_code'], 'PurchaseOrder.id' => $purchase_order['PurchaseOrder']['id']));
+       
+                     }
+                /* End Sp1 and Sp2,Sp3 in DB  */
         }
 
 
@@ -200,14 +247,14 @@ class PurchaseOrdersController extends AppController {
 
                 $conditions = array('PurchaseOrder.linnworks_code LIKE' => '%' . $prname . '%', 'PurchaseOrder.category LIKE' => '%' . $prsku . '%');
                 $this->PurchaseOrder->recursive = 0;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC', 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('PurchaseOrder.category LIKE' => "%$prsku%", 'PurchaseOrder.linnworks_code LIKE' => "%$prsku%", 'PurchaseOrder.supplier LIKE' => "%$prsku%"));
                 $this->PurchaseOrder->recursive = 0;
-                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC', 'conditions' => $conditions);
             }
             $this->PurchaseOrder->recursive = 0;
             $this->set('purchase_orders', $this->paginate());
@@ -221,14 +268,14 @@ class PurchaseOrdersController extends AppController {
             $filepath = "C:\Users\Administrator\Downloads" . "code_purchase_orders.csv";
             $csv->auto($filepath);
             $this->PurchaseOrder->recursive = 0;
-            $this->set('purchase_orders',$this->PurchaseOrder->find('all', array('fields' => array('PurchaseOrder.linnworks_code','PurchaseOrder.product_name','PurchaseOrder.invoice_value','PurchaseOrder.latest_invoice','PurchaseOrder.category','PurchaseOrder.supplier','PurchaseOrder.invoice_currency','AdminListing.web_sale_price_uk','PurchaseOrder.sale_price_gbp','AdminListing.web_sale_price_de','PurchaseOrder.sale_price_euro','PurchaseOrder.error'),'conditions' => array('PurchaseOrder.id' => $checkboxid))));
+               $this->set('purchase_orders',$this->PurchaseOrder->find('all', array('fields' => array('PurchaseOrder.linnworks_code','PurchaseOrder.product_name','PurchaseOrder.invoice_value','PurchaseOrder.latest_invoice','PurchaseOrder.category','PurchaseOrder.supplier','PurchaseOrder.invoice_currency','PurchaseOrder.landed_price_gbp','PurchaseOrder.sp1_value_gbp','PurchaseOrder.sp2_value_gbp','PurchaseOrder.sp3_value_gbp','AdminListing.web_sale_price_uk','PurchaseOrder.sale_price_gbp','PurchaseOrder.landed_price_eur','PurchaseOrder.sp1_value_eur','PurchaseOrder.sp2_value_eur','PurchaseOrder.sp3_value_eur','AdminListing.web_sale_price_de','PurchaseOrder.sale_price_euro','PurchaseOrder.error'),'conditions' => array('PurchaseOrder.id' => $checkboxid))));
             //$this->set('purchase_orders', $this->PurchaseOrder->find('all', array('PurchaseOrder.id ASC', 'conditions' => array('PurchaseOrder.id' => $checkboxid))));
-            $this->layout = null;
+            $this->layout = null;       
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
             $this->PurchaseOrder->recursive = 0;
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id');
+            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC');
             $this->set('purchase_orders', $this->paginate());
             $this->set(compact('categories','getCost'));
         }
@@ -259,15 +306,108 @@ class PurchaseOrdersController extends AppController {
 
             $this->PurchaseOrder->recursive = 1;
             $conditions = array('PurchaseOrder.category LIKE' => '%' . $options . '%');
-            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.id', 'conditions' => $conditions);
+            $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC', 'conditions' => $conditions);
 
         }
         $this->PurchaseOrder->recursive = 1;
-        $this->set('purchase_orders', $this->paginate());
-        $this->set(compact('categories','options','getCost','getsupp'));
+        //$this->set('purchase_orders', $this->paginate());
+        //$this->set(compact('categories','options','getCost','getsupp'));
+        
+            /* Add Sp1 and Sp2,Sp3 in DB  */
+             $purchase_orders = $this->paginate();            
+            $this->set(compact('purchase_orders','categories','getCost','getsupp'));
+            //print_r($purchase_orders); die();
+            
+                        foreach ($purchase_orders as $purchase_order){
+                            
+                                     foreach ($getCost as $exchange_rate){
+                                        if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')){
+                                        $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                                            break;                                        
+                                        }
+                                       
+                                     }
+                                     foreach ($getCost as $exchange_rate){
+                                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')){
+                                        $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                                            break;                                        
+                                        }
+                                     }
+                                     
+                                     foreach ($getsupp as $getsupps){
+                                         if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')){
+                                             
+                                             $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];
+                                             $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];
+                                             $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];
+                                              break;
+                                                 }                                             
+                                            }
+                                            
+                                        foreach ($getsupp as $getsupps){
+                                      if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')){
+                                             
+                                             $Eursp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];
+                                             $Eursp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];
+                                             $Eursp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];
+                                              break;
+                                                 }
+                                            }
+                                            
+                                                 
+                 $this->PurchaseOrder->updateAll(array('PurchaseOrder.landed_price_gbp' => round($GbpLP, 2),'PurchaseOrder.sp1_value_gbp' =>round($GbpLP*$sp1, 2),'PurchaseOrder.sp2_value_gbp' =>round($GbpLP*$sp2, 2),'PurchaseOrder.sp3_value_gbp' =>round($GbpLP*$sp3, 2),'PurchaseOrder.landed_price_eur' =>round($EurLP, 2),'PurchaseOrder.sp1_value_eur' =>round($EurLP*$Eursp1, 2),'PurchaseOrder.sp2_value_eur' =>round($EurLP*$Eursp2, 2),'PurchaseOrder.sp3_value_eur' =>round($EurLP*$Eursp3, 2)), array('PurchaseOrder.linnworks_code' => $purchase_order['PurchaseOrder']['linnworks_code'], 'PurchaseOrder.id' => $purchase_order['PurchaseOrder']['id']));
+       
+                     }
+                /* End Sp1 and Sp2,Sp3 in DB  */
     }
 
 
+    public function update_invoice($invoiceid){
+//print_r($this->data['PurchaseOrder']['invoice_value']);die();
+        $this->set('title', 'Cost Calculator');
+
+        $categories = $this->categname();
+        //$options = urldecode($invoiceid);
+         
+        $this->loadModel('CostSetting');
+        $getCost	=	$this->CostSetting->find('all');
+  
+        $this->loadModel('SupplierMultiplier');
+        $getsupp	=	$this->SupplierMultiplier->find('all');
+
+        if ((empty($invoiceid)) && (empty($this->data))) {
+            $this->Session->setFlash(__('Please select valid ID.', true));
+            $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
+        } 
+
+     
+        if (!empty($this->data)) {
+
+
+            if (!empty($this->data['PurchaseOrder']['invoice_value'])) {  print_r($this->data['PurchaseOrder']['invoice_value']);die();
+               // $this->saveField('invoice_value', $err, array($this->id = $this->data['PurchaseOrder']['id']));
+                $this->PurchaseOrder->updateAll(array('PurchaseOrder.invoice_value' => $this->data['PurchaseOrder']['invoice_value']), array('PurchaseOrder.id' => $this->data['PurchaseOrder']['id']));
+
+                $this->Session->setFlash(__('Update Invoice value successfully', true));
+                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('ERROR!! Please check the fields and try again.', true));
+            }
+        }
+        if (empty($this->data)) {
+            $this->data = $this->PurchaseOrder->read(null, $invoiceid);
+        }
+
+        $this->PurchaseOrder->recursive = 1;
+        $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC');
+        //$this->set('purchase_orders', $this->paginate());
+        $purchase_orders = $this->paginate();            
+        $this->set(compact('purchase_orders','categories','getCost','getsupp'));
+    }
+
+
+
+    
 
     public function importdata() {
 
@@ -387,45 +527,6 @@ class PurchaseOrdersController extends AppController {
         $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
     }
 
-    public function update_invoice($invoiceid = null){
-
-        $this->set('title', 'Cost Calculator');
-
-        $categories = $this->categname();
-        $this->loadModel('CostSetting');
-        $getCost	=	$this->CostSetting->find('all');
-
-        $this->loadModel('AdminListing');
-        $Webprices	=	$this->AdminListing->find('all');
-
-        if (!$invoiceid && empty($this->data)) {
-            $this->Session->setFlash(__('Invalid ID.', true));
-            $this->redirect(array('controller' => 'purchase_orders ', 'action' => 'index'));
-        }
-        if (!empty($this->data)) {
-
-//print_r($this->data['MasterListing']);die();
-            if (!empty($this->data['PurchaseOrder']['invoice_value'])) {
-               // $this->saveField('invoice_value', $err, array($this->id = $this->data['PurchaseOrder']['id']));
-                $this->PurchaseOrder->updateAll(array('PurchaseOrder.invoice_value' => $this->data['PurchaseOrder']['invoice_value']), array('PurchaseOrder.id' => $this->data['PurchaseOrder']['id']));
-
-                $this->Session->setFlash(__('Update Invoice value successfully', true));
-                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('ERROR!! Please check the fields and try again.', true));
-            }
-        }
-        if (empty($this->data)) {
-            $this->data = $this->PurchaseOrder->read(null, $invoiceid);
-        }
-
-        $this->PurchaseOrder->recursive = 1;
-        $this->paginate = array('limit' => 500, 'order' => 'PurchaseOrder.id');
-        $this->set('purchase_orders', $this->paginate());
-        $this->set(compact('categories','invoiceid','getCost','Webprices'));
-    }
-
-
-
+    
 
 }

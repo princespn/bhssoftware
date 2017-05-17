@@ -69,8 +69,8 @@ class MasterListingsController extends AppController {
         $this->loadModel('Shipping');
          $Catname = $this->categname();
 
-        $this->paginate = array('limit' => 3, 'order' => 'Shipping.id');
-        $getshipppings   =	$this->Shipping->find('all',array('fields' => array('Shipping.*'),$this->paginate()));
+       // $this->paginate = array('limit' => 3, 'order' => 'Shipping.category DESC');
+        $getshipppings   =	$this->Shipping->find('all',array('fields' => array('Shipping.*')));
 
         $this->set('title', 'Master listing database.');
         
@@ -81,8 +81,13 @@ class MasterListingsController extends AppController {
         $France_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_fr','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'2')));
         $Germany_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_de','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'3')));
         
-        $this->set(compact('Catname','Amazonuk','getshipppings','France_primes','Germany_primes'));
-
+        //$Ebay_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_de','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'3')));
+        
+       $Cdiscount_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_cdiscount','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'10')));
+       
+       
+        
+   
         if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['MasterListing']['all_item']))) {
             $string = explode(",", trim($this->data['MasterListing']['all_item']));
             $prsku = $string[0];
@@ -91,17 +96,21 @@ class MasterListingsController extends AppController {
 
                 $conditions = array('MasterListing.linnworks_code LIKE' => '%' . $prname . '%', 'MasterListing.linnworks_code LIKE' => '%' . $prsku . '%');
                 $this->MasterListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id', 'conditions' => $conditions);
+                $orders = array('MasterListing.error DESC', 'MasterListing.prime_date DESC');
+                $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => $orders, 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('MasterListing.linnworks_code LIKE' => "%$prsku%", 'MasterListing.linnworks_code LIKE' => "%$prsku%"));
                 $this->MasterListing->recursive = 1;
-                $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id', 'conditions' => $conditions);
+                $orders = array('MasterListing.error DESC', 'MasterListing.prime_date DESC');
+                $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => $orders, 'conditions' => $conditions);
             }
 
             $this->set('code_listings', $this->paginate());
+           $this->set(compact('Catname','Amazonuk','getshipppings','France_primes','Germany_primes','Cdiscount_primes'));
+
 
         }
 
@@ -126,14 +135,36 @@ class MasterListingsController extends AppController {
             Configure::write('debug', '2');
         } else {
             $this->MasterListing->recursive = 1;
-            $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id');
-            $this->set('code_listings', $this->paginate());
+            $orders = array('MasterListing.error DESC', 'MasterListing.prime_date DESC');
+            $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => $orders);
+            
 
         }
+        $this->set('code_listings', $this->paginate());
+             $this->set(compact('Catname','Amazonuk','getshipppings','France_primes','Germany_primes','Cdiscount_primes'));
 
     }
 
-    
+    /*
+     * 
+     * 
+     *  SELECT `MasterListing`.`id`, `MasterListing`.`amazon_sku`, `MasterListing`.`channel_id`, `MasterListing`.`linnworks_code`, 
+     * `MasterListing`.`price_uk`, `MasterListing`.`sale_price_uk`, `MasterListing`.`price_fr`, `MasterListing`.`sale_price_fr`, 
+     * `MasterListing`.`price_de`, `MasterListing`.`sale_price_de`, `MasterListing`.`price_es`, `MasterListing`.`sale_price_es`,
+     *  `MasterListing`.`price_ebay`, `MasterListing`.`sale_price_ebay`, `MasterListing`.`price_cdiscount`, `MasterListing`.`sale_price_cdiscount`,
+     *  `MasterListing`.`prime_date`, `MasterListing`.`error`, `AdminListing`.`id`, `AdminListing`.`web_sku`, `AdminListing`.`linnworks_code`,
+     *  `AdminListing`.`web_price_uk`, `AdminListing`.`web_sale_price_uk`, `AdminListing`.`web_price_fr`, `AdminListing`.`web_sale_price_fr`, 
+     * `AdminListing`.`web_price_de`, `AdminListing`.`web_sale_price_de`, `AdminListing`.`web_price_dm`, `AdminListing`.`web_sale_price_dm`, 
+     * `AdminListing`.`web_price_tesco`, `AdminListing`.`web_sale_price_tesco`, 
+     * `SalesChannel`.`id`, `SalesChannel`.`channel_code`, `SalesChannel`.`channel_name`,
+     *  `InventoryCode`.`id`, `InventoryCode`.`linnworks_code`, `InventoryCode`.`product_name`,
+     *  `InventoryCode`.`category` FROM `master_listings` AS `MasterListing` LEFT JOIN `admin_listings` AS `AdminListing` 
+     * ON (`MasterListing`.`linnworks_code` = `AdminListing`.`linnworks_code`) LEFT JOIN `sales_channels` AS `SalesChannel` 
+     * ON (`MasterListing`.`channel_id` = `SalesChannel`.`id`) LEFT JOIN `inventory_codes` AS `InventoryCode` ON 
+     * (`MasterListing`.`linnworks_code` = `InventoryCode`.`linnworks_code`)  WHERE 1 = 1  GROUP BY `MasterListing`.`linnworks_code` 
+     *  ORDER BY `MasterListing`.`error` DESC, `MasterListing`.`prime_date` DESC  LIMIT 200, 100 
+     * 
+     */
   
     public function index_prices() {
 
@@ -259,33 +290,42 @@ class MasterListingsController extends AppController {
 
         $this->set('title', 'Master listing database.');
         
-        $categories = $this->categname();
+       
+       
+        
+        $this->loadModel('Shipping');
+
+        //$this->paginate = array('limit' => 3, 'order' => 'Shipping.category DESC');
+        $getshipppings   =	$this->Shipping->find('all',array('fields' => array('Shipping.*')));
+
+        $catnaam = urldecode($catn);
+              // print_r(urldecode($catname));die();
+        
+         $Catname = $this->categname();
 
         $Amazonuk   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_uk','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'1')));
         //print_r($Amazonuk);
         $France_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_fr','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'2')));
         $Germany_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_de','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'3')));
         
-        $this->set(compact('Catname','Amazonuk','getshipppings','France_primes','Germany_primes'));
-
+       //$Ebay_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_de','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'3')));
+        
+       $Cdiscount_primes   =	$this->MasterListing->find('all',array('fields' => array('MasterListing.sale_price_cdiscount','MasterListing.linnworks_code','MasterListing.amazon_sku'), 'conditions' => array('MasterListing.channel_id' =>'10')));
+       
        
         
-        $this->loadModel('Shipping');
+        $this->set(compact('Catname','Amazonuk','getshipppings','France_primes','Germany_primes','Cdiscount_primes'));
 
-        $this->paginate = array('limit' => 3, 'order' => 'Shipping.id');
-        $getshipppings   =	$this->Shipping->find('all',array('fields' => array('Shipping.*'),$this->paginate()));
-
-        $catname = urldecode($catn);
-              // print_r(urldecode($catname));die();
           
-        if (empty($catname)) {
+        if (empty($catnaam)) {
             $this->Session->setFlash(__('Please select valid category.', true));
             $this->redirect(array('controller' => 'master_listings', 'action' => 'index'));
         } else {
 
             $this->MasterListing->recursive = 1;
-            $conditions = array('InventoryCode.category LIKE' => '%' . $catname . '%');
-            $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => 'MasterListing.id', 'conditions' => $conditions);
+            $conditions = array('InventoryCode.category LIKE' => '%' . $catnaam . '%');
+            $orders = array('MasterListing.error DESC', 'MasterListing.prime_date DESC');
+            $this->paginate = array('limit' => 100, 'group' => 'MasterListing.linnworks_code','order' => $orders, 'conditions' => $conditions);
            // $this->set(compact('Amazonuk'));
 
         }

@@ -9,7 +9,7 @@ class InventoryCodesController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
          
-        $this->Auth->allow(array('index','linnworkcode'));
+        $this->Auth->allow(array('index','linnworkcode','delete','edit'));
     }
 
      public function index() {
@@ -53,6 +53,50 @@ class InventoryCodesController extends AppController {
     }
 
 
+    public function edit($id = null) {
+
+
+        $this->set('title', 'Edit Linnworks Code Information Data.');
+
+
+        if (!$id && empty($this->data)) {
+            $this->Session->setFlash(__('Invalid ID.', true));
+            $this->redirect(array('controller' => 'inventory_codes ', 'action' => 'index'));
+        }
+        if (!empty($this->data)) {
+
+//print_r($this->data['MasterListing']);die();
+            if ($this->InventoryCode->save($this->data['InventoryCode'])) {
+                $this->Session->setFlash(__('The Linnworks Code save successfully', true));
+                $this->redirect(array('controller' => 'inventory_codes', 'action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('ERROR!! Please check the fields and try again.', true));
+            }
+        }
+        if (empty($this->data)) {
+            $this->data = $this->InventoryCode->read(null, $id);
+        }
+    }
+
+
+    public function delete($id = null) {
+        //print_r($id);die();
+        if (!$id) {
+            $this->Session->setFlash(__('Invalid ID in database.', true));
+            $this->redirect(array('controller' => 'inventory_codes', 'action' => 'index'));
+        } else {
+
+            if ($this->InventoryCode->delete($id)) {
+
+                $this->Session->setFlash(__('The Linnworks Code was deleted successfully.', true));
+                $this->redirect(array('controller' => 'inventory_codes', 'action' => 'index'));
+            }
+        }
+        $this->Session->setFlash(__('ERROR!! The Linnworks Code could not be deleted!', true));
+        $this->redirect(array('controller' => 'inventory_codes', 'action' => 'index'));
+    }
+
+    
 
     public function linnworkcode() {
 

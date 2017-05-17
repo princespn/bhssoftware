@@ -36,7 +36,7 @@ class StocksController extends AppController {
     }
 	//a6c5c1ae-bf72-483b-bbdc-0a37ca3e700a
 	//old-ffc7e454-b0b3-4d67-ad10-23c639a61992
-	//http://www.cricbuzz.com/live-cricket-scores/16874/ind-vs-eng-2nd-odi-england-tour-of-india-2016-17
+	//EntityId-7311b443-cd79-4d68-97fe-18e3873eb84c
 
     public function tokenkey() {
                     $auth_data = array(

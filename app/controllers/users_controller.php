@@ -11,17 +11,17 @@ class UsersController extends AppController {
         // $this->layout = 'defaultm';
         $this->Auth->allow(array('login', 'logout', 'index', 'edit', 'view', 'groups'));
         $this->Auth->userModel = 'User';
-        //$this->Auth->allow('*');
+        //$this->Auth->allow('*');  
         $this->Session->activate();
     }
 
     function login() {
         $this->set('title', 'User login.');
-        $this->layout = 'administrator';
+         $this->layout = 'administrator';
         if (!empty($this->data)) {
             if ($this->Auth->login($this->data)) {
                 $this->Session->setFlash(__('Welcome, ' . $this->Auth->user('username')));
-                $this->redirect(array('controller' => 'main_listings', 'action' => 'index'));
+                $this->redirect(array('controller' => 'english_listings', 'action' => 'index'));
             } else {
                 $this->Session->setFlash('Your username or password was incorrect.');
             }
@@ -34,7 +34,7 @@ class UsersController extends AppController {
     function logout() {
         $this->layout = 'administrator';
         $this->Session->setFlash('You are not authorized to access this area.');
-        $this->Session->destroy();
+        $this->Session->destroy();      
         $this->redirect($this->Auth->logout());
     }
 

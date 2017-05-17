@@ -6,10 +6,11 @@ class ProcessedOrdersController extends AppController {
 
     function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow(array('index', 'tokenkey','getallprocess','runurl','categname','prevweeks','currentweeks'));
+        $this->Auth->allow(array('index', 'tokenkey','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
         $this->Session->activate();
 
     }
+
 
 
 
@@ -69,10 +70,14 @@ class ProcessedOrdersController extends AppController {
         $userkey = $this->tokenkey();
         $some_data = array('token' => $userkey);
 
-        //$from = '2017-12-30T00:01:03';
-       $from = '';
-       // $to =  '2017-02-01T60:60:60';
-         $to = '';
+    
+       
+       //  $from = '2017-03-17T00:00:00'; //min
+         $from = '';   // 2017-04-03 - TO - 2017-04-09
+       // $to =  '2017-03-19T00:60:00'; //max
+       $to = '';
+        
+        //$to = '';
         $datetype = '1';
         $sfield  = '';
         $sterm  = '';
@@ -103,6 +108,8 @@ class ProcessedOrdersController extends AppController {
 
     }
 
+
+    
 
     public function index(){
 
@@ -222,50 +229,66 @@ class ProcessedOrdersController extends AppController {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         $orders = json_decode($result);
-      // print_r($result); die();
+       //print_r($result); die();
         curl_close($ch);
        
             if (!empty($orders)) {
                 foreach ($orders as $order){
-                    $sku = array();
-                    $catname = array();
-                    $pname = array();
-                    $quanty = array();
-                    $stock = array();
-                    $priceunit = array();
+                   $sku = array();
+                   $catname = array();
+                   $pname = array();
+                   $quanty = array();
+                   $stock = array();
+                   $priceunit = array();
 for ($i = 0;$i<=count($order->Items); $i++) {
-    $sku[$i] = $order->Items[$i]->SKU;
-    $catname[$i] = $order->Items[$i]->CategoryName;
+   /*$sku[$i] = $order->Items[$i]->SKU;
+   $catname[$i] = $order->Items[$i]->CategoryName;
     $pname[$i] = $order->Items[$i]->Title;
-    $quanty[$i] = $order->Items[$i]->Quantity;
-    $stock[$i] = $order->Items[$i]->AvailableStock;
-    $priceunit[$i] = $order->Items[$i]->CostIncTax;
-}
+   $quanty[$i] = $order->Items[$i]->Quantity;
+   $stock[$i] = $order->Items[$i]->AvailableStock;
+   $priceunit[$i] = $order->Items[$i]->CostIncTax;
+
     $skuname = implode("  ",$sku);
     $catname = implode("  ",$catname);
     $pname = implode("  ",$pname);
     $quanty = implode("  ",$quanty);
     $stock = implode("  ",$stock);
-    $priceunit = implode("  ",$priceunit);
+    $priceunit = implode("  ",$priceunit);*/
+    $days = strtotime($order->GeneralInfo->ReceivedDate);
 
-                    $days = strtotime($order->GeneralInfo->ReceivedDate);
+    $this_week_sd = date("Y-m-d",$days);
+    
+if((count($order->Items)) > '1'){$ordertitle = $order->Items[$i]->Title."Name-".$i;}else {$ordertitle = $order->Items[$i]->Title;}
+     
+     $this->loadModel('ProcessedListing');
+      
+    $this->ProcessedListing->create();
+   
+    $this->ProcessedListing->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $ordertitle, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
+         
+        
+} 
 
-        $this_week_sd = date("Y-m-d",$days);
-        $this->ProcessedOrder->create();
-        $this->ProcessedOrder->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum, 'product_sku' => $skuname,'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'category' => $catname, 'product_name' => $pname, 'quantity' => $quanty, 'stocks' => $stock, 'price_per_unit' => $priceunit, 'order_date' => $this_week_sd,'order_value' => $order->TotalsInfo->TotalCharge));
-                }
+    $days = strtotime($order->GeneralInfo->ReceivedDate);
 
-            }
-             $this->set(compact('orders','pagination'));
+    $this_week_sd = date("Y-m-d",$days);
+    
+   $ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
+    
+   $this->ProcessedOrder->create();
+   
+   $this->ProcessedOrder->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
+             
+     
 
+}
 
-
+ }
+        $this->set(compact('orders','pagination'));
             
     }
 
- 
-
-    public function currentweeks(){
+ public function currentweeks(){
 
 $previous_week = strtotime("-1 week +1 day");
 
@@ -275,19 +298,21 @@ $end_week = strtotime("next sunday",$start_week);
 $this_week_sd = date("Y-m-d",$start_week);
 $this_week_ed = date("Y-m-d",$end_week);
  
-//echo "Current week range from $this_week_sd to $this_week_ed ";
+ $this->loadModel('ProcessedListing');
 
+ $conditions = array('ProcessedOrder.order_date <=' => $this_week_ed,
+     'ProcessedOrder.order_date >=' => $this_week_sd,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
 
-
-    $conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-      
-
-        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed));
-        $dataweek1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => 'subsource','conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource')));
-        // print_r($dataweek1);die();
+    //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
+      $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+        $dataweek1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+        //print_r($dataweek1);die();
        return $dataweek1;
 
     }
+    
+    
 
     public function prevweeks(){
 
@@ -300,46 +325,321 @@ $this_week_ed = date("Y-m-d",$end_week);
         $end_week = date("Y-m-d",$send_week);
 
        // echo $start_week.' '.$end_week ;
+        
+        /*
+         $present_week = strtotime("-2 week +1 day");
+
+$second_week = strtotime("last monday midnight",$present_week);
+$send_week = strtotime("next sunday",$second_week);
+
+$start_week = date("Y-m-d",$second_week);
+$end_week = date("Y-m-d",$send_week);       
+         
 
 
+$conditions = array('ProcessedOrder.order_date <= ' => $end_week,
+      'ProcessedOrder.order_date >= ' => $start_week,'ProcessedOrder.order_value  !='=>'0');*/
 
+$conditions = array('ProcessedOrder.order_date <=' => $end_week,
+     'ProcessedOrder.order_date >=' => $start_week,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
 
-$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
+ $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+//$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
        
         //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week));
-        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => 'subsource','conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource')));
-      // print_r($dataprevweeks);die();     
+        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+      //print_r($dataprevweeks);die();     
         return $dataprevweeks;
 
     }
 
 
+    
 
 
-    public function runurl() {
-
-        $this->set('title', 'Progress Report weekly Inventory Database.');        
-        $currents = $this->currentweeks();
-        $previousweeks = $this->prevweeks();
-
-                   $this->set('title', 'Progress Repots weekly Inventory Database.');        
-        $currents = $this->currentweeks();
-        $previousweeks = $this->prevweeks();
+    public function last_weekly() {   
         
- $present_year_week = strtotime("-53 week +1 day");
-$last_year_week = strtotime("last monday midnight",$present_year_week);
-$end_year_week = strtotime("next sunday",$last_year_week);
+$present_year_week = strtotime("-53 week +1 day");
+
+$last_year_week = strtotime("last sunday midnight",$present_year_week);
+$end_year_week = strtotime("next saturday",$last_year_week);
 
 $main_last_week = date("Y-m-d",$last_year_week);
 $main_end_week = date("Y-m-d",$end_year_week);
 
 
-        $conditions = array('ProcessedOrder.order_date' =>array('Between',$main_last_week,$main_end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-        $datalastweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => 'subsource','conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource')));
-       //print_r($dataprevweeks);die();   
-        $this->set(compact('datalastweeks','currents','previousweeks'));
+ $conditions = array('ProcessedOrder.order_date <= ' => $main_end_week,
+      'ProcessedOrder.order_date >= ' => $main_last_week,'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+  
+ 
+ $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+     $lastweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+       //print_r($datalastweeks);die(); 
+     return $lastweeks;
+      
 
     }
 
+    
+    
+    
+    public function channel_weekly() {
+
+        $this->set('title', 'Progress Report weekly Inventory Database.');        
+        $currents = $this->currentweeks();
+        $previousweeks = $this->prevweeks();
+        $datalastweeks = $this->last_weekly();
+
+     
+        
+ $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+   
+ $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+
+        $savealldataweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+       //print_r($savealldataweeks);die();   
+        $this->set(compact('savealldataweeks','datalastweeks','currents','previousweeks'));
+
+    }
+    
+    
+    /* Add monthly  */
+    
+    
+    
+    
+    public function currentmonths(){
+        
+        
+ $this_week_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+$this_week_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+        
+    /*    $start_week = strtotime("first day of last month");
+        //$end_week = strtotime("next month",$start_week);
+        $end_week = strtotime("last day of last month");
+
+
+$this_week_sd = date("Y-m-d",$start_week);
+$this_week_ed = date("Y-m-d",$end_week);
+
+$previous_week = strtotime("-1 month +1 day");
+
+$start_week = strtotime("last monday midnight",$previous_week);
+$end_week = strtotime("next month",$start_week);
+
+$this_week_sd = date("Y-m-d",$start_week);
+$this_week_ed = date("Y-m-d",$end_week);
+ 
+//echo "Current week range from $this_week_sd to $this_week_ed ";
+
+$start_week = strtotime("first day of last month");
+$end_week = strtotime("next month",$start_week);
+
+$this_week_sd = date("Y-m-d",$start_week);
+$this_week_ed = date("Y-m-d",$end_week);*/
+
+
+
+
+
+$conditions = array('ProcessedOrder.order_date <= ' => $this_week_ed,
+      'ProcessedOrder.order_date >= ' => $this_week_sd,'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+  
+
+    //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
+       $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed));
+        $dataweek1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+        //print_r($dataweek1);die();
+       return $dataweek1;
+
+    }
+    
+
+    public function prevmonths(){
+        
+        
+        $start_week = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
+        $end_week =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+        
+          /*$start_week = strtotime("first day of last month");        
+        $present_week = strtotime("-1 month",$start_week);
+        $send_week = strtotime("next month",$present_week);
+        $day_week = strtotime("-1 day",$send_week);
+
+        $start_week = date("Y-m-d",$present_week);
+        $end_week = date("Y-m-d",$day_week);
+
+
+
+       $present_week = strtotime("-2 month -1 day");
+
+        //$second_week = strtotime("last monday midnight",$present_week);
+        $send_week = strtotime("next month",$present_week);
+
+        $start_week = date("Y-m-d",$present_week);
+        $end_week = date("Y-m-d",$send_week);
+
+       // echo $start_week.' '.$end_week ;
+        
+$present_week = strtotime("-1 month",$start_week);
+$send_week = strtotime("next month",$present_week);
+
+$start_week = date("Y-m-d",$present_week);
+$end_week = date("Y-m-d",$send_week);*/
+
+
+
+
+$conditions = array('ProcessedOrder.order_date <= ' => $end_week,
+      'ProcessedOrder.order_date >= ' => $start_week,'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+  
+
+$groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+//$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
+       
+        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week));
+        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+      //print_r($dataprevweeks);die();     
+        return $dataprevweeks;
+
+    }
+    
+    
+     public function last_monthly() {
+
+              
+        $main_last_week = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
+        $main_end_week = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+        
+         /*$present_year_week = strtotime("first day of last Year last month");
+        //$end_year_week = strtotime("next month",$present_year_week);
+        $end_year_week = strtotime("last day of last Year last month");
+
+        $main_last_week = date("Y-m-d",$present_year_week);
+        $main_end_week = date("Y-m-d",$end_year_week);
+
+        
+       $present_year_week = strtotime("-13 month -1 day");
+
+        //$last_year_week = strtotime("last monday midnight",$present_year_week);
+        $end_year_week = strtotime("next month",$present_year_week);
+
+        $main_last_week = date("Y-m-d",$present_year_week);
+        $main_end_week = date("Y-m-d",$end_year_week);
+        
+$present_year_week = strtotime("first day of last Year last month");
+$end_year_week = strtotime("next month",$present_year_week);
+
+$main_last_week = date("Y-m-d",$present_year_week);
+$main_end_week = date("Y-m-d",$end_year_week);*/
+
+        
+
+ $conditions = array('ProcessedOrder.order_date <= ' => $main_end_week,
+      'ProcessedOrder.order_date >= ' => $main_last_week,'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+ 
+ $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+
+        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$main_last_week,$main_end_week));
+        $lastmonths =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+       //print_r($dataprevweeks);die();   
+        return $lastmonths;
+
+    }
+    
+    
+        public function channel_monthly() {
+
+        $this->set('title', 'Progress Report monthly Inventory Database.'); 
+        
+        $currentmonths = $this->currentmonths();
+        $previousmonths = $this->prevmonths();
+        $datalastmonths = $this->last_monthly();
+        
+        $main_last_week = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
+        $main_end_week = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+        
+ 
+
+        
+
+ $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+ 
+ $groupby = array(('ProcessedOrder.plateform'),
+         'AND'=> 'ProcessedOrder.subsource');
+
+        $savealldatas =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+       //print_r($dataprevweeks);die();   
+        $this->set(compact('savealldatas','datalastmonths','currentmonths','previousmonths'));
+
+    }
+    
+
+/*
+ * Import CSV Processed Orders
+ * 
+ * 
+ * 
+ */
+
+public function importprocessed(){    
+    
+    
+    $this->set('title', 'Processed Orders Import CSV in Database system.');
+
+        if (!empty($this->data)) {
+            $filename = $this->data['ProcessedOrder']['file']['name'];
+            $fileExt = explode(".", $filename);
+            $fileExt2 = end($fileExt);
+            //print_r($this->data['MasterListing']['file']['tmp_name']); die();
+
+            if ($fileExt2 == 'csv') {
+                if (move_uploaded_file($this->data['ProcessedOrder']['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' . $this->data['ProcessedOrder']['file']['name']))
+                    // $messages = $this->ProcessedOrder->importprocessed($filename);
+                    $messages = $this->ProcessedOrder->importprocessed($filename);
+                $this->Session->setFlash(__('Processed Orders data Imports successfully.', true));
+
+                if (!empty($messages)) {
+                    $this->set('anything', $messages);
+                    Configure::write('debug', '2');
+                }
+            } else {
+
+                $this->Session->setFlash(__('File format not supported,Please upload .CSV file format only.', true));
+            }
+        } else {
+            //$filename = 'Product Code.csv';
+            //$messages = Product Code($filename);
+        }  
+    
+    
 }
 
+}
+   
+/* SELECT * FROM `processed_orders` WHERE `order_date` >= '2016-02-15' AND `order_date` <= '2016-02-21'
+ * 
+ * SELECT sum(order_value) AS ordervalues FROM `processed_orders` WHERE `order_date` >= '2017-04-01' AND `order_date` <= '2017-04-30' GROUP BY `subsource` ='http://www.smartparcelbox.com';
+ * 
+ * SELECT SUM( order_value ) AS ordervalues
+FROM  `processed_orders` 
+WHERE  `order_date` >=  '2017-04-01'
+AND  `order_date` <=  '2017-04-30'
+GROUP BY  `subsource` =  'http://www.homescapesonline.com'
+AND  `plateform` =  'MAGENTO'
+AND  `currency` =  'GBP'
+LIMIT 0 , 30
+ */
