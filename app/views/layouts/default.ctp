@@ -5,16 +5,16 @@
 <meta name=viewport content="width=device-width, initial-scale=1">
 <?php echo $this->Html->meta('favicon.ico','/img/favicon.ico',array('type' => 'icon'));?> 
 <title><?php echo $title; ?></title>
-<?php echo $this->Html->css(array('bootstrap.min.css','dashboard.css')); ?>
-<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-<?php echo $this->Html->script(array('responsive-tabs.js','RGraph.bar.js','RGraph.common.core.js','RGraph.common.key.js')); ?>
-<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+<link rel="Stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/start/jquery-ui.css"/>
 
+<?php echo $this->Html->css(array('bootstrap.min.css','dashboard.css')); ?>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<?php echo $this->Html->script(array('responsive-tabs.js','RGraph.bar.js','RGraph.common.core.js','RGraph.common.key.js','RGraph.line.js','RGraph.pie.js','RGraph.common.effects.js','RGraph.common.dynamic.js','RGraph.common.tooltips.js')); ?>
 <script type="text/javascript">
       $(document).ready(function(){//alert('fsdfds');
 		$('ul.nav.nav-tabs a').click(function(e){//alert('fdsf');
@@ -26,7 +26,7 @@
 });
 </script>
 </head>
-<body onload=work();>
+<body>
 <?php echo $this->element('admin/main_menu'); ?>
 <div class="container-fluid">
 <?php echo $content_for_layout; ?>
@@ -87,8 +87,33 @@ $(document).ready(function(){
     
 });
 </script>
+<script type="text/javascript">
+$.noConflict();
+   $(document).ready( function() {
+            $('.checkbox1').change(function () {
+                if ($(this).is(":checked")) {
+                    $('div.btnClick').show();
+                }
+                else {
+                    var isChecked = false;
+                    $('.checkbox1').each(function () {
+                        if ($(this).is(":checked")) {
+                             $('div.btnClick').show();
+                            isChecked = true;
+                        }
+                    });
+                    if (!isChecked) {
+                        $('div.btnClick').hide();
+                    }
+                }
+ 
+ 
+            })
+        });
+</script>
 <script>
 $(document).ready(function(){
+
 	// hide #back-top first
 	$("#back-top").hide();
 	
