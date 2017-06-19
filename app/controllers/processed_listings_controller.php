@@ -8,7 +8,7 @@ class ProcessedListingsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();   
       
-        $this->Auth->allow(array('index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
+        $this->Auth->allow(array('selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
          $this->Session->activate();
 
     }
@@ -729,7 +729,7 @@ $groupby = array(('ProcessedListing.product_sku'),
             } else if(!empty($productname)){ 
        $conditions = array('ProcessedListing.product_sku'=> $productname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
         } else {
-       $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'','ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
+       $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
         }
           
   
@@ -992,7 +992,7 @@ $groupby = array(('ProcessedListing.product_sku'),
             } else if(!empty($productskuname)){                 
             $conditions = array('ProcessedListing.product_sku'=> $productskuname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.product_sku !='=>'');
             } else {
-                    $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.product_sku !='=>'');
+                    $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.plateform !='=>'','ProcessedListing.product_sku !='=>'');
             }
      
     $groupby = array(('ProcessedListing.plateform'),
@@ -1053,6 +1053,224 @@ public function importcategory(){
     
     
 }
+
+     public function get_months($date1, $date2) { 
+						$time1  = strtotime($date1); 
+						$time2  = strtotime($date2); 
+						$my     = date('Y-m-d', $time2); 
+
+						$months = array(date('Y-m-d', $time1)); 
+
+						while($time1 < $time2) { 
+						$time1 = strtotime(date('Y-m-d', $time1).' +1 month'); 
+						if(date('Y-m-d', $time1) != $my && ($time1 < $time2)) 
+						$months[] = date('Y-m-d', $time1); 
+						} 
+
+						$months[] = date('Y-m-d', $time2); 
+						return $months; 
+                } 
+				
+				
+
+           
+
+          public function selection_categories(){
+
+                $this->set('title', 'Number of Processed Orders in Selected Periods.');
+               
+                         
+                 
+                
+                if ((!empty($this->data['ProcessedListing']['date_from'])) && (!empty($_POST['submit'])) && (!empty($this->data['ProcessedListing']['date_to']))) {
+                 $first_date =  $this->data['ProcessedListing']['date_from'];
+                  $next_date =  $this->data['ProcessedListing']['date_to']; 
+                  } else{
+                      
+                            
+                    $first_date = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+                    $next_date = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+                      
+                  }
+				 
+               
+			     
+                  
+                $month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
+                  
+                $query_date = $this->get_months($first_date, $next_date);
+                   
+                $firstdate = array();  $lastdate = array();
+              
+                foreach($query_date as $firstandlast){  
+				
+                $firstdate[] =  date('Y-m-01', strtotime($firstandlast));                
+                $lastdate[] =  date('Y-m-t', strtotime($firstandlast)); 
+				
+                }
+                
+					$group = array(('ProcessedListing.cat_name'),
+						'AND'=> 'ProcessedListing.currency');
+						
+						
+					$groupby = array(('ProcessedListing.plateform'),
+						'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+				  
+                  if((!empty($month_interval)) && (($month_interval=='2') || ($month_interval=='3') || ($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$cond1 = array('ProcessedListing.order_date <= ' => $lastdate[1],
+                    'ProcessedListing.order_date >= ' => $firstdate[1],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall1 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond1,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+
+					                     
+                    $conditions1 = array('ProcessedListing.order_date <= ' => $lastdate[1],
+                    'ProcessedListing.order_date >= ' => $firstdate[1],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates1 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions1,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+  
+                    $this->set(compact('countselectdates1','Catsaveall1'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='3') || ($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$cond2 = array('ProcessedListing.order_date <= ' => $lastdate[2],
+                    'ProcessedListing.order_date >= ' => $firstdate[2],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall2 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond2,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+
+					                     
+                    $conditions2 = array('ProcessedListing.order_date <= ' => $lastdate[2],
+                    'ProcessedListing.order_date >= ' => $firstdate[2],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates2 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions2,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates2','Catsaveall2'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$cond3 = array('ProcessedListing.order_date <= ' => $lastdate[3],
+                    'ProcessedListing.order_date >= ' => $firstdate[3],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall3 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond3,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions3 = array('ProcessedListing.order_date <= ' => $lastdate[3],
+                    'ProcessedListing.order_date >= ' => $firstdate[3],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates3 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions3,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates3','Catsaveall3'));
+					}
+				
+				if((!empty($month_interval)) && (($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$cond4 = array('ProcessedListing.order_date <= ' => $lastdate[4],
+                    'ProcessedListing.order_date >= ' => $firstdate[4],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall4 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond4,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions4 = array('ProcessedListing.order_date <= ' => $lastdate[4],
+                    'ProcessedListing.order_date >= ' => $firstdate[4],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates4 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions4,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates4','Catsaveall4'));
+					}
+				
+				if((!empty($month_interval)) && (($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+  					$cond5 = array('ProcessedListing.order_date <= ' => $lastdate[5],
+                    'ProcessedListing.order_date >= ' => $firstdate[5],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall5 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond5,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions5 = array('ProcessedListing.order_date <= ' => $lastdate[5],
+                    'ProcessedListing.order_date >= ' => $firstdate[5],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates5 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions5,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates5','Catsaveall5'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$cond6 = array('ProcessedListing.order_date <= ' => $lastdate[6],
+                    'ProcessedListing.order_date >= ' => $firstdate[6],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall6 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond6,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions6 = array('ProcessedListing.order_date <= ' => $lastdate[6],
+                    'ProcessedListing.order_date >= ' => $firstdate[6],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates6 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions6,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates6','Catsaveall6'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$cond7 = array('ProcessedListing.order_date <= ' => $lastdate[7],
+                    'ProcessedListing.order_date >= ' => $firstdate[7],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall7 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond7,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions7 = array('ProcessedListing.order_date <= ' => $lastdate[7],
+                    'ProcessedListing.order_date >= ' => $firstdate[7],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates7 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions7,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates7','Catsaveall7'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$cond8 = array('ProcessedListing.order_date <= ' => $lastdate[8],
+                    'ProcessedListing.order_date >= ' => $firstdate[8],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall8 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond8,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions8 = array('ProcessedListing.order_date <= ' => $lastdate[8],
+                    'ProcessedListing.order_date >= ' => $firstdate[8],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates8 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions8,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates8','Catsaveall8'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+				           
+					$cond9 = array('ProcessedListing.order_date <= ' => $lastdate[9],
+                    'ProcessedListing.order_date >= ' => $firstdate[9],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall9 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond9,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions9 = array('ProcessedListing.order_date <= ' => $lastdate[9],
+                    'ProcessedListing.order_date >= ' => $firstdate[9],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates9 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions9,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates9','Catsaveall9'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$cond10 = array('ProcessedListing.order_date <= ' => $lastdate[10],
+                    'ProcessedListing.order_date >= ' => $firstdate[10],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall10 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond10,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions10 = array('ProcessedListing.order_date <= ' => $lastdate[10],
+                    'ProcessedListing.order_date >= ' => $firstdate[10],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates10 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions10,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates10','Catsaveall10'));
+					}
+					if((!empty($month_interval)) && ($month_interval=='12')){ 
+                  
+					$cond3 = array('ProcessedListing.order_date <= ' => $lastdate[3],
+                    'ProcessedListing.order_date >= ' => $firstdate[3],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall3 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond3,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+					                     
+                    $conditions3 = array('ProcessedListing.order_date <= ' => $lastdate[3],
+                    'ProcessedListing.order_date >= ' => $firstdate[3],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates3 =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions3,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+   
+                    $this->set(compact('countselectdates3','Catsaveall3'));
+					}
+										                   
+                    $cond = array('ProcessedListing.order_date <= ' => $lastdate[0],
+                    'ProcessedListing.order_date >= ' => $firstdate[0],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $Catsaveall =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $group,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.currency DESC')));
+
+					                     
+                    $condited = array('ProcessedListing.order_date <= ' => $lastdate[0],
+                    'ProcessedListing.order_date >= ' => $firstdate[0],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdated =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $condited,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
+					
+					$conditions = array('ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.plateform ASC')));
+   
+   
+	 //print_r($countselectdates1);die();
+                    $this->set(compact('Catsaveall','countselectdated','countselectdates','month_interval'));  
+                            
+
+		  }
      
     
 }

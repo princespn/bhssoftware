@@ -251,7 +251,6 @@ class MainListingsController extends AppController {
             
         }
         $this->MainListing->recursive = 1;
-         $this->paginate = array('limit' => 100, 'order' => 'MainListing.error DESC');
         $this->set('code_listings', $this->paginate());
         $this->set(compact('categories'));
     }

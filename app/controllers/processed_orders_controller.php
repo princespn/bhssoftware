@@ -6,7 +6,7 @@ class ProcessedOrdersController extends AppController {
 
     function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow(array('index', 'tokenkey','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
+        $this->Auth->allow(array('index', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
         $this->Session->activate();
 
     }
@@ -72,16 +72,17 @@ class ProcessedOrdersController extends AppController {
 
     
        
-       //  $from = '2017-03-17T00:00:00'; //min
-         $from = '';   // 2017-04-03 - TO - 2017-04-09
-       // $to =  '2017-03-19T00:60:00'; //max
-       $to = '';
+        $from = '2016-04-02T00:00:00'; //min
+         // $from = '';   // 2017-04-03 - TO - 2017-04-09
+        $to =  '2016-06-17T00:60:00'; //max
+        //$to = '';
         
         //$to = '';
         $datetype = '1';
         $sfield  = '';
         $sterm  = '';
         $limit = '50';
+		
         //$pagenum = isset($_GET['page']);
        //$pagenum =  '5'; //1482,74070
         // for process orders
@@ -101,7 +102,7 @@ class ProcessedOrdersController extends AppController {
         $result = curl_exec($ch);
         $porders = json_decode($result);
        // print_r($porders); die();
-      curl_close($ch);
+          curl_close($ch);
        if(!empty($porders)){return $porders ;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
 
         $this->set(compact('porders'));
@@ -344,12 +345,12 @@ $conditions = array('ProcessedOrder.order_date <=' => $end_week,
      'ProcessedOrder.order_date >=' => $start_week,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
 
  $groupby = array(('ProcessedOrder.plateform'),
-         'AND'=> 'ProcessedOrder.subsource');
+         'AND'=> 'ProcessedOrder.subsource','ProcessedOrder.currency');
 
 //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
        
         //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week));
-        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.currency','ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
       //print_r($dataprevweeks);die();     
         return $dataprevweeks;
 
@@ -588,48 +589,215 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
     }
     
 
-/*
- * Import CSV Processed Orders
- * 
- * 
- * 
- */
+    /*
+     * Import CSV Processed Orders
+     * 
+     * 
+     * 
+     */
 
-public function importprocessed(){    
-    
-    
-    $this->set('title', 'Processed Orders Import CSV in Database system.');
+            public function importprocessed(){    
 
-        if (!empty($this->data)) {
-            $filename = $this->data['ProcessedOrder']['file']['name'];
-            $fileExt = explode(".", $filename);
-            $fileExt2 = end($fileExt);
-            //print_r($this->data['MasterListing']['file']['tmp_name']); die();
 
-            if ($fileExt2 == 'csv') {
+            $this->set('title', 'Processed Orders Import CSV in Database system.');
+
+                if (!empty($this->data)) {
+                $filename = $this->data['ProcessedOrder']['file']['name'];
+                $fileExt = explode(".", $filename);
+                $fileExt2 = end($fileExt);
+                //print_r($this->data['MasterListing']['file']['tmp_name']); die();
+
+                if ($fileExt2 == 'csv') {
                 if (move_uploaded_file($this->data['ProcessedOrder']['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . '/app/webroot/files/' . $this->data['ProcessedOrder']['file']['name']))
-                    // $messages = $this->ProcessedOrder->importprocessed($filename);
-                    $messages = $this->ProcessedOrder->importprocessed($filename);
+                // $messages = $this->ProcessedOrder->importprocessed($filename);
+                $messages = $this->ProcessedOrder->importprocessed($filename);
                 $this->Session->setFlash(__('Processed Orders data Imports successfully.', true));
 
                 if (!empty($messages)) {
-                    $this->set('anything', $messages);
-                    Configure::write('debug', '2');
+                $this->set('anything', $messages);
+                Configure::write('debug', '2');
                 }
-            } else {
+                } else {
 
                 $this->Session->setFlash(__('File format not supported,Please upload .CSV file format only.', true));
-            }
-        } else {
-            //$filename = 'Product Code.csv';
-            //$messages = Product Code($filename);
-        }  
-    
-    
-}
+                }
+                } else {
+                //$filename = 'Product Code.csv';
+                //$messages = Product Code($filename);
+                }  
 
-}
+
+            }
+
+
+
+            public function counselection_periods(){
+                 
+           
+                  $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                $groupby = array(('ProcessedOrder.plateform'),
+                'AND'=> 'ProcessedOrder.subsource');
+
+                $countselectdates =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.currency','ProcessedOrder.plateform','ProcessedOrder.subsource'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+               
+              return $countselectdates;
+
+            }
+
+                public function get_months($date1, $date2) { 
+                $time1  = strtotime($date1); 
+                $time2  = strtotime($date2); 
+                $my     = date('Y-m-d', $time2); 
+
+                $months = array(date('Y-m-d', $time1)); 
+
+                while($time1 < $time2) { 
+                $time1 = strtotime(date('Y-m-d', $time1).' +1 month'); 
+                if(date('Y-m-d', $time1) != $my && ($time1 < $time2)) 
+                $months[] = date('Y-m-d', $time1); 
+                } 
+
+                $months[] = date('Y-m-d', $time2); 
+                return $months; 
+                }  
+
+
+              public function selection_periods(){
+
+                $this->set('title', 'Number of Processed Orders in Selected Periods.');
+               
+                 $saveplatformdatas = $this->counselection_periods();                
+                 
+                
+                if ((!empty($this->data['ProcessedOrder']['date_from'])) && (!empty($_POST['submit'])) && (!empty($this->data['ProcessedOrder']['date_to']))) {
+                 $first_date =  $this->data['ProcessedOrder']['date_from'];
+                  $next_date =  $this->data['ProcessedOrder']['date_to']; 
+                  } else{
+                      
+                            
+                    $first_date = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+                    $next_date = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+                      
+                  }
+               
+                  
+                  $month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
+                  
+                   $query_date = $this->get_months($first_date, $next_date);
+                   
+                   $firstdate = array();  $lastdate = array();
+              
+                foreach($query_date as $firstandlast){
+              
+                $firstdate[] =  date('Y-m-01', strtotime($firstandlast));
+                
+                $lastdate[] =  date('Y-m-t', strtotime($firstandlast));           
+                
+                }
+                
+				
+                           
+                  $groupby = array(('ProcessedOrder.plateform'),'AND'=> 'ProcessedOrder.subsource');
+				  
+                  if((!empty($month_interval)) && (($month_interval=='2') || ($month_interval=='3') || ($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+                    $conditions = array('ProcessedOrder.order_date <= ' => $lastdate[0],
+                    'ProcessedOrder.order_date >= ' => $firstdate[0],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+
+                    $conditions1 = array('ProcessedOrder.order_date <= ' => $lastdate[1],
+                    'ProcessedOrder.order_date >= ' => $firstdate[1],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+
+                    $countselectdates1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions1,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+
+                    $this->set(compact('saveplatformdatas','countselectdates','countselectdates1','month_interval'));
+					}
+					if((!empty($month_interval)) && (($month_interval=='3') || ($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$conditions2 = array('ProcessedOrder.order_date <= ' => $lastdate[2],
+                    'ProcessedOrder.order_date >= ' => $firstdate[2],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates2 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions2,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates2'));
+                    }
+					if((!empty($month_interval)) && (($month_interval=='4') || ($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$conditions3 = array('ProcessedOrder.order_date <= ' => $lastdate[3],
+                    'ProcessedOrder.order_date >= ' => $firstdate[3],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates3 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions3,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+					$this->set(compact('countselectdates3'));
+                    }
+				
+				if((!empty($month_interval)) && (($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                
+					$conditions4 = array('ProcessedOrder.order_date <= ' => $lastdate[4],
+                    'ProcessedOrder.order_date >= ' => $firstdate[4],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates4 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions4,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates4'));
+                    }
+				
+				if((!empty($month_interval)) && (($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+  					$conditions5 = array('ProcessedOrder.order_date <= ' => $lastdate[5],
+                    'ProcessedOrder.order_date >= ' => $firstdate[5],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates5 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions5,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+					$this->set(compact('countselectdates5'));
+                    }
+					if((!empty($month_interval)) && (($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$conditions6 = array('ProcessedOrder.order_date <= ' => $lastdate[6],
+                    'ProcessedOrder.order_date >= ' => $firstdate[6],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates6 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions6,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+					$this->set(compact('countselectdates6'));
+					
+                    }
+					if((!empty($month_interval)) && (($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$conditions7 = array('ProcessedOrder.order_date <= ' => $lastdate[7],
+                    'ProcessedOrder.order_date >= ' => $firstdate[7],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates7 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions7,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates7'));
+                    }
+					if((!empty($month_interval)) && (($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$conditions8 = array('ProcessedOrder.order_date <= ' => $lastdate[8],
+                    'ProcessedOrder.order_date >= ' => $firstdate[8],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates8 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions8,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates8'));
+                    }
+					if((!empty($month_interval)) && (($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))){ 
+				           
+					$conditions9 = array('ProcessedOrder.order_date <= ' => $lastdate[9],
+                    'ProcessedOrder.order_date >= ' => $firstdate[9],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates9 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions9,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates9'));
+                    }
+					if((!empty($month_interval)) && (($month_interval=='11') || ($month_interval=='12'))){ 
+                  
+					$conditions10 = array('ProcessedOrder.order_date <= ' => $lastdate[10],
+                    'ProcessedOrder.order_date >= ' => $firstdate[10],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates10 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions10,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates10'));
+                    }
+					if((!empty($month_interval)) && ($month_interval=='12')){ 
+                  
+					$conditions11 = array('ProcessedOrder.order_date <= ' => $lastdate[11],
+                    'ProcessedOrder.order_date >= ' => $firstdate[11],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates11 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions11,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('countselectdates11'));
+                    }
+
+					else{                        
+                     $conditions = array('ProcessedOrder.order_date <= ' => $lastdate[0],
+                    'ProcessedOrder.order_date >= ' => $firstdate[0],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+                    $countselectdates =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
    
+                    $this->set(compact('saveplatformdatas','countselectdates','month_interval'));  
+                    }              
+
+                
+                
+
+            }          
+             
 /* SELECT * FROM `processed_orders` WHERE `order_date` >= '2016-02-15' AND `order_date` <= '2016-02-21'
  * 
  * SELECT sum(order_value) AS ordervalues FROM `processed_orders` WHERE `order_date` >= '2017-04-01' AND `order_date` <= '2017-04-30' GROUP BY `subsource` ='http://www.smartparcelbox.com';
@@ -643,3 +811,5 @@ AND  `plateform` =  'MAGENTO'
 AND  `currency` =  'GBP'
 LIMIT 0 , 30
  */
+
+}

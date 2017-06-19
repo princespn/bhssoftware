@@ -362,52 +362,6 @@ class PurchaseOrdersController extends AppController {
     }
 
 
-    public function update_invoice($invoiceid){
-//print_r($this->data['PurchaseOrder']['invoice_value']);die();
-        $this->set('title', 'Cost Calculator');
-
-        $categories = $this->categname();
-        //$options = urldecode($invoiceid);
-         
-        $this->loadModel('CostSetting');
-        $getCost	=	$this->CostSetting->find('all');
-  
-        $this->loadModel('SupplierMultiplier');
-        $getsupp	=	$this->SupplierMultiplier->find('all');
-
-        if ((empty($invoiceid)) && (empty($this->data))) {
-            $this->Session->setFlash(__('Please select valid ID.', true));
-            $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
-        } 
-
-     
-        if (!empty($this->data)) {
-
-
-            if (!empty($this->data['PurchaseOrder']['invoice_value'])) {  print_r($this->data['PurchaseOrder']['invoice_value']);die();
-               // $this->saveField('invoice_value', $err, array($this->id = $this->data['PurchaseOrder']['id']));
-                $this->PurchaseOrder->updateAll(array('PurchaseOrder.invoice_value' => $this->data['PurchaseOrder']['invoice_value']), array('PurchaseOrder.id' => $this->data['PurchaseOrder']['id']));
-
-                $this->Session->setFlash(__('Update Invoice value successfully', true));
-                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('ERROR!! Please check the fields and try again.', true));
-            }
-        }
-        if (empty($this->data)) {
-            $this->data = $this->PurchaseOrder->read(null, $invoiceid);
-        }
-
-        $this->PurchaseOrder->recursive = 1;
-        $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC');
-        //$this->set('purchase_orders', $this->paginate());
-        $purchase_orders = $this->paginate();            
-        $this->set(compact('purchase_orders','categories','getCost','getsupp'));
-    }
-
-
-
-    
 
     public function importdata() {
 
@@ -527,6 +481,50 @@ class PurchaseOrdersController extends AppController {
         $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
     }
 
-    
+
+    public function update_invoice($invoiceid = null){
+
+        $this->set('title', 'Cost Calculator');
+
+        $categories = $this->categname();  
+         
+        $this->loadModel('CostSetting');
+        $getCost	=	$this->CostSetting->find('all');
+  
+        $this->loadModel('SupplierMultiplier');
+        $getsupp	=	$this->SupplierMultiplier->find('all');
+
+
+        if (!$invoiceid && empty($this->data)) {
+            $this->Session->setFlash(__('Invalid ID.', true));
+            $this->redirect(array('controller' => 'purchase_orders ', 'action' => 'index'));
+        }
+        if (!empty($this->data)) {
+
+//print_r($this->data['MasterListing']);die();
+            if (!empty($this->data['PurchaseOrder']['invoice_value'])) {
+               // $this->saveField('invoice_value', $err, array($this->id = $this->data['PurchaseOrder']['id']));
+                $this->PurchaseOrder->updateAll(array('PurchaseOrder.invoice_value' => $this->data['PurchaseOrder']['invoice_value']), array('PurchaseOrder.id' => $this->data['PurchaseOrder']['id']));
+
+                $this->Session->setFlash(__('Update Invoice value successfully', true));
+                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'index'));
+            } else {
+                $this->Session->setFlash(__('ERROR!! Please check the fields and try again.', true));
+            }
+        }
+        if (empty($this->data)) {
+            $this->data = $this->PurchaseOrder->read(null, $invoiceid);
+        }
+
+        $this->PurchaseOrder->recursive = 1;
+        $this->paginate = array('limit' => 100, 'order' => 'PurchaseOrder.import_dates  DESC');
+        //$this->set('purchase_orders', $this->paginate());
+        $purchase_orders = $this->paginate();
+        $this->set(compact('purchase_orders','categories','getCost','getsupp'));
+       // $this->set(compact('categories','invoiceid','getCost','Webprices'));
+    }
+
+
+
 
 }
