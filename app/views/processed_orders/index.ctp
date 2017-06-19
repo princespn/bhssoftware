@@ -28,7 +28,6 @@ $sale_error = array($code_listing['MasterListing']['error']);
 $line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$web_fr,$sale_price_fr,$sale_error);
 echo $csv->addRow($line);
 endforeach;
-
 $filename='code_listings';
 echo $csv->render($filename);*/
 }else{	
@@ -95,10 +94,9 @@ echo $this->Session->flash(); ?>
 <script>
 function pageloader()
 {
-<?php for ($i=8000; $i<=8400; $i++) { ?>
+<?php for ($i=400; $i<=800; $i++) { ?>
  window.open("http://ukwalahome.com/processed_orders?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }
 </script>
-<?php } 
-
+<?php } echo "Amit kumar tiwari";
