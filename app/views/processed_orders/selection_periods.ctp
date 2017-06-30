@@ -1,5 +1,5 @@
 <hr>
-<?php //print_r($previousweeks[14]['ProcessedOrder']); ?>
+<?php //print_r($query_date); ?>
   <h1 class="sub-header"><?php __('Sales Dates or Periods Selection Orders Reports');?></h1>
   <div class="panel panel-default" >
     <?php  echo $form->create('ProcessedOrder',array('action'=>'selection_periods')); ?>
@@ -35,9 +35,10 @@
    <?php echo $this->Form->end();?>
   </div> 
    <div class="table-responsive">
-    <table class="table table-bordered table-striped table-hover">
-        <tr><td><strong><?php __('Sales Platform');?></strong></td><td><strong><?php __('Sales Channel');?></strong></td><td><strong><?php __('Currency');?></strong></td><?php  for($i=1; $i<=$month_interval; $i++){ ?><td colspan="2"><strong><?php __('Period');?> <?php echo $i; ?></strong></td><?php } ?><td><strong><?php __('Total No');?></strong></td><td><strong><?php __('Total Order');?></strong></td></tr>
-        <tr><td colspan="3"></td><?php  for($i=1; $i<=$month_interval; $i++){ ?><td><strong><?php __('No of Orders');?></strong></td><td><strong><?php __('Orders value');?></strong></td><?php } ?><td><strong><?php __('Of Orders ');?></strong></td><td><strong><?php __(' Values ');?></tr>
+   <table id="header-fixed" class="table table-bordered table-striped table-hover"></table>
+    <table id="table-1" class="table table-bordered table-striped table-hover">	    
+         <thead><tr><th><strong><?php __('Sales Platform');?></strong></th><th><strong><?php __('Sales Channel');?></strong></th><th><strong><?php __('Currency');?></strong></th><?php $i = 0; $len = count($query_date); foreach($query_date as $firstandlast){  $yrdata = strtotime($firstandlast);   if ($i == $len - 1){ }else {?><th colspan="2"><strong><?php echo date('M-Y', $yrdata); $i++; ?></strong></th><?php } ?><?php } ?><th><strong><?php __('Total');?></strong></th><th><strong><?php __('Total');?></strong></th></tr>
+        <tr><th colspan="3"></th><?php  for($i=1; $i<=$month_interval; $i++){ ?><th><strong><?php __('No of Orders');?></strong></th><th><strong><?php __('Orders value');?></strong></td><?php } ?><td><strong><?php __('No of Orders ');?></strong></th><th><strong><?php __('Order values ');?></th></tr></thead>
           <?php foreach ($saveplatformdatas as $value): ?>
             <tr> 
              <td><?php if(!empty($value['ProcessedOrder']['plateform'])){ echo $value['ProcessedOrder']['plateform']; }else {echo "-";}; ?></td>
@@ -104,8 +105,8 @@
             <td><?php if($pordercurreur3[0]==='EUR'){ echo round($pordernumeur3[0],2); } else if ($pordercurregbp3[0]==='GBP'){echo round($pordernumgbp3[0],2); } else {echo "-";}?></td>
             <td><?php if($pordercurreur3[0]==='EUR'){ echo round($pordervalueeur3[0],2); } else if ($pordercurregbp3[0]==='GBP'){echo round($pordervaluegbp3[0],2); } else {echo "-";}?></td>
               
-			 <?php  } ?>
-			  <?php if((!empty($month_interval)) && (($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))) { ?>
+			<?php  } ?>
+			<?php if((!empty($month_interval)) && (($month_interval=='5') || ($month_interval=='6') || ($month_interval=='7') || ($month_interval=='8') || ($month_interval=='9') || ($month_interval=='10') || ($month_interval=='11') || ($month_interval=='12'))) { ?>
 			  
 			<?php $pordernumeur4 = array(); $pordervalueeur4 = array(); $pordercurreur4 = array(); ?>
             <?php $pordernumgbp4 = array(); $pordervaluegbp4 = array(); $pordercurregbp4= array(); ?>
@@ -194,28 +195,28 @@
 			  
 			<?php $pordernumeur10 = array(); $pordervalueeur10 = array(); $pordercurreur10 = array(); ?>
             <?php $pordernumgbp10 = array(); $pordervaluegbp10 = array(); $pordercurregbp10 = array(); ?>
-            <?php foreach ($countselectdates10 as $previousweeks): ?>  
+            <?php foreach ($countselectdates12 as $previousweeks): ?>  
             <?php if(($value['ProcessedOrder']['subsource'] === $previousweeks['ProcessedOrder']['subsource']) && ($value['ProcessedOrder']['plateform'] === $previousweeks['ProcessedOrder']['plateform'])) {?>
             <?php if($previousweeks['ProcessedOrder']['currency']==='EUR'){$pordernumeur10[] = $previousweeks[0]['orderid']; $pordervalueeur10[] = $previousweeks[0]['ordervalues']; $pordercurreur10[] = $previousweeks['ProcessedOrder']['currency'];} else if($previousweeks['ProcessedOrder']['currency']==='GBP'){ $pordernumgbp10[] = $previousweeks[0]['orderid']; $pordervaluegbp10[] = $previousweeks[0]['ordervalues']; $pordercurregbp10[] = $previousweeks['ProcessedOrder']['currency']; }  ?>                              
             <?php if($previousweeks['ProcessedOrder']['currency'] ==='EUR'){ $Totalnumbsumeur10 += $previousweeks[0]['orderid']; $Totalordersumeur10 += $previousweeks[0]['ordervalues']*0.84;}else if($previousweeks['ProcessedOrder']['currency'] ==='GBP'){ $Totalnumbsumegbp10 += $previousweeks[0]['orderid'];  $Totalordersumegbp10 += $previousweeks[0]['ordervalues'];} ?>
            <?php } ?>
              <?php endforeach; ?> 
-            <td><?php if($pordercurreur10[0]==='EUR'){ echo round($pordernumeur10[0],2); } else if ($pordercurregbp10[0]==='GBP'){echo round($pordernumgbp10[0],2); } else {echo "-";}?></td>
-            <td><?php if($pordercurreur10[0]==='EUR'){ echo round($pordervalueeur10[0],2); } else if ($pordercurregbp10[0]==='GBP'){echo round($pordervaluegbp10[0],2); } else {echo "-";}?></td>
+            <td><?php echo "sdgvfdg"; if($pordercurreur10[0]==='EUR'){ echo round($pordernumeur10[0],2); } else if ($pordercurregbp10[0]==='GBP'){echo round($pordernumgbp10[0],2); } else {echo "-";}?></td>
+            <td><?php echo "sfdsdfg"; if($pordercurreur10[0]==='EUR'){ echo round($pordervalueeur10[0],2); } else if ($pordercurregbp10[0]==='GBP'){echo round($pordervaluegbp10[0],2); } else {echo "-";}?></td>
             <?php  } ?>
 			
 			<?php if((!empty($month_interval)) && ($month_interval=='12')){ ?>
 			  
-			<?php $pordernumeur11 = array(); $pordervalueeur11 = array(); $pordercurreur11 = array(); ?>
-            <?php $pordernumgbp11 = array(); $pordervaluegbp11 = array(); $pordercurregbp11 = array(); ?>
-            <?php foreach ($countselectdates11 as $previousweeks): ?>  
-            <?php if(($value['ProcessedOrder']['subsource'] === $previousweeks['ProcessedOrder']['subsource']) && ($value['ProcessedOrder']['plateform'] === $previousweeks['ProcessedOrder']['plateform'])) {?>
-            <?php if($previousweeks['ProcessedOrder']['currency']==='EUR'){$pordernumeur11[] = $previousweeks[0]['orderid']; $pordervalueeur11[] = $previousweeks[0]['ordervalues']; $pordercurreur11[] = $previousweeks['ProcessedOrder']['currency'];} else if($previousweeks['ProcessedOrder']['currency']==='GBP'){ $pordernumgbp11[] = $previousweeks[0]['orderid']; $pordervaluegbp11[] = $previousweeks[0]['ordervalues']; $pordercurregbp11[] = $previousweeks['ProcessedOrder']['currency']; }  ?>                              
-            <?php if($previousweeks['ProcessedOrder']['currency'] ==='EUR'){ $Totalnumbsumeur11 += $previousweeks[0]['orderid']; $Totalordersumeur11+= $previousweeks[0]['ordervalues']*0.84;}else if($previousweeks['ProcessedOrder']['currency'] ==='GBP'){ $Totalnumbsumegbp11 += $previousweeks[0]['orderid'];  $Totalordersumegbp11+= $previousweeks[0]['ordervalues'];} ?>
+			<?php $pordernumeur13 = array(); $pordervalueeur13 = array(); $pordercurreur13 = array(); ?>
+            <?php $pordernumgbp13 = array(); $pordervaluegbp13 = array(); $pordercurregbp13 = array(); ?>
+            <?php foreach ($countselectdates13 as $previousweeks13): ?>  
+            <?php if(($value['ProcessedOrder']['subsource'] === $previousweeks13['ProcessedOrder']['subsource']) && ($value['ProcessedOrder']['plateform'] === $previousweeks13['ProcessedOrder']['plateform'])) {?>
+            <?php if($previousweeks13['ProcessedOrder']['currency']==='EUR'){$pordernumeur13[] = $previousweeks13[0]['orderid']; $pordervalueeur13[] = $previousweeks13[0]['ordervalues']; $pordercurreur11[] = $previousweeks13['ProcessedOrder']['currency'];} else if($previousweeks13['ProcessedOrder']['currency']==='GBP'){ $pordernumgbp13[] = $previousweeks13[0]['orderid']; $pordervaluegbp13[] = $previousweeks13[0]['ordervalues']; $pordercurregbp13[] = $previousweeks13['ProcessedOrder']['currency']; }  ?>                              
+            <?php if($previousweeks13['ProcessedOrder']['currency'] ==='EUR'){ $Totalnumbsumeur13 += $previousweeks13[0]['orderid']; $Totalordersumeur13+= $previousweeks13[0]['ordervalues']*0.84;}else if($previousweeks13['ProcessedOrder']['currency'] ==='GBP'){ $Totalnumbsumegbp13 += $previousweeks13[0]['orderid'];  $Totalordersumegbp13+= $previousweeks13[0]['ordervalues'];} ?>
            <?php } ?>
              <?php endforeach; ?> 
-            <td><?php if($pordercurreur11[0]==='EUR'){ echo round($pordernumeur11[0],2); } else if ($pordercurregbp11[0]==='GBP'){echo round($pordernumgbp7[0],2); } else {echo "-";}?></td>
-            <td><?php if($pordercurreur11[0]==='EUR'){ echo round($pordervalueeur11[0],2); } else if ($pordercurregbp11[0]==='GBP'){echo round($pordervaluegbp7[0],2); } else {echo "-";}?></td>
+            <td><?php if($pordercurreur13[0]==='EUR'){ echo round($pordernumeur13[0],2); } else if ($pordercurregbp13[0]==='GBP'){echo round($pordernumgbp13[0],2); } else {echo "-";}?></td>
+            <td><?php if($pordercurreur13[0]==='EUR'){ echo round($pordervalueeur13[0],2); } else if ($pordercurregbp13[0]==='GBP'){echo round($pordervaluegbp13[0],2); } else {echo "-";}?></td>
             <?php  } ?>
 			
 			
@@ -240,6 +241,18 @@
        		<?php } else if((!empty($month_interval)) && ($month_interval=='8')){ ?>
 			<td><?php if($pordercurreur[0]==='EUR'){ $totalnumbeur = $pordernumeur[0]+$pordernumeur1[0]+$pordernumeur2[0]+$pordernumeur3[0]+$pordernumeur4[0]+$pordernumeur5[0]+$pordernumeur6[0]+$pordernumeur7[0]; echo "<div class='rTableCell green'>".round($totalnumbeur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){ $Totalnumbgbp = $pordernumgbp[0]+$pordernumgbp1[0]+$pordernumgbp2[0]+$pordernumgbp3[0]+$pordernumgbp4[0]+$pordernumgbp5[0]+$pordernumgbp6[0]+$pordernumgbp7[0]; echo "<div class='rTableCell green'>".round($Totalnumbgbp,2)."</div>"; } else {echo "-";}?></td>
             <td><?php if($pordercurreur[0]==='EUR'){ $totalvaleur = $pordervalueeur[0]+$pordervalueeur1[0]+$pordervalueeur2[0]+$pordervalueeur3[0]+$pordervalueeur4[0]+$pordervalueeur5[0]+$pordervalueeur6[0]+$pordervalueeur7[0];  echo "<div class='rTableCell green'>".round($totalvaleur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){$Totalvalgbp = $pordervaluegbp[0]+$pordervaluegbp1[0]+$pordervaluegbp2[0]+$pordervaluegbp3[0]+$pordervaluegbp4[0]+$pordervaluegbp5[0]+$pordervaluegbp6[0]+$pordervaluegbp7[0]; echo "<div class='rTableCell green'>".round($Totalvalgbp,2)."</div>"; } else {echo "-";}?></td>
+       		<?php } else if((!empty($month_interval)) && ($month_interval=='9')){ ?>
+			<td><?php if($pordercurreur[0]==='EUR'){ $totalnumbeur = $pordernumeur[0]+$pordernumeur1[0]+$pordernumeur2[0]+$pordernumeur3[0]+$pordernumeur4[0]+$pordernumeur5[0]+$pordernumeur6[0]+$pordernumeur7[0]+$pordernumeur8[0]; echo "<div class='rTableCell green'>".round($totalnumbeur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){ $Totalnumbgbp = $pordernumgbp[0]+$pordernumgbp1[0]+$pordernumgbp2[0]+$pordernumgbp3[0]+$pordernumgbp4[0]+$pordernumgbp5[0]+$pordernumgbp6[0]+$pordernumgbp7[0]+$pordernumgbp8[0]; echo "<div class='rTableCell green'>".round($Totalnumbgbp,2)."</div>"; } else {echo "-";}?></td>
+            <td><?php if($pordercurreur[0]==='EUR'){ $totalvaleur = $pordervalueeur[0]+$pordervalueeur1[0]+$pordervalueeur2[0]+$pordervalueeur3[0]+$pordervalueeur4[0]+$pordervalueeur5[0]+$pordervalueeur6[0]+$pordervalueeur7[0]+$pordervalueeur8[0];  echo "<div class='rTableCell green'>".round($totalvaleur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){$Totalvalgbp = $pordervaluegbp[0]+$pordervaluegbp1[0]+$pordervaluegbp2[0]+$pordervaluegbp3[0]+$pordervaluegbp4[0]+$pordervaluegbp5[0]+$pordervaluegbp6[0]+$pordervaluegbp7[0]+$pordervaluegbp8[0]; echo "<div class='rTableCell green'>".round($Totalvalgbp,2)."</div>"; } else {echo "-";}?></td>
+       		<?php } else if((!empty($month_interval)) && ($month_interval=='10')){ ?>
+			<td><?php if($pordercurreur[0]==='EUR'){ $totalnumbeur = $pordernumeur[0]+$pordernumeur1[0]+$pordernumeur2[0]+$pordernumeur3[0]+$pordernumeur4[0]+$pordernumeur5[0]+$pordernumeur6[0]+$pordernumeur7[0]+$pordernumeur8[0]+$pordernumeur9[0]; echo "<div class='rTableCell green'>".round($totalnumbeur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){ $Totalnumbgbp = $pordernumgbp[0]+$pordernumgbp1[0]+$pordernumgbp2[0]+$pordernumgbp3[0]+$pordernumgbp4[0]+$pordernumgbp5[0]+$pordernumgbp6[0]+$pordernumgbp7[0]+$pordernumgbp8[0]+$pordernumgbp9[0]; echo "<div class='rTableCell green'>".round($Totalnumbgbp,2)."</div>"; } else {echo "-";}?></td>
+            <td><?php if($pordercurreur[0]==='EUR'){ $totalvaleur = $pordervalueeur[0]+$pordervalueeur1[0]+$pordervalueeur2[0]+$pordervalueeur3[0]+$pordervalueeur4[0]+$pordervalueeur5[0]+$pordervalueeur6[0]+$pordervalueeur7[0]+$pordervalueeur8[0]+$pordervalueeur9[0];  echo "<div class='rTableCell green'>".round($totalvaleur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){$Totalvalgbp = $pordervaluegbp[0]+$pordervaluegbp1[0]+$pordervaluegbp2[0]+$pordervaluegbp3[0]+$pordervaluegbp4[0]+$pordervaluegbp5[0]+$pordervaluegbp6[0]+$pordervaluegbp7[0]+$pordervaluegbp8[0]+$pordervaluegbp9[0]; echo "<div class='rTableCell green'>".round($Totalvalgbp,2)."</div>"; } else {echo "-";}?></td>
+       		<?php } else if((!empty($month_interval)) && ($month_interval=='11')){ ?>
+			<td><?php if($pordercurreur[0]==='EUR'){ $totalnumbeur = $pordernumeur[0]+$pordernumeur1[0]+$pordernumeur2[0]+$pordernumeur3[0]+$pordernumeur4[0]+$pordernumeur5[0]+$pordernumeur6[0]+$pordernumeur7[0]+$pordernumeur8[0]+$pordernumeur9[0]+$pordernumeur10[0]; echo "<div class='rTableCell green'>".round($totalnumbeur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){ $Totalnumbgbp = $pordernumgbp[0]+$pordernumgbp1[0]+$pordernumgbp2[0]+$pordernumgbp3[0]+$pordernumgbp4[0]+$pordernumgbp5[0]+$pordernumgbp6[0]+$pordernumgbp7[0]+$pordernumgbp8[0]+$pordernumgbp9[0]+$pordernumgbp10[0]; echo "<div class='rTableCell green'>".round($Totalnumbgbp,2)."</div>"; } else {echo "-";}?></td>
+            <td><?php if($pordercurreur[0]==='EUR'){ $totalvaleur = $pordervalueeur[0]+$pordervalueeur1[0]+$pordervalueeur2[0]+$pordervalueeur3[0]+$pordervalueeur4[0]+$pordervalueeur5[0]+$pordervalueeur6[0]+$pordervalueeur7[0]+$pordervalueeur8[0]+$pordervalueeur9[0]+$pordervalueeur10[0];  echo "<div class='rTableCell green'>".round($totalvaleur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){$Totalvalgbp = $pordervaluegbp[0]+$pordervaluegbp1[0]+$pordervaluegbp2[0]+$pordervaluegbp3[0]+$pordervaluegbp4[0]+$pordervaluegbp5[0]+$pordervaluegbp6[0]+$pordervaluegbp7[0]+$pordervaluegbp8[0]+$pordervaluegbp9[0]+$pordervaluegbp10[0]; echo "<div class='rTableCell green'>".round($Totalvalgbp,2)."</div>"; } else {echo "-";}?></td>
+       		<?php } else if((!empty($month_interval)) && ($month_interval=='12')){ ?>
+			<td><?php if($pordercurreur[0]==='EUR'){ $totalnumbeur = $pordernumeur[0]+$pordernumeur1[0]+$pordernumeur2[0]+$pordernumeur3[0]+$pordernumeur4[0]+$pordernumeur5[0]+$pordernumeur6[0]+$pordernumeur7[0]+$pordernumeur8[0]+$pordernumeur9[0]+$pordernumeur10[0]+$pordernumeur13[0]; echo "<div class='rTableCell green'>".round($totalnumbeur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){ $Totalnumbgbp = $pordernumgbp[0]+$pordernumgbp1[0]+$pordernumgbp2[0]+$pordernumgbp3[0]+$pordernumgbp4[0]+$pordernumgbp5[0]+$pordernumgbp6[0]+$pordernumgbp7[0]+$pordernumgbp8[0]+$pordernumgbp9[0]+$pordernumgbp10[0]+$pordernumgbp13[0]; echo "<div class='rTableCell green'>".round($Totalnumbgbp,2)."</div>"; } else {echo "-";}?></td>
+            <td><?php if($pordercurreur[0]==='EUR'){ $totalvaleur = $pordervalueeur[0]+$pordervalueeur1[0]+$pordervalueeur2[0]+$pordervalueeur3[0]+$pordervalueeur4[0]+$pordervalueeur5[0]+$pordervalueeur6[0]+$pordervalueeur7[0]+$pordervalueeur8[0]+$pordervalueeur9[0]+$pordervalueeur10[0]+$pordervalueeur13[0];  echo "<div class='rTableCell green'>".round($totalvaleur,2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){$Totalvalgbp = $pordervaluegbp[0]+$pordervaluegbp1[0]+$pordervaluegbp2[0]+$pordervaluegbp3[0]+$pordervaluegbp4[0]+$pordervaluegbp5[0]+$pordervaluegbp6[0]+$pordervaluegbp7[0]+$pordervaluegbp8[0]+$pordervaluegbp9[0]+$pordervaluegbp10[0]+$pordervaluegbp13[0]; echo "<div class='rTableCell green'>".round($Totalvalgbp,2)."</div>"; } else {echo "-";}?></td>
        		<?php } else { ?>
 			<td><?php if($pordercurreur[0]==='EUR'){ echo "<div class='rTableCell green'>".round($pordernumeur[0],2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){echo "<div class='rTableCell green'>".round($pordernumgbp[0],2)."</div>"; } else {echo "-";}?></td>
             <td><?php if($pordercurreur[0]==='EUR'){ echo "<div class='rTableCell green'>".round($pordervalueeur[0],2)."</div>"; } else if ($pordercurregbp[0]==='GBP'){echo "<div class='rTableCell green'>".round($pordervaluegbp[0],2)."</div>"; } else {echo "-";}?></td>
@@ -270,7 +283,7 @@
 			<?php if((!empty($month_interval)) && (($month_interval=='11') || ($month_interval=='12'))){  ?>
 			<?php echo "<td>". $Totalnumbsumegbp10 . "</td><td>" . round($Totalordersumegbp10,2) ."</td>"; }?>
 			<?php if((!empty($month_interval)) && ($month_interval=='12')){  ?>
-			<?php echo "<td>". $Totalnumbsumegbp11 . "</td><td>" . round($Totalordersumegbp11,2) ."</td>"; }?>
+			<?php echo "<td>". $Totalnumbsumegbp13 . "</td><td>" . round($Totalordersumegbp13,2) ."</td>"; }?>
 			
 			
 			
@@ -298,7 +311,7 @@
 			<?php if((!empty($month_interval)) && (($month_interval=='11') || ($month_interval=='12'))){  ?>
 			<?php echo "<td>". $Totalnumbsumeur10 . "</td><td>" . round($Totalordersumeur10,2) ."</td>"; }?>
 			<?php if((!empty($month_interval)) && ($month_interval=='12')){  ?>
-			<?php echo "<td>". $Totalnumbsumeur11 . "</td><td>" . round($Totalordersumeur11,2) ."</td>"; }?>
+			<?php echo "<td>". $Totalnumbsumeur13 . "</td><td>" . round($Totalordersumeur13,2) ."</td>"; }?>
 			
 			
 			
@@ -330,10 +343,39 @@ numberOfMonths: 2,
         $('#datepicker').datepicker('option', 'maxDate', max || '0'); // Set other max, default to +1 months
         var start = $("#date_from").datepicker("getDate");
         var end = $("#date_to").datepicker("getDate");
-        var days = ((end - start) / (1000 * 60 * 60 * 24)/29);
-		    var months = days.toFixed(0)
+    	var days = monthDiff(start,end);
+	    var months = days.toFixed(0)
         $("#number_period").val(months);
     }
-	});       
+	});
+
+function monthDiff(d1, d2) {
+    var months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth() + 1;
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months+2;
+}
+	
+});
+</script>
+<script type="text/javascript">
+$.noConflict();  //Not to conflict with other scripts
+jQuery(document).ready(function($) {
+var tableOffset = $("#table-1").offset().top;
+var $header = $("#table-1 > thead").clone();
+var $fixedHeader = $("#header-fixed").append($header);
+
+$(window).bind("scroll", function() {
+    var offset = $(this).scrollTop();
+    
+    if (offset >= tableOffset && $fixedHeader.is(":hidden")) {
+        $fixedHeader.show();
+    }
+    else if (offset < tableOffset) {
+        $fixedHeader.hide();
+    }
+});
+
 });
 </script>
