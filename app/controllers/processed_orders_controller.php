@@ -72,9 +72,9 @@ class ProcessedOrdersController extends AppController {
 
     
        
-        $from = '2016-04-02T00:00:00'; //min
+         $from = '2017-03-10T00:00:00'; //min
          // $from = '';   // 2017-04-03 - TO - 2017-04-09
-        $to =  '2016-06-17T00:60:00'; //max
+        $to =  '2017-05-10T00:60:00'; //max
         //$to = '';
         
         //$to = '';
@@ -779,10 +779,10 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                     }
 					if((!empty($month_interval)) && ($month_interval=='12')){ 
                   
-					$conditions11 = array('ProcessedOrder.order_date <= ' => $lastdate[11],
+					$conditions13 = array('ProcessedOrder.order_date <= ' => $lastdate[11],
                     'ProcessedOrder.order_date >= ' => $firstdate[11],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
-                    $countselectdates11 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions11,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
-                    $this->set(compact('countselectdates11'));
+                    $countselectdates13 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions13,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+                    $this->set(compact('query_date','countselectdates13'));
                     }
 
 					else{                        
@@ -790,7 +790,7 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                     'ProcessedOrder.order_date >= ' => $firstdate[0],'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
                     $countselectdates =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
    
-                    $this->set(compact('saveplatformdatas','countselectdates','month_interval'));  
+                    $this->set(compact('query_date','saveplatformdatas','countselectdates','month_interval'));  
                     }              
 
                 
