@@ -341,3 +341,9 @@ text-align: center;
   outline: none;
   text-decoration: none;
 }
+body { height: 1000px; }
+#header-fixed { 
+    position: fixed; 
+    top: 0px; display:none;
+    background-color:white;
+}
