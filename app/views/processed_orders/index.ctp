@@ -94,7 +94,7 @@ echo $this->Session->flash(); ?>
 <script>
 function pageloader()
 {
-<?php for ($i=400; $i<=800; $i++) { ?>
+<?php for ($i=1200; $i<=1600; $i++) { ?>
  window.open("http://ukwalahome.com/processed_orders?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }
