@@ -1096,8 +1096,11 @@ public function importcategory(){
                
 			     
                   
-                $month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
-                  
+                //$month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
+                
+ 
+                $month_interval = 1 + (date('Y',strtotime($next_date)) - date('Y',strtotime($first_date))) * 12   +   (date('m',strtotime($next_date)) - date('m',strtotime($first_date))); 
+                				
                 $query_date = $this->get_months($first_date, $next_date);
                    
                 $firstdate = array();  $lastdate = array();

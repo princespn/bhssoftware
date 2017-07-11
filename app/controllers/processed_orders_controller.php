@@ -1,7 +1,7 @@
 <?php
 class ProcessedOrdersController extends AppController {
     var $name = 'ProcessedOrders';
-    var $components = array('Acl', 'Auth', 'Session', 'RequestHandler');
+    var $components = array('Email','Acl', 'Auth', 'Session', 'RequestHandler');
     var $helpers = array('Html', 'Form', 'Ajax', 'Javascript', 'Js', 'Csv');
 
     function beforeFilter() {
@@ -72,9 +72,9 @@ class ProcessedOrdersController extends AppController {
 
     
        
-         $from = '2017-03-10T00:00:00'; //min
-         // $from = '';   // 2017-04-03 - TO - 2017-04-09
-        $to =  '2017-05-10T00:60:00'; //max
+         $from = '2017-04-10T00:00:00'; //min
+          //$from = '';   // 2017-04-03 - TO - 2017-04-09
+        $to =  '2017-07-11T00:60:00'; //max
         //$to = '';
         
         //$to = '';
@@ -681,11 +681,14 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                   }
                
                   
-                  $month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
                   
                    $query_date = $this->get_months($first_date, $next_date);
-                   
-                   $firstdate = array();  $lastdate = array();
+				   
+				   //$month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
+                  
+                  $month_interval = 1 + (date('Y',strtotime($next_date)) - date('Y',strtotime($first_date))) * 12   +   (date('m',strtotime($next_date)) - date('m',strtotime($first_date))); 
+                  
+				  $firstdate = array();  $lastdate = array();
               
                 foreach($query_date as $firstandlast){
               
@@ -791,12 +794,27 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                     $countselectdates =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
    
                     $this->set(compact('query_date','saveplatformdatas','countselectdates','month_interval'));  
-                    }              
+                    } 
 
-                
+					/* Add E-mail sending code */
+					$this->Email->to = '';
+					$this->Email->bcc = array('amit@homescapesonline.com');
+					$this->Email->subject = 'Notification Alerts.';
+					$this->Email->replyTo = 'amit@homescapesonline.com';
+					$this->Email->from = 'Homescapesonline<test@Homescapesonline.com>';
+					$this->Email->template = 'default'; 
+					$this->Email->sendAs = 'html';
+					$reports = '400.90';
+					$this->set('reports', $reports);
+					//Do not pass any args to send()
+					$this->Email->send();
                 
 
-            }          
+            } 
+
+
+	
+ 
              
 /* SELECT * FROM `processed_orders` WHERE `order_date` >= '2016-02-15' AND `order_date` <= '2016-02-21'
  * 
