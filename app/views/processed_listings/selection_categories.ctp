@@ -1,3 +1,9 @@
+<?php
+if(($session->read('Auth.User.group_id')!='4'))
+{
+$this->requestAction('/users/logout/', array('return'));
+}
+?>
 <hr>
 <?php  //print_r($query_date); die(); ?>
   <h1 class="sub-header"><?php __('Sales Dates or Periods Selection Orders Reports');?></h1>
@@ -78,7 +84,7 @@
             <?php endforeach; ?>			
 			<?php  $TotalNumb3 = $Totalnumbsumeur3[0]+$Totalnumbsumegbp3[0]; $TotalOrder3 = $Totalordersumeur3[0]+$Totalordersumegbp3[0];  ?>
 			
-			<?php $Totalnumbsumeur4 = array(); $Totalnumbsumegbp4 = array();  $Totalordersumeur4 = array();  $Totalordersumeur4 = array(); ?>
+			<?php $Totalnumbsumeur4 = array(); $Totalnumbsumegbp4 = array();  $Totalordersumeur4 = array();  $Totalordersumegbp4 = array(); ?>
 			<?php foreach ($Catsaveall4 as $currentsweeks4): ?>  
             <?php if(($value['ProcessedListing']['cat_name'] === $currentsweeks4['ProcessedListing']['cat_name'])) {?>
 			<?php if($currentsweeks4['ProcessedListing']['currency'] ==='EUR'){ $Totalnumbsumeur4[] = $currentsweeks4[0]['orderid']; $Totalordersumeur4[] = $currentsweeks4[0]['ordervalues']*0.84;}else if($currentsweeks4['ProcessedListing']['currency'] ==='GBP'){ $Totalnumbsumegbp4[] = $currentsweeks4[0]['orderid'];  $Totalordersumegbp4[] = $currentsweeks4[0]['ordervalues'];} ?>

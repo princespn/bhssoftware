@@ -106,9 +106,9 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
         <?php } ?>       
         <?php endforeach; ?> 
        
-         <?php if(($session->read('Auth.User.group_id')!=='5')){ $order1 = "<td class='width15'>". round($ordercurgbp[0],2) ."</td>"; $order2 = "<td>". round($ordercureur[0],2)  ."</td>";  $order3 = "<td class='width20'>". round($orderprevgbp[0],2) ."</td>"; $order4 = "<td class='width20'>". round($orderpreveur[0],2) ."</td>"; $order5 = "<td class='width20'>". round($orderlastgbp[0],2) ."</td>"; $order6 = "<td class='width20'>". round($orderlasteur[0],2) ."</td>"; } else { } ?>
+        <?php if(($session->read('Auth.User.group_id')!=='5')){ $order1 = "<td class='width15'>". round($ordercurgbp[0],2) ."</td>"; $order2 = "<td>". round($ordercureur[0],2)  ."</td>";  $order3 = "<td class='width20'>". round($orderprevgbp[0],2) ."</td>"; $order4 = "<td class='width20'>". round($orderpreveur[0],2) ."</td>"; $order5 = "<td class='width20'>". round($orderlastgbp[0],2) ."</td>"; $order6 = "<td class='width20'>". round($orderlasteur[0],2) ."</td>"; } else { } ?>
         
-         <?php  if((!empty($numcurgbp[0])) && (!empty($numprevgbp[0]))){ $curprogress = ((($numcurgbp[0]/$numprevgbp[0])-1)*100);  if($curprogress < 0){$currnumprogress = "<td class='width20 red'>".round($curprogress,2)."%"."</td>"; }else { $currnumprogress = "<td class='width20 green'>".round($curprogress,2)."%"."</td>"; } } else { $currnumprogress = "<td class='width20 green'>-</td>"; }?>
+        <?php  if((!empty($numcurgbp[0])) && (!empty($numprevgbp[0]))){ $curprogress = ((($numcurgbp[0]/$numprevgbp[0])-1)*100);  if($curprogress < 0){$currnumprogress = "<td class='width20 red'>".round($curprogress,2)."%"."</td>"; }else { $currnumprogress = "<td class='width20 green'>".round($curprogress,2)."%"."</td>"; } } else { $currnumprogress = "<td class='width20 green'>-</td>"; }?>
         <?php  if((!empty($numcureur[0])) && (!empty($numpreveur[0]))){ $cureurprogress = ((($numcureur[0]/$numpreveur[0])-1)*100);  if($cureurprogress < 0){$cureurnumprogress = "<td class='width20 red'>".round($cureurprogress,2)."%"."</td>"; }else { $cureurnumprogress = "<td class='width20 green'>".round($cureurprogress,2)."%"."</td>"; } } else { $cureurnumprogress = "<td class='width20 green'>-</td>"; } ?>
         <?php if((!empty($ordercurgbp[0])) && (!empty($orderprevgbp[0]))){ $curvaluegbpprogress = ((($ordercurgbp[0]/$orderprevgbp[0])-1)*100);   if($curvaluegbpprogress < 0){$curvaluegbpprog = "<td class='width20 red'>".round($curvaluegbpprogress,2)."%"."</td>"; }else { $curvaluegbpprog = "<td class='width20 green'>".round($curvaluegbpprogress,2)."%"."</td>"; } } else { $curvaluegbpprog = "<td class='width20 green'>-</td>"; } ?>
         <?php  if((!empty($ordercureur[0])) && (!empty($orderpreveur[0]))){ $curvalueeurprogress = ((($ordercureur[0]/$orderpreveur[0])-1)*100);  if($curvalueeurprogress < 0){$curvalueeurprog = "<td class='width20 red'>".round($curvalueeurprogress,2)."%"."</td>"; }else { $curvalueeurprog = "<td class='width20 green'>".round($curvalueeurprogress,2)."%"."</td>"; } } else { $curvalueeurprog = "<td class='width20 green'>-</td>"; } ?>
@@ -122,7 +122,7 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                                  <div class="rTableHead"><?php __('Sales Channel');?></div>
                                  <div class="rTableHead"><?php __('No. of Orders');?></div>
                                  <div class="rTableHead"><?php __('Currency');?></div>
-                                   <?php if(($session->read('Auth.User.group_id')!=='5')){ $amit = "<div class='rTableHead'> Order Value </div>";} else { $amit = ""; } ?>
+                                 <?php if(($session->read('Auth.User.group_id')!=='5')){ $amit = "<div class='rTableHead'> Order Value </div>";} else { $amit = ""; } ?>
                                 <?php echo $amit; ?>
                                 <div class="rTableHead"><?php __('No. of Orders');?></div>
                                 <div class="rTableHead"><?php __('Order Progress');?></div>

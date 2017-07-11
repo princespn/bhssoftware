@@ -35,9 +35,7 @@
         <div class="col-md-12 mobile-bottomspace">
             <div class="col-md-2"><b>Date Selection</b></div><div class="col-md-1">From</div><div class="col-md-2"><?php echo $this->Form->input('date_from',array('label'=>false,'div'=>false,'id'=>'date_from','class'=>'form-control'))?></div><div class="col-md-1">TO</div><div class="col-md-2"><?php echo $this->Form->input('date_to',array('label'=>false,'div'=>false,'id'=>'date_to','class'=>'form-control'))?></div><div class="col-md-5 input-group-btn"><?php echo $this->Form->button('Submit', array('value'=>'submit','name'=>'submit','id'=>'submit','class'=>'btn btn-primary','type'=>'submit')); ?></div>
          </div>          
-      </div>
-
-   
+      </div>   
        <hr>
        <div class="row">
         <div class="col-md-12 mobile-bottomspace"><?php $option = array($month_interval =>'Months'); ?>
