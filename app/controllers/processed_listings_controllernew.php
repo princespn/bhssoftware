@@ -1581,16 +1581,16 @@ public function importcategory(){
 			
 				//$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name', 'ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
              
-				$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
+				$saveproductskusamedays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku2,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
 			
 				 $this->paginate = array(
 					'fields' => array('ProcessedListing.product_name','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 
 					'limit' => 1000,
 					'group' => $productskuby,
-					'conditions' => $productsku2,
+					'conditions' => $productsku1,
 					'order' => array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')
 					);
-				 $this->set('saveproductskusamedays', $this->paginate());     
+				 $this->set('saveproductskutodays', $this->paginate());     
 				   
 					
 					/* Add E-mail sending code */					

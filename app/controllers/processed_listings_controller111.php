@@ -1505,8 +1505,8 @@ public function importcategory(){
                 $this->set('title', 'E-mail Notification of Open Orders.');
 
 				$Date = date("Y-m-d");
-				$today = date('Y-m-d', strtotime($Date. ' - 3 days'));;
-				$sameday = date("Y-m-d", strtotime($today .' - 3 days'));
+				$today = date('Y-m-d', strtotime($Date. ' - 7 days'));;
+				$sameday = date("Y-m-d", strtotime($today .' - 7 days'));
 				//echo $today;
 				
 					$groupby = array(('ProcessedListing.plateform'),
@@ -1541,7 +1541,7 @@ public function importcategory(){
 			
 		public function productsku_notifications($catgoryname){
 
-                $this->set('title', 'List-High variation in Sales.');
+                $this->set('title', 'E-mail Notification of Open Orders.');
 				 
 				$categories = $this->categname();
 				
@@ -1554,9 +1554,9 @@ public function importcategory(){
 			 
 				
 				$Date = date("Y-m-d");
-				$today = date('Y-m-d', strtotime($Date. ' - 3 days'));;
+				$today = date('Y-m-d', strtotime($Date. ' - 7 days'));;
 				$sameday = date("Y-m-d", strtotime($today .' - 7 days'));
-						//print_r($sameday);die();	
+							
 				
 				 $productskuby = array(('ProcessedListing.plateform'),
 					'AND'=> 'ProcessedListing.subsource','ProcessedListing.product_sku','ProcessedListing.cat_name');
@@ -1579,19 +1579,12 @@ public function importcategory(){
 	
   			
 			
-				//$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name', 'ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
+				$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name', 'ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
              
-				$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
+				$saveproductskusamedays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku2,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
 			
-				 $this->paginate = array(
-					'fields' => array('ProcessedListing.product_name','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 
-					'limit' => 1000,
-					'group' => $productskuby,
-					'conditions' => $productsku2,
-					'order' => array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')
-					);
-				 $this->set('saveproductskusamedays', $this->paginate());     
-				   
+						//print_r($saveproductskusamedays);
+						//print_r("<br></br>");
 					
 					/* Add E-mail sending code */					
 					$this->Email->to = '';
@@ -1601,27 +1594,10 @@ public function importcategory(){
 					$this->Email->from = 'Homescapesonline.com<test@Homescapesonline.com>';
 					$this->Email->template = 'defaultsku'; 
 					$this->Email->sendAs = 'html';						
-					$this->set(compact('sameday','today','categories','saveproductskutodays','saveproductskusamedays'));  
-					$this->Email->send();
+					$this->set(compact('categories','saveproductskutodays','saveproductskusamedays'));  
+					$this->Email->send();    					
 
-			$exports = $this->params['url']['exports'];
-				
-					
-			if (!empty($_POST['exports'])) {
-            App::import("Vendor", "parsecsv");
-            $csv = new parseCSV();
-            $filepath = "C:\Users\Administrator\Downloads" . "saveproductskusamedays.csv";
-            $csv->auto($filepath); 
-			$saveproductskutodays =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name', 'ProcessedListing.product_sku','ProcessedListing.plateform','ProcessedListing.currency','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $productskuby,'conditions' => $productsku1,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC','ProcessedListing.plateform ASC')));
-             
-			 $this->set('saveproductskutodays');            
-            $this->layout = null;
-            $this->autoLayout = false;
-            Configure::write('debug', '2');
             } 
-
-				
-		}
     
 }
 

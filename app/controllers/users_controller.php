@@ -9,7 +9,7 @@ class UsersController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();
         // $this->layout = 'defaultm';
-        $this->Auth->allow(array('login', 'logout', 'index', 'edit', 'view', 'groups'));
+        $this->Auth->allow(array('login', 'logout', 'index', 'edit', 'groups'));
         $this->Auth->userModel = 'User';
         //$this->Auth->allow('*');  
         $this->Session->activate();
