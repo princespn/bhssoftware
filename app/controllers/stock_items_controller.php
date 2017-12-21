@@ -7,7 +7,7 @@ class StockItemsController extends AppController {
 
     	function beforeFilter() {
         	parent::beforeFilter();
-        	$this->Auth->allow(array('stockconsump', 'stockitems','index','stock_value'));
+        	$this->Auth->allow(array('category','stock_category', 'index'));
 	        $this->Session->activate();
     		
 	}
@@ -106,19 +106,17 @@ class StockItemsController extends AppController {
 
     
 				
-       		public function stock_purprice(){
-
-        
+       		public function stock_purprice(){        
 	
-        			$this->set('title', 'Linnworks Get Stock Channels Purchase Prices.');
-	        		$userkey = $this->tokenkey();
+        		$this->set('title', 'Linnworks Get Stock Channels Purchase Prices.');
+	        	$userkey = $this->tokenkey();
 				$some_data = array('token' => $userkey);
 
 				$purchaseid = "2efa09b6-af37-461d-9983-4cd19eee1192";
 		
 				$header = array("POST:https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder HTTP/1.1", "Connection: keep-alive", "Content-Length: 139", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 
-			         $url = 'https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder?pkPurchaseId='.$purchaseid;
+			     $url = 'https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder?pkPurchaseId='.$purchaseid;
 				 $ch = curl_init();
 			        curl_setopt($ch, CURLOPT_URL, $url);
 			        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -135,134 +133,85 @@ class StockItemsController extends AppController {
         //$this->set(compact('porders'));
 			
 		}
-
-
-    			 public function index(){
-
-      				  $this->set('title', 'Linnworks Get Stock Items Information.');
-      
-      				  $userkey = $this->tokenkey();
-     				  $some_data = array('token' => $userkey);
+    			
+ 		public function index(){
 		
-				//if(!empty($page)){
-				$page = $this->params['url']['page'];
-				//}else {$page=1;}
-		
-				$keywords = '';
-				$location = '';
-				//	$stockitmid = $this->stock_withpurchase();
-				//	$stockpurid = $this->stock_purprice();
-
-        
-				$header = array("POST:https://eu1.linnworks.net//api/Stock/GetStockItems HTTP/1.1", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-
-       				 $url = 'https://eu1.linnworks.net//api/Stock/GetStockItems?keyword=' . $keywords . '&locationId='. $location . '&entriesPerPage=500&pageNumber='. $page .'&excludeComposites=true';
-
-		
-					$ch = curl_init();
-	      				curl_setopt($ch, CURLOPT_URL, $url);
-        				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				        curl_setopt($ch, CURLOPT_POST, 1);
-				        curl_setopt($ch, CURLOPT_POSTFIELDS, $some_data);
-				        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				        $result = curl_exec($ch);
-				        $orders = json_decode($result);			
-			
-					//print_r($orders->Data); die();
-				        curl_close($ch);
-	       
-					if (!empty($orders->Data)) {
-		       
-						foreach ($orders->Data as $order){
-
-
-					$days = strtotime($order->CreationDate);
-					$this_week_sd = date("Y-m-d",$days);
-				//	$Quen = $order->Quantity;
-				//	echo "</BR>";
-				//	echo "In" .$order->InOrder;
-				//	echo "</BR>";
+					$this->set('title', 'Linnworks Get Stock Items Information.');
 					
-			
-				$this->StockItem->create(); 					
-				$this->StockItem->saveAll(array('item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName,'creation_date' => $this_week_sd, 'available'=> $order->Available ,'min_level'=> $order->MinimumLevel,'purchase_price' => $order->PurchasePrice,'retail_price' => $order->Quantity,'height' =>$order->Height, 'width' =>$order->Width, 'depth' =>$order->Depth, 'weight' =>$order->Weight, 'stock_itemid' =>$order->StockItemId));
-				 }
-				/*	 for ($i = 0;$i<=count($order->StockLevels); $i++) {
-						$this->loadModel('StockLevel');	
-						$StockItemId = $order->StockLevels[$i]->StockItemId;
-						$LocationIds  =  $order->StockLevels[$i]->Location->StockLocationId;
-						$stocksReports = $this->stock_withpurchase($StockItemId,$LocationIds);
+					$Catname = $this->categname();
 					
-						$this->StockLevel->create(); 	
+					$date = '2017-12-18';
 					
-					    	$this->StockLevel->saveAll(array('item_number' => $order->ItemNumber, 'stock_location_id' =>$order->StockLevels[$i]->Location->StockLocationId,'location_name' => $order->StockLevels[$i]->Location->LocationName,'available' => $order->StockLevels[$i]->Available,'min_level' => $order->StockLevels[$i]->MinimumLevel,'stock_value' => $order->StockLevels[$i]->StockValue,'stock_level' => $order->StockLevels[$i]->StockLevel,'unit_cost' => $order->StockLevels[$i]->UnitCost));
-         					}	
-	
-			
-   				}*/
+					$this->loadModel('StockLevel');
+					
+					$ukstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $date)));
+					
+					$waterstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'WATERFALL LANE','StockLevel.change_date' => $date)));
+					
+					$ukfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'United Kingdom FBA','StockLevel.change_date' => $date)));
+					
+					$frfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'France FBA','StockLevel.change_date' => $date)));
 
-				}  		   
-       	 $this->set(compact('orders','pagination'));
-        	}
+					$gerfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Germany FBA','StockLevel.change_date' => $date)));
+					
+					$esfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.change_date' => $date)));
 
-
- 		public function stockitems(){
-		
-			$this->set('title', 'Linnworks Get Stock Items Information.');
-
-	 			   $opening_date = '2017-09-07';	    
-	 			   $closing_date = '2017-09-21';
-    
-    
-				   $conditions = array('StockItem.creation_date <=' => $closing_date,'StockItem.creation_date >=' => $opening_date);
-				   $groupby = array('StockItem.item_number');
-
-				   
+					if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['StockItem']['all_item']))) {
+            		$string = trim($this->data['StockItem']['all_item']);   
+						//print_r($string);die();
+					$condsku = array('StockItem.item_number LIKE' => '%' . $string . '%');
+					$orders = array('StockItem.item_number ASC');
+					$this->paginate = array('limit' => 100, 'order' => $orders, 'conditions' => $condsku);
+					}else{						
+					$orders = array('StockItem.item_number ASC');
+					$this->paginate = array('limit' => 100, 'order' => $orders);
+					}
 					$this->StockItem->recursive = 1;
-				    $this->set('stocks',$this->StockItem->find('all', array('fields' => array('StockItem.item_number','StockItem.item_title','StockItem.purchase_price','StockItem.category_name', 'StockLevel.item_number','StockLevel.uk_stock_level','StockLevel.uk_stock_value'), 'conditions' => $conditions,'order' =>array('StockItem.item_number ASC'))));
-				   
-				  	$this->set(compact('stocks'));
-    
-   					 }
-					 
-					 
-					 
-		
-		public function stock_status(){
-		
-		
-		$this->set('title', 'Linnworks Get Stock Items Information.');
-	    $this_start_date = '2017-08-01';	    
-	    $this_end_date = '2017-08-01';
-
-    
-    
- $conditions = array('StockLevel.date_change <=' => $this_end_date,
-     'StockLevel.date_change >=' => $this_start_date);
-
-    
-
-    
-     $this->StockLevel->recursive = 1;	
-//$this->set('datastocks', $this->StockLevel->find('all', array('fields' => array(),'conditions' => $conditions,'order' =>array('StockLevel.date_change  ASC'))));  
-    //$this->set(compact('datastocks')); 
-$this->set('datastocks',$this->StockLevel->find('all', array('fields' => array('StockItem.date_change', 'StockLevel.item_number', 'StockLevel.item_title', 'StockLevel.category_name', 'StockItem.stock_level', 'StockItem.stock_value', 'StockItem.stock_itemid'),'conditions' =>$conditions)));
-           
-	 	
-		
-
-		
-		
-		
-		
-	}
-					 
-					 
+					$this->set('stocks', $this->paginate());
+					$this->set(compact('esfbastocks','waterstocks','gerfbastocks','frfbastocks','ukfbastocks','ukstocks','Catname'));
 					
+			}
+					
+					
+					public function category($catn){
+		
+					$this->set('title', 'Linnworks Get Stock Items Information.');
+					
+					$Catname = $this->categname();					
+					
+					$cat = urldecode($catn);
+					//print_r($cat);die();
+						  
+					$date = '2017-12-18';		  
 
+					$this->loadModel('StockLevel');
+					
+					$ukstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $date, 'StockLevel.category_name' => $cat)));
+					
+					$waterstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'WATERFALL LANE','StockLevel.change_date' => $date, 'StockLevel.category_name' => $cat)));
+					
+					$ukfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'United Kingdom FBA','StockLevel.change_date' => $date, 'StockLevel.category_name' => $cat)));
+					
+					$frfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'France FBA','StockLevel.change_date' => $date, 'StockLevel.category_name' => $cat)));
 
-
- 		 
-	}
+					$gerfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Germany FBA','StockLevel.change_date' => $date, 'StockLevel.category_name' => $cat)));
+					
+					$esfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.change_date' => $date)));
+					
+					if (empty($cat)) {
+					$this->Session->setFlash(__('Please select valid category.', true));
+					$this->redirect(array('controller' => 'stock_items', 'action' => 'stockitems'));
+					} else {
+						
+						$orders = array('StockItem.item_number ASC');
+						$conditions = array('StockItem.category_name LIKE' => '%' . $cat . '%');                
+						$this->paginate = array('limit' => 100, 'order' => $orders, 'conditions' => $conditions);
+					}
+					//print_r($waterstocks);die();								
+					$this->StockItem->recursive = 1;
+					$this->set('stocks', $this->paginate());
+					
+					$this->set(compact('esfbastocks','waterstocks','gerfbastocks','frfbastocks','ukfbastocks','ukstocks','Catname'));
+					}		
+		
+		}
