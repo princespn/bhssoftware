@@ -11,15 +11,21 @@ class StockLevel extends AppModel {
         ),       
   
     );
-    
-    
+  
   var $hasOne = array(
-        'StockItem' => array(
-            'className' => 'StockItem',
+        'CostCalculator' => array(
+            'className' => 'CostCalculator',
             'foreignKey' => false,
-            'conditions' => 'StockLevel.stock_itemid = StockItem.stock_itemid'
-    )
-    );
+            'conditions' => 'StockLevel.item_number = CostCalculator.linnworks_code'
+        ),
+
+		'PurchasePrice' => array(
+            'className' => 'PurchasePrice',
+            'foreignKey' => false,
+            'conditions' => 'StockLevel.item_number = PurchasePrice.item_sku'
+        ) 
        
+    );	
+  
 
 }

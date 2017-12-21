@@ -1,7 +1,7 @@
 <?php
-class PurchaseOrder extends AppModel {
+class CostCalculator extends AppModel {
 
-    var $name = 'PurchaseOrder';
+    var $name = 'CostCalculator';
     var $validate = array(
         'linnworks_code' => array(
             'Unique-1' => array(
@@ -35,18 +35,18 @@ class PurchaseOrder extends AppModel {
                     $h = explode('.', $head);
                     $data[$h[0]][$h[1]] = (isset($row[$k])) ? $row[$k] : '';
                 } else {
-                    $data['PurchaseOrder'][$head] = (isset($row[$k])) ? $row[$k] : '';
+                    $data['CostCalculator'][$head] = (isset($row[$k])) ? $row[$k] : '';
                 }
             }
 
             $id = isset($row[0]) ? $row[0] : 0;
             if (!empty($id)) {
 
-                $pcodes = $this->find('all', array('conditions' => array('PurchaseOrder.linnworks_code' => $id)));
+                $pcodes = $this->find('all', array('conditions' => array('CostCalculator.linnworks_code' => $id)));
                 if ((!empty($pcodes))) {
-                    $apiConfig = (isset($pcodes[0]['PurchaseOrder']) && is_array($pcodes[0]['PurchaseOrder'])) ? ($pcodes[0]['PurchaseOrder']) : array();
-                    $data['PurchaseOrder'] = (isset($data['PurchaseOrder']) && is_array($data['PurchaseOrder'])) ? ($data['PurchaseOrder']) : array();
-                    $data['PurchaseOrder'] = array_merge($apiConfig, $data['PurchaseOrder']);
+                    $apiConfig = (isset($pcodes[0]['CostCalculator']) && is_array($pcodes[0]['CostCalculator'])) ? ($pcodes[0]['CostCalculator']) : array();
+                    $data['CostCalculator'] = (isset($data['CostCalculator']) && is_array($data['CostCalculator'])) ? ($data['CostCalculator']) : array();
+                    $data['CostCalculator'] = array_merge($apiConfig, $data['CostCalculator']);
                 } else {
                     $this->id = $id;
                 }
@@ -66,9 +66,7 @@ class PurchaseOrder extends AppModel {
            if (($this->saveAll($data, $validate = false)) && (!empty($id))) {
            
                     $value = date("Y-m-d");                   
-                   $this->saveField('import_dates', $value, array($this->linnworks_code = $id));
-
-               
+					$this->saveField('import_dates', $value, array($this->linnworks_code = $id));
             }
         }
         return $return;
@@ -81,25 +79,25 @@ class PurchaseOrder extends AppModel {
         'AdminListing' => array(
             'className' => 'AdminListing',
             'foreignKey' => false,
-            'conditions' => 'PurchaseOrder.linnworks_code = AdminListing.linnworks_code'
+            'conditions' => 'CostCalculator.linnworks_code = AdminListing.linnworks_code'
         ),
 		
         'Multiplier' => array(
             'className' => 'Multiplier',
             'foreignKey' => false,
-            'conditions' => array('PurchaseOrder.category = Multiplier.category','PurchaseOrder.supplier = Multiplier.supplier')
+            'conditions' => array('CostCalculator.category = Multiplier.category','CostCalculator.supplier = Multiplier.supplier')
         ),
 		
 		'PurchasePrice' => array(
             'className' => 'PurchasePrice',
             'foreignKey' => false,
-            'conditions' => 'PurchaseOrder.linnworks_code = PurchasePrice.item_sku'
+            'conditions' => 'CostCalculator.linnworks_code = PurchasePrice.item_sku'
         ),
 		
 		'StockItem' => array(
             'className' => 'StockItem',
             'foreignKey' => false,
-            'conditions' => 'PurchaseOrder.linnworks_code = StockItem.item_number'
+            'conditions' => 'CostCalculator.linnworks_code = StockItem.item_number'
         )
        
     );

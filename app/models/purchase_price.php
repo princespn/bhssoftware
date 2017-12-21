@@ -10,16 +10,6 @@ class PurchasePrice extends AppModel {
             ),
         ),       
   
-    );
-    
-    
-  /*
-    var $hasOne = array(
-        'StockLevel' => array(
-            'className' => 'StockLevel',
-            'foreignKey' => false,
-            'conditions' => 'PurchasePrice.stock_itemid = StockLevel.stock_itemid'
-    )
-    );*/
+    );  
 
 }
