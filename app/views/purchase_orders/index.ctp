@@ -1,43 +1,50 @@
 <?php
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
-
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
-$mapping = array('linnworks_code','product_name','invoice_value','latest_invoice','category','supplier','invoice_currency','web_price_gbp','sale_price_gbp','web_price_euro','sale_price_euro','error');
+$mapping = array('linnworks_code','product_name','purchase_price','category','supplier','invoice_currency','Landed price in GBP','SP1 price in GBP','SP2 price in GBP','SP3 price in GBP','web_price_gbp','sale_price_gbp','Landed price in EUR','SP1 price in EUR','SP2 price in EUR','SP3 price in EUR','web_price_euro','sale_price_euro','error');
 echo $csv->addRow($mapping);
 
 foreach ($purchase_orders as $purchase_order):
-$line_code = array($purchase_order['PurchaseOrder']['linnworks_code']);
-$line_name = array($purchase_order['PurchaseOrder']['product_name']);
-$line_value = array($purchase_order['PurchaseOrder']['invoice_value']);
-$line_inv = array($purchase_order['PurchaseOrder']['latest_invoice']);
-$line_cate = array($purchase_order['PurchaseOrder']['category']);
-$line_supp = array($purchase_order['PurchaseOrder']['supplier']);
-$invoice_curr = array($purchase_order['PurchaseOrder']['invoice_currency']);
+$line_code = array($purchase_order['CostCalculator']['linnworks_code']);
+$line_name = array($purchase_order['CostCalculator']['product_name']);
+$line_value = array($purchase_order['PurchasePrice']['purchase_price']);
+//$line_inv = array($purchase_order['CostCalculator']['latest_invoice']);
+$line_cate = array($purchase_order['CostCalculator']['category']);
+$line_supp = array($purchase_order['CostCalculator']['supplier']);
+$invoice_curr = array($purchase_order['CostCalculator']['invoice_currency']);
+$land_bgp = array($purchase_order['CostCalculator']['landed_price_gbp']);
+$sp1_bgp = array($purchase_order['CostCalculator']['sp1_value_gbp']);
+$sp2_bgp = array($purchase_order['CostCalculator']['sp2_value_gbp']);
+$sp3_bgp = array($purchase_order['CostCalculator']['sp3_value_gbp']);
 
 $web_gbp = array($purchase_order['AdminListing']['web_sale_price_uk']);
-$sale_price_gbp = array($purchase_order['PurchaseOrder']['sale_price_gbp']);
+$sale_price_gbp = array($purchase_order['CostCalculator']['sale_price_gbp']);
+$land_eur = array($purchase_order['CostCalculator']['landed_price_eur']);
+$sp1_eur = array($purchase_order['CostCalculator']['sp1_value_eur']);
+$sp2_eur = array($purchase_order['CostCalculator']['sp2_value_eur']);
+$sp3_eur = array($purchase_order['CostCalculator']['sp3_value_eur']);
 $web_euro = array($purchase_order['AdminListing']['web_sale_price_de']);
-$sale_price_euro = array($purchase_order['PurchaseOrder']['sale_price_euro']);
-//$sale_error = array($purchase_order['PurchaseOrder']['error']);
-$line = array_merge($line_code,$line_name,$line_value,$line_inv,$line_cate,$line_supp,$invoice_curr,$web_gbp,$sale_price_gbp,$web_euro,$sale_price_euro);
+$sale_price_euro = array($purchase_order['CostCalculator']['sale_price_euro']);
+//$sale_error = array($purchase_order['CostCalculator']['error']);
+$line = array_merge($line_code,$line_name,$line_value,$line_cate,$line_supp,$invoice_curr,$land_bgp,$sp1_bgp,$sp2_bgp,$sp3_bgp,$web_gbp,$sale_price_gbp,$land_eur,$sp1_eur,$sp2_eur,$sp3_eur,$web_euro,$sale_price_euro);
 echo $csv->addRow($line);
 endforeach;
-$filename='code_purchase_orders';
+$filename='cost_calculators';
 echo $csv->render($filename);
 }else{	
 echo $this->Session->flash(); ?>
  <hr>
- <?php  echo $form->create('PurchaseOrder',array('action'=>'index','id'=>'saveForm')); ?>
+ <?php  echo $form->create('CostCalculator',array('action'=>'index','id'=>'saveForm')); ?>
 <h1 class="sub-header"><?php __('Cost Calculator');?></h1>
 <div class="panel panel-default">
     <div class="panel-body">       
       <div class="row">     
         <div class="col-md-8 mobile-bottomspace">
         <?php echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php echo $this->Paginator->sort('Sort by update', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>
-        <?php echo $this->Html->link(__('Import data', true), array('controller' => 'purchase_orders', 'action' => 'importdata'),array('class' => 'btn btn-info btn-sm')); ?>
+        <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import data', true), array('controller' => 'cost_calculators', 'action' => 'importdata'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
         <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
         </div>
         <div class="col-md-4">
@@ -52,7 +59,7 @@ echo $this->Session->flash(); ?>
       </div>
     </div>
 </div> 
-<div class="table-responsive">
+<div class="table-responsive catname">
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr id="head-table">
@@ -62,26 +69,24 @@ echo $this->Session->flash(); ?>
           <th></th>
           <th></th>
           <th></th>  
-          <th></th> 
-           <th></th>
-          <th colspan="6" class="text-center text-uppercase color-white gbp-bg"><?php __('GBP');?></th> 
+          <th></th>          
+          <th colspan="5" class="text-center text-uppercase color-white gbp-bg"><?php __('GBP');?></th> 
          
-          <th colspan="6" class="text-center text-uppercase color-white eur-bg"><?php __('EUR');?></th> 
+          <th colspan="5" class="text-center text-uppercase color-white eur-bg"><?php __('EUR');?></th> 
        
           <th></th> 
         </tr>
         <tr> 
           <th class="wid-20"><input name="selecctall" id="selecctall" type="checkbox"></th>
           <th class="wid-200"><?php __('Linnworks Code');?></th>
-          <th><?php __('Product Name');?></th>          
-          <th><?php __('Invoice value');?></th>
-          <th><?php __('Latest Invoice');?></th>
+          <th><?php __('Product Name');?></th>      
+          <th><?php __('Purchase Price');?></th>
           <th><ul class="select-drop">
               <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Category <span class="caret"></span></a>
                  <ul class="dropdown-menu">
                    <?php foreach ($categories as $category): ?>
                      
-                    <li><a href="<?php echo  $actual_link ; ?>/purchase_orders/category/<?php echo rawurlencode($category->CategoryName); ?>" target="_self"><?php echo $category->CategoryName; ?></a></li>
+                    <li><a href="<?php echo  $actual_link ; ?>/cost_calculators/category/<?php echo rawurlencode($category->CategoryName); ?>" target="_self"><?php echo $category->CategoryName; ?></a></li>
                   <?php endforeach; ?>
                 </ul>
               </li>
@@ -93,97 +98,79 @@ echo $this->Session->flash(); ?>
           <th class="wid-20"><?php __('S.P.1');?></th>
           <th class="wid-20"><?php __('S.P.2');?></th>
           <th class="wid-20"><?php __('S.P.3');?></th>       
-          <th><?php __('Selling Price');?></th>
           <th><?php __('Web Price');?></th>
-          
           <th class="wid-20"><?php __('Landed Price');?></th>
           <th class="wid-20"><?php __('S.P.1');?></th>
           <th class="wid-20"><?php __('S.P.2');?></th>
           <th class="wid-20"><?php __('S.P.3');?></th>
-          <th><?php __('Selling Price');?></th>
-          <th><?php __('Web Price');?></th>
-          
-          <th class="wid-20"><?php __('Action');?></th>      
+          <th><?php __('Web Price');?></th>          
+         <?php if($session->read('Auth.User.group_id')!='3') { ?> <th class="wid-20"><?php __('Action');?></th><?php } ?>
         </tr>
       </thead>
       <tbody>
       <?php foreach ($purchase_orders as $purchase_order): ?>
         <tr> 
-         <td><?php $pid = $purchase_order['PurchaseOrder']['id']; if(!empty($purchase_order['PurchaseOrder']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
-         echo $this->Form->input('PurchaseOrder.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$pid,'name'=>'checkid[]', 'type'=>'checkbox')); ?> <?php if(!empty($purchase_order['PurchaseOrder']['error'])){echo "&#8595;";} ?></td>
-           <td class="wid-200"><?php echo $purchase_order['PurchaseOrder']['linnworks_code']; ?></td>
-          <td><?php echo $purchase_order['PurchaseOrder']['product_name']; ?></td>          
-           <?php if((!empty($purchase_order['PurchaseOrder']['latest_invoice'])) && ($purchase_order['PurchaseOrder']['latest_invoice']) === ($purchase_order['PurchaseOrder']['invoice_value'])) { ?>
-            <td class="red-info"><div class="btn-update"><span id="btn-update<?php echo $purchase_order['PurchaseOrder']['id']; ?>"><?php echo $purchase_order['PurchaseOrder']['invoice_value']; ?></span></div><div id="update-btn<?php echo $purchase_order['PurchaseOrder']['id']; ?>" style="display:none;"><span class="btn-edit"><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-bell"></i>',array('controller'=>'purchase_orders','action'=>'update_invoice',$purchase_order['PurchaseOrder']['id'],'#answers'),array('class'=> 'edit-btn','escape'=>false)); ?></span></div></td>
-                <script type="text/javascript">
-                  $(document).ready(function() {
-                      $("#btn-update<?php echo $purchase_order['PurchaseOrder']['id']; ?>").hover(
-                      function() {
-                          $("#update-btn<?php echo $purchase_order['PurchaseOrder']['id']; ?>").show();
-                      });
-                  });
-           </script>
-         <td><?php echo $purchase_order['PurchaseOrder']['latest_invoice']; ?></td> 
-         <?php  } else { ?>    
-          <td><div class="btn-update"><?php echo $purchase_order['PurchaseOrder']['invoice_value']; ?></div></td> 
-          <td><?php echo $purchase_order['PurchaseOrder']['latest_invoice']; ?></td>         
-       <?php } ?>
-          <td><?php echo $purchase_order['PurchaseOrder']['category']; ?></td>
-          <td><?php echo $purchase_order['PurchaseOrder']['supplier']; ?></td>
-          <td><?php echo $purchase_order['PurchaseOrder']['invoice_currency']; ?></td>
-          
-          <td><?php // Currency Master Information in GBP---                   
+         <td><?php $pid = $purchase_order['CostCalculator']['id']; if(!empty($purchase_order['CostCalculator']['error'])){$class ='checkerror';}else{$class ='checkbox1';}
+         echo $this->Form->input('CostCalculator.id',array('class'=>$class, 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$pid,'name'=>'checkid[]', 'type'=>'checkbox')); ?> <?php if(!empty($purchase_order['CostCalculator']['error'])){echo "&#8595;";} ?></td>
+           <td class="wid-200"><?php echo $purchase_order['CostCalculator']['linnworks_code']; ?></td>
+          <?php if(!empty($purchase_order['PurchasePrice']['item_title'])){ ?>
+		  <td><?php echo $purchase_order['PurchasePrice']['item_title']; ?></td>
+          	<?php }else {?>
+		  <td><?php echo $purchase_order['CostCalculator']['product_name']; ?></td>
+			<?php } ?>
+          <td><?php echo $purchase_order['PurchasePrice']['purchase_price']; ?></td>   
+          <td><?php echo $purchase_order['CostCalculator']['category']; ?></td>
+          <td><?php echo $purchase_order['CostCalculator']['supplier']; ?></td>
+			<?php if(!empty($purchase_order['PurchasePrice']['invoice_currency'])){ ?>
+		  <td><?php echo $purchase_order['PurchasePrice']['invoice_currency']; ?></td>
+          	<?php } else if(!empty($purchase_order['CostCalculator']['invoice_currency'])){ ?>
+		  <td><?php echo $purchase_order['CostCalculator']['invoice_currency']; ?></td>
+			<?php } ?>
+		  <td><?php // Currency Master Information in GBP---   
+				if(!empty($purchase_order['PurchasePrice']['invoice_currency'])){$purr = $purchase_order['PurchasePrice']['invoice_currency'];}else {$purr = $purchase_order['CostCalculator']['invoice_currency'];}
                 foreach ($getCost as $exchange_rate):
-                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')):
-                      $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purr) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')):
+                      $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchasePrice']['purchase_price'])*($purchase_order['Multiplier']['multiplier']);
                     echo "<div><span class=blue>". round($GbpLP, 2) ."</span></div>";  ?></td> 
             <?php   break;endif; endforeach; ?>
            <?php foreach ($getsupp as $getsupps):
-           if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')): ?>
+           if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['CostCalculator']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['CostCalculator']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')): ?>
               
              <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($GbpLP*$sp1, 2)."</span></div>";    ?></td>
              <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp2, 2)."</span></div>";   ?></td>
              <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp3, 2) ."</span></div>";    ?></td>
-             <?php $salegbp = $purchase_order['PurchaseOrder']['sale_price_gbp'];
+             <?php $salegbp = $purchase_order['AdminListing']['web_sale_price_uk'];
              if(($salegbp > $GbpLP*$sp1) && ($salegbp < $GbpLP*$sp3)){ ?>
-             <td><?php echo $purchase_order['PurchaseOrder']['sale_price_gbp']; ?></td>
+             <td><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td>
              <?php } else { ?>
-             <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$GbpLP*$sp1. " Sp2->".$GbpLP*$sp2. " Sp3->".$GbpLP*$sp3;?>"><?php echo $purchase_order['PurchaseOrder']['sale_price_gbp']; ?></td>
-              <?php } ?>              
-         
-           <?php   break;endif; endforeach; ?>                  
-            <?php if(((!empty($purchase_order['AdminListing']['web_sale_price_uk'])) && (!empty($purchase_order['PurchaseOrder']['sale_price_gbp']))) && (($purchase_order['AdminListing']['web_sale_price_uk'])===($purchase_order['PurchaseOrder']['sale_price_gbp']))) {    ?>
-            <td><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td>
-            <?php } else { ?><td class="red-info" title="<?php Echo "Selling Price GBP :: ".$purchase_order['PurchaseOrder']['sale_price_gbp']." Web Price GBP :: ".$purchase_order['AdminListing']['web_sale_price_uk']." Mismatch."; ?>"><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td> 
-            <?php } ?>            
+             <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$GbpLP*$sp1. " Sp2->".$GbpLP*$sp2. " Sp3->".$GbpLP*$sp3;?>"><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td>
+            <?php } ?>       
+			<?php   break;endif; endforeach; ?>                  
+                       
              <td><?php // Currency Master Information in EUR---                   
                 foreach ($getCost as $exchange_rate):
-                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchaseOrder']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')):
+                      if(($exchange_rate['CostSetting']['invoice_currency'])===($purr) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')):
                       $ExEurRate = $exchange_rate['CostSetting']['exchange_rate'];
-                      $Eurinvoice = $purchase_order['PurchaseOrder']['invoice_value'];
+                      $Eurinvoice = $purchase_order['PurchasePrice']['purchase_price'];
                       $EurMull = $purchase_order['Multiplier']['multiplier']; 
-                      $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchaseOrder']['invoice_value'])*($purchase_order['Multiplier']['multiplier']);
+                      $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchasePrice']['purchase_price'])*($purchase_order['Multiplier']['multiplier']);
                        echo "<div><span class=blue>". round($EurLP, 2) ."</span></div>";                      
                     ?></td> 
             <?php  break; endif; endforeach; ?>
             <?php foreach ($getsupp as $getsupps):
-           if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['PurchaseOrder']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['PurchaseOrder']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')): ?>
+           if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['CostCalculator']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['CostCalculator']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')): ?>
                 <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($EurLP*$sp1, 2) ."</span></div>";    ?></td>
              <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp2, 2) ."</span></div>";   ?></td>
              <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp3, 2) ."</span></div>";    ?></td>
-            <?php $saleeur = $purchase_order['PurchaseOrder']['sale_price_euro'];
+            <?php $saleeur = $purchase_order['AdminListing']['web_sale_price_de'];
              if(($saleeur > $EurLP*$sp1) && ($saleeur < $EurLP*$sp3)){ ?>
-             <td><?php echo $purchase_order['PurchaseOrder']['sale_price_euro']; ?></td>
+             <td><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td>
              <?php } else { ?>
-             <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$EurLP*$sp1. " Sp2->".$EurLP*$sp2. " Sp3->".$EurLP*$sp3;?>"><?php echo $purchase_order['PurchaseOrder']['sale_price_euro']; ?></td>
-              <?php } ?>  
-       
-           <?php   break;endif; endforeach; ?>
-            <?php if(((!empty($purchase_order['AdminListing']['web_sale_price_de'])) && (!empty($purchase_order['PurchaseOrder']['sale_price_euro']))) && (($purchase_order['AdminListing']['web_sale_price_de'])===($purchase_order['PurchaseOrder']['sale_price_euro']))) {    ?>
-            <td><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td>
-            <?php } else { ?><td class="red-info" title="<?php Echo "Selling Price EUR :: ".$purchase_order['PurchaseOrder']['sale_price_euro']." Web Price EUR :: ".$purchase_order['AdminListing']['web_sale_price_de']." Mismatch."; ?>"><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td> 
-            <?php } ?>                     
-            <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'purchase_orders','action'=>'edit',$purchase_order['PurchaseOrder']['id']),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'purchase_orders','action' => 'delete',$purchase_order['PurchaseOrder']['id']), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $purchase_order['PurchaseOrder']['id']));  ?></td>
+             <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$EurLP*$sp1. " Sp2->".$EurLP*$sp2. " Sp3->".$EurLP*$sp3;?>"><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td>
+              <?php } ?>
+			  <?php   break;endif; endforeach; ?>
+
+            <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'cost_calculators','action'=>'edit',$purchase_order['CostCalculator']['id']),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'cost_calculators','action' => 'delete',$purchase_order['CostCalculator']['id']), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $purchase_order['CostCalculator']['id']));  ?></td><?php } ?>
             </tr>         
          <?php endforeach; ?>            
       </tbody>
@@ -205,7 +192,7 @@ echo $this->Session->flash(); ?>
  </nav>
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#PurchaseOrderError').click(function(event) {  //on click
+    $('#CostCalculatorError').click(function(event) {  //on click
         if(this.checked) { // check select status
             $('.checkerror').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
@@ -230,7 +217,7 @@ $(document).ready(function() {
             $('.checkbox1').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
 		$('#exportfile').removeAttr('disabled');
-		$('#PurchaseOrderError').attr('disabled','disabled');
+		$('#CostCalculatorError').attr('disabled','disabled');
             });
 		$('.checkerror').each(function() { //loop through each checkbox
                 this.checked = true;  //select all checkboxes with class "checkbox1" 
@@ -240,7 +227,7 @@ $(document).ready(function() {
             $('.checkbox1').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
 		$('#exportfile').attr("disabled", "disabled");
-		$('#PurchaseOrderError').removeAttr('disabled','disabled');
+		$('#CostCalculatorError').removeAttr('disabled','disabled');
             }); 
 		$('.checkerror').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      

@@ -1,5 +1,5 @@
 <?php 
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -49,11 +49,18 @@ $this->requestAction('/users/logout/', array('return'));
          
            <td><?php  $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency']; $to =  $exchange_rate['CostSetting']['sale_base_currency'];
                                     //$url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
-                                   $url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
-                                   $data = file_get_contents($url);
-                                   $yummy = json_decode($data);
-                                   $converted = $yummy->{'Rate'};
-                                   $ExRate = round($converted, 3);                          
+                                   //$url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
+								   $url  = "https://finance.google.com/finance/converter?a=$amount&from=$from&to=$to";
+                                   
+								   $data = file_get_contents($url);
+								   $get = explode("<span class=bld>",$data);
+									$get = explode("</span>",$get[1]);  
+									$converted = preg_replace("/[^0-9\.]/", null, $get[0]);
+																		
+                                   //$yummy = json_decode($data);
+								   //print_r($converted_amount);die();
+                                   //$converted = $yummy->{'Rate'};
+                                   $ExRate = round($converted, 2);                          
                                    if($ExRate =='0'){echo "1";}else {echo $ExRate;}                                 
                                    ?></td> 
             <td><?php echo $exchange_rate['CostSetting']['variation']; ?></td>

@@ -1,5 +1,5 @@
 <?php
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -7,13 +7,12 @@ $this->requestAction('/users/logout/', array('return'));
 <?php echo $this->Session->flash(); ?><hr>
 <h1 class="sub-header"><?php __('Import Cost Calculator Data');?></h1>
 <hr>
-
  <div class="panel panel-info import-panel">
       <div class="panel-heading">
         <h3 class="panel-title"><?php __('Import data');?></h3>
       </div>
       <div class="panel-body">
-        <?php echo $this->Form->create('PurchaseOrder',array('action' => 'importdata','enctype'=>'multipart/form-data'));?>
+        <?php echo $this->Form->create('CostCalculator',array('action' => 'importdata','enctype'=>'multipart/form-data'));?>
           <div class="form-group">          
             <?php echo $this->Form->input('file', array('label'=>'Import data','type'=>'file') );?> 
           </div>
@@ -50,7 +49,7 @@ $this->requestAction('/users/logout/', array('return'));
 <?php } ?>
 <script>
 $(document).ready(function(){
-	$('#PurchaseOrderFile').change(function(){
+	$('#CostCalculatorFile').change(function(){
 	$('#submit').removeAttr('disabled');
 	
 	});
