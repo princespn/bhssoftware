@@ -21,7 +21,7 @@ class MultipliersController extends AppController {
         if (!empty($catname[0]['Multiplier']['id'])) {            
         $this->Multiplier->updateAll(array('Multiplier.multiplier' => $this->data['Multiplier']['multiplier']), array('Multiplier.category' => $cat, 'Multiplier.supplier' => $supp));
         $this->Session->setFlash(__('Update Multiplier data successfully', true));
-        $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));                    
+        $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));                    
         }else {            
         $this->request->data['Multiplier']['category'] = $cat;
         $this->request->data['Multiplier']['supplier'] = $supp;                            
@@ -30,7 +30,7 @@ class MultipliersController extends AppController {
                              $this->Multiplier->create();
                              if ($this->Multiplier->save($this->request->data)) {
                                 $this->Session->setFlash(__('Multiplier data created successfully.', true));
-                                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                                $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                                  }  
 
          
@@ -45,17 +45,17 @@ class MultipliersController extends AppController {
     function delete($id = null) {
         if (!$id) {
             $this->Session->setFlash(__('Invalid ID in database.', true));
-            $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+            $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
         } else {
 
             if ($this->Multiplier->delete($id)) {
 
                 $this->Session->setFlash(__('Multiplier  deleted successfully.', true));
-                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
             }
         }
         $this->Session->setFlash(__('ERROR!! Multiplier could not be deleted!', true));
-        $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+        $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
     }
 	
 }

@@ -140,11 +140,10 @@ class PurchasePricesController extends AppController {
 								$updeta = date("Ymd",$days);
 								$lang = 60*60*24;
 								
-								//print_r($date);
+								$supp = $porders->PurchaseOrderHeader->fkSupplierId;
+								$curr = $porders->PurchaseOrderHeader->Currency;
 								//echo "</br>";
-								
-								
-													
+								//die();												
 							
 							 foreach ($porders->PurchaseOrderItem as $order){
 							
@@ -152,24 +151,30 @@ class PurchasePricesController extends AppController {
 											
 							$this->loadModel('PurchasePrice');
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
+							//print_r($days);
+							//echo "</br>";
+
 							$oldd = strtotime($data[0]['PurchasePrice']['purchase_date']);
+							
+							//print_r($oldd); 
+							
 							
 							//print_r($data[0]['PurchasePrice']['purchase_date']);
 							//echo "</br>";
-							$diff = floor(($days-$oldd)/$lang);
-							//echo $diff;
+							//$diff = floor(($days-$oldd)/$lang);
+							
 							
 							if ((($purprices)!='0') && (!empty($oldd)) && ($diff>1)){//echo "hello"; die();
 								
-							
+							//echo $diff;die();
 								$this->PurchasePrice->updateAll(
-								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices),
+								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices,'item_title'=>$order->ItemTitle,'invoice_currency'=>$curr),
 								array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' =>$data[0]['PurchasePrice']['id']));
 								
 							}else {//die();
-									
+							
 							$this->PurchasePrice->create();							
-							$this->PurchasePrice->saveAll(array('purchase_id'=>$order->pkPurchaseItemId,'stock_itemid'=>$order->fkStockItemId, 'item_sku'=>$order->SKU, 'item_title'=>$order->ItemTitle, 'quantity'=>$order->Quantity, 'tax'=>$order->Tax, 'cost'=>$order->Cost, 'purchase_price'=>$purprices, 'purchase_date'=>$date));
+							$this->PurchasePrice->saveAll(array('purchase_id'=>$order->pkPurchaseItemId, 'supplier_id'=>$supp, 'stock_itemid'=>$order->fkStockItemId, 'item_sku'=>$order->SKU, 'item_title'=>$order->ItemTitle, 'invoice_currency'=>$curr, 'quantity'=>$order->Quantity, 'tax'=>$order->Tax, 'cost'=>$order->Cost, 'purchase_price'=>$purprices, 'purchase_date'=>$date));
 							}							
 							$this->set(compact('porders','date'));				
 							}	

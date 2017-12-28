@@ -140,7 +140,7 @@ class StockItemsController extends AppController {
 					
 					$Catname = $this->categname();
 					
-					$date = '2017-12-18';
+					$date = '2017-12-20';
 					
 					$this->loadModel('StockLevel');
 					
@@ -158,7 +158,7 @@ class StockItemsController extends AppController {
 
 					if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['StockItem']['all_item']))) {
             		$string = trim($this->data['StockItem']['all_item']);   
-						//print_r($string);die();
+					//print_r($string);die();
 					$condsku = array('StockItem.item_number LIKE' => '%' . $string . '%');
 					$orders = array('StockItem.item_number ASC');
 					$this->paginate = array('limit' => 100, 'order' => $orders, 'conditions' => $condsku);
@@ -182,7 +182,7 @@ class StockItemsController extends AppController {
 					$cat = urldecode($catn);
 					//print_r($cat);die();
 						  
-					$date = '2017-12-18';		  
+					$date = '2017-12-20';		  
 
 					$this->loadModel('StockLevel');
 					

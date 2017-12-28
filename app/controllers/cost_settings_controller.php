@@ -28,19 +28,19 @@ class CostSettingsController extends AppController {
                 if ((!empty($exchange))&& (empty($dynaiccurr))  && (!empty($currname[0]['CostSetting']['exchange_rate'])) && (!empty($currname[0]['CostSetting']['invoice_currency']))) {
                     $this->CostSetting->updateAll(array('CostSetting.exchange_rate' => $this->data['CostSetting']['exchange_rate']), array('CostSetting.sale_base_currency' => $this->data['CostSetting']['sale_base_currency'], 'CostSetting.invoice_currency' => $this->data['CostSetting']['invoice_currency']));
                     $this->Session->setFlash(__('Update Exchange Rate successfully.', true));
-                    $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                    $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
 
                 } else  if ((empty($exchange)) && (!empty($dynaiccurr)) && (!empty($currname[0]['CostSetting']['variation'])) && (!empty($currname[0]['CostSetting']['invoice_currency'])) && (!empty($currname[0]['CostSetting']['sale_base_currency']))) {
 
                     $this->CostSetting->updateAll(array('CostSetting.variation' => $this->data['CostSetting']['variation']), array('CostSetting.sale_base_currency' => $this->data['CostSetting']['sale_base_currency'], 'CostSetting.invoice_currency' => $this->data['CostSetting']['invoice_currency']));
                     $this->Session->setFlash(__('Update  Variation successfully.', true));
-                    $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                    $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
 
                 } else  if ((!empty($exchange)) && (!empty($dynaiccurr)) && (!empty($currname[0]['CostSetting']['variation'])) && (!empty($currname[0]['CostSetting']['invoice_currency'])) && (!empty($currname[0]['CostSetting']['sale_base_currency']))) {
 
                     $this->CostSetting->updateAll(array('CostSetting.variation' => $this->data['CostSetting']['variation'],'CostSetting.exchange_rate' => $this->data['CostSetting']['exchange_rate']), array('CostSetting.sale_base_currency' => $this->data['CostSetting']['sale_base_currency'], 'CostSetting.invoice_currency' => $this->data['CostSetting']['invoice_currency']));
                     $this->Session->setFlash(__('Update  Both Exchange rate And Variation successfully.', true));
-                    $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                    $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
 
                 } else {
 
@@ -51,13 +51,13 @@ class CostSettingsController extends AppController {
                     $this->CostSetting->create();
                             if ($this->CostSetting->save($this->request->data)) {
                                 $this->Session->setFlash(__('Exchange Rate  currency created successfully.', true));
-                                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                                $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                     }
                 }
             //}else{
 
                // $this->Session->setFlash(__('Error !!, Exchange Rate currency Already Exist.', true));
-               // $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+               // $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
             //}
 
         }

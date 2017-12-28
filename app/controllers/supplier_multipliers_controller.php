@@ -35,7 +35,7 @@ class SupplierMultipliersController extends AppController
                                                                
                                                                $this->SupplierMultiplier->updateAll(array('SupplierMultiplier.sp1_multiplier' => $this->data['SupplierMultiplier']['sp1_multiplier'], 'SupplierMultiplier.sp2_multiplier' => $this->data['SupplierMultiplier']['sp2_multiplier'], 'SupplierMultiplier.sp3_multiplier' => $this->data['SupplierMultiplier']['sp3_multiplier']), array('SupplierMultiplier.invoice_currency' => $categoryname['0']['SupplierMultiplier']['invoice_currency'],'SupplierMultiplier.category' => $categoryname['0']['SupplierMultiplier']['category'], 'SupplierMultiplier.supplier' => $categoryname['0']['SupplierMultiplier']['supplier']));
                                                                $this->Session->setFlash(__('Update Supplier Multiplier data successfully', true));
-                                                               $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                                                               $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                                                                
                                                            }else {  
                                                                
@@ -51,7 +51,7 @@ class SupplierMultipliersController extends AppController
                                                                $this->SupplierMultiplier->create();
                                                                if ($this->SupplierMultiplier->save($this->request->data)) {
                                                                    $this->Session->setFlash(__('Supplier Multiplier data created successfully.', true));
-                                                                   $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                                                                   $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                                                                }  
                                                                
                                                                
@@ -63,7 +63,7 @@ class SupplierMultipliersController extends AppController
                
                
                $this->Session->setFlash(__('Error !! , Please Insert Multiplier value First.', true));
-               $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));          
+               $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));          
                
                
            }
@@ -101,7 +101,7 @@ class SupplierMultipliersController extends AppController
             //$newuser = $this->data['SupplierMultiplier']['invoice_currency'];
                     $this->SupplierMultiplier->updateAll(array('SupplierMultiplier.sp1_multiplier' => $this->data['SupplierMultiplier']['sp1_multiplier'], 'SupplierMultiplier.sp2_multiplier' => $this->data['SupplierMultiplier']['sp2_multiplier'], 'SupplierMultiplier.sp3_multiplier' => $this->data['SupplierMultiplier']['sp3_multiplier']), array('SupplierMultiplier.invoice_currency' => $catname['0']['SupplierMultiplier']['invoice_currency'],'SupplierMultiplier.category' => $catname['0']['SupplierMultiplier']['category'], 'SupplierMultiplier.supplier' => $catname['0']['SupplierMultiplier']['supplier']));
                     $this->Session->setFlash(__('Update Sales Price Multiplier value successfully', true));
-                    $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                    $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                 } else  if (((!empty($invoice['0']['SupplierMultiplier']['category'])) && ((!empty($invoice['0']['SupplierMultiplier']['supplier']))) && (!(empty($invoice['0']['SupplierMultiplier']['multiplier'])))) && ((!empty($this->data['SupplierMultiplier']['multiplier'])))) {
 
                        // $suppid = $this->SupplierMultiplier->find('All',);
@@ -110,7 +110,7 @@ class SupplierMultipliersController extends AppController
                 //$this->request->data['SupplierMultiplier']['multiplier'] = urldecode($this->data['SupplierMultiplier']['multiplier']);
                         $this->SupplierMultiplier->updateAll(array('SupplierMultiplier.multiplier' => $this->data['SupplierMultiplier']['multiplier']), array('SupplierMultiplier.category' => $invoice['0']['SupplierMultiplier']['category'], 'SupplierMultiplier.supplier' => $invoice['0']['SupplierMultiplier']['supplier']));
                         $this->Session->setFlash(__('Update Supplier Multiplier value successfully', true));
-                        $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                        $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
               
                     } else if((!empty($this->data['SupplierMultiplier']['invoice_currency'])) && (!empty($this->data['SupplierMultiplier']['supplier'])) && (!empty($this->data['SupplierMultiplier']['category']))) {
                         
@@ -123,11 +123,11 @@ class SupplierMultipliersController extends AppController
                             $this->SupplierMultiplier->create();
                             if ($this->SupplierMultiplier->save($this->request->data)) {
                                 $this->Session->setFlash(__('Sales Price Multiplier data created successfully.', true));
-                                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                                $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                             }
                     } else {
                     $this->Session->setFlash(__('Error !!. Please check all the fields and try again.', true));
-                  $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                  $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
                     }
 
         }
@@ -137,17 +137,17 @@ class SupplierMultipliersController extends AppController
     function delete($id = null) {
         if (!$id) {
             $this->Session->setFlash(__('Invalid ID in database.', true));
-            $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+            $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
         } else {
 
             if ($this->SupplierMultiplier->delete($id)) {
 
                 $this->Session->setFlash(__('The Supplier Multiplier deleted successfully.', true));
-                $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+                $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
             }
         }
         $this->Session->setFlash(__('ERROR!! The Supplier Multiplier could not be deleted!', true));
-        $this->redirect(array('controller' => 'purchase_orders', 'action' => 'settings'));
+        $this->redirect(array('controller' => 'cost_calculators', 'action' => 'settings'));
     }
 }
 ?>
