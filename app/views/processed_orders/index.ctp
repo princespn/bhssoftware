@@ -47,10 +47,10 @@ echo $this->Session->flash(); ?>
       <th><?php __('Category');?></th>
       <th><?php __('Product name');?></th>
        <th><?php __('Quantity');?></th>
-        <th><?php __('Cost PerUnit');?></th>       
-         <th><?php __('Order Date');?></th>
-         <th><?php __('Order value');?></th> 
-         </tr>
+       <th><?php __('Cost PerUnit');?></th>       
+       <th><?php __('Order Date');?></th>
+       <th><?php __('Order value');?></th> 
+       </tr>
       </thead>
       <tbody>
 
@@ -80,7 +80,7 @@ echo $this->Session->flash(); ?>
          <td><?php echo number_format($order->TotalsInfo->TotalCharge,2);?></td>        
           <?Php //if($order->GeneralInfo->SubSource ==='Germany'){$Gersum+= $order->TotalsInfo->TotalCharge; } ?>
           <?Php //if($order->GeneralInfo->SubSource ==='United Kingdom'){$Uksum+= $order->TotalsInfo->TotalCharge; } ?>
-            <?Php //if($order->GeneralInfo->SubSource ==='EBAY0'){$Ebsum+= $order->TotalsInfo->TotalCharge; } ?>
+           <?Php //if($order->GeneralInfo->SubSource ==='EBAY0'){$Ebsum+= $order->TotalsInfo->TotalCharge; } ?>
           <?Php //if($order->GeneralInfo->SubSource ==='France'){$Frsum+= $order->TotalsInfo->TotalCharge; } ?>
           <?Php //if($order->GeneralInfo->SubSource ==='Tesco UK'){$Tessum+= $order->TotalsInfo->TotalCharge; } ?>
           <?Php //if($order->GeneralInfo->SubSource ==='http://www.homescapesonline.com'){$Magsum+= $order->TotalsInfo->TotalCharge; } ?>        
@@ -90,11 +90,11 @@ echo $this->Session->flash(); ?>
     </table>
   </div>
  <p><nav><?php //print_r($pagination); ?></nav></p>
-<a href="#" onclick="pageloader();">Click here </a>
+<a href="#" onclick="pageloader();">Click here</a>
 <script>
 function pageloader()
 {
-<?php for ($i=1200; $i<=1600; $i++) { ?>
+<?php for ($i=1600; $i<=2000; $i++){ ?>
  window.open("http://ukwalahome.com/processed_orders?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }
