@@ -15,13 +15,13 @@ $this->requestAction('/users/logout/', array('return'));
         <div class="panel-heading custom-panel-heading"><?php __('Amazon UK Listing');?></div>
             <div class="panel-body form-horizontal">
                 <div class="form-group">          
-                   <div class="col-sm-9">
+                    <div class="col-sm-9">
                                   <?php echo $this->Form->hidden('id',array('value'=>$this->data['EnglishListing']['id'])); ?>
                                   <?php $wordlist = split ("\_", $this->data['EnglishListing']['item_sku']);  ?>
                     </div>
-            </div>        
-<div class="form-group">                               
-<div class="col-sm-9">   
+                </div>        
+    <div class="form-group">                               
+    <div class="col-sm-9">   
  <?php
 echo $this->Form->hidden('id',array('value'=>$this->data['EnglishListing']['id']));
 $wordlist = split ("\_", $this->data['EnglishListing']['item_sku']); 	

@@ -7,7 +7,7 @@ class PurchasePricesController extends AppController {
 
     	function beforeFilter() {
         	parent::beforeFilter();
-        	$this->Auth->allow(array('productprice','tokenkey','index','searchpurorder','getpurchaseprice'));
+        	$this->Auth->allow(array('productprice','tokenkey','index','searchpurorder','getpurchaseprice','suppliername'));
 	        $this->Session->activate();
     		
 	}
@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu1.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu1.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","EntriesPerPage":50,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu1.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","EntriesPerPage":80,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -142,8 +142,7 @@ class PurchasePricesController extends AppController {
 								
 								$supp = $porders->PurchaseOrderHeader->fkSupplierId;
 								$curr = $porders->PurchaseOrderHeader->Currency;
-								//echo "</br>";
-								//die();												
+																			
 							
 							 foreach ($porders->PurchaseOrderItem as $order){
 							
@@ -151,31 +150,25 @@ class PurchasePricesController extends AppController {
 											
 							$this->loadModel('PurchasePrice');
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
-							//print_r($days);
-							//echo "</br>";
-
+							
 							$oldd = strtotime($data[0]['PurchasePrice']['purchase_date']);
-							
-							//print_r($oldd); 
-							
-							
-							//print_r($data[0]['PurchasePrice']['purchase_date']);
-							//echo "</br>";
-							//$diff = floor(($days-$oldd)/$lang);
+														
+							$diff = floor(($days-$oldd)/$lang);
 							
 							
-							if ((($purprices)!='0') && (!empty($oldd)) && ($diff>1)){//echo "hello"; die();
+							if ((($purprices)!=='0') && (!empty($oldd)) && ($diff>1)){ //echo "hello"; die();
 								
-							//echo $diff;die();
+							
 								$this->PurchasePrice->updateAll(
-								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices,'item_title'=>$order->ItemTitle,'invoice_currency'=>$curr),
+								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices),
 								array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' =>$data[0]['PurchasePrice']['id']));
 								
-							}else {//die();
+							}else { 
 							
 							$this->PurchasePrice->create();							
 							$this->PurchasePrice->saveAll(array('purchase_id'=>$order->pkPurchaseItemId, 'supplier_id'=>$supp, 'stock_itemid'=>$order->fkStockItemId, 'item_sku'=>$order->SKU, 'item_title'=>$order->ItemTitle, 'invoice_currency'=>$curr, 'quantity'=>$order->Quantity, 'tax'=>$order->Tax, 'cost'=>$order->Cost, 'purchase_price'=>$purprices, 'purchase_date'=>$date));
-							}							
+							 //echo "hello vzxb xcbbvbh";die();
+							 }							
 							$this->set(compact('porders','date'));				
 							}	
 					}
@@ -183,12 +176,31 @@ class PurchasePricesController extends AppController {
 				} 
 
 
-				public function productprice(){
-				$this->set('title', 'Linnworks Get Purchse Prices Information.');
-	    		
-				//$this->PurchasePrice->recursive = 1;	
-				$this->set('datastocks',$this->PurchasePrice->find('all', array('fields' => array('PurchasePrice.stock_itemid', 'PurchasePrice.item_sku', 'PurchasePrice.item_title', 'PurchasePrice.quantity', 'PurchasePrice.tax', 'PurchasePrice.cost', 'PurchasePrice.purchase_price','PurchasePrice.purchase_date'))));
+				public function suppliername(){
 				
-				}
+				$this->set('title', 'Linnworks Get Purchase Prices Information.');
+	    		
+				$userkey = $this->tokenkey();
+
+						$some_data = array('token' => $userkey);
+						
+						$header = array("POST:https://eu1.linnworks.net//api/Inventory/GetSuppliers HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+						
+						$url ='https://eu1.linnworks.net//api/Inventory/GetSuppliers';
+																				
+						$ch = curl_init();
+	      				curl_setopt($ch, CURLOPT_URL, $url);
+        				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				        curl_setopt($ch, CURLOPT_POST, 1);
+				        curl_setopt($ch, CURLOPT_POSTFIELDS, $some_data);
+				        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+				        $result = curl_exec($ch);
+				        $supliers = json_decode($result);
+						print_r($supliers); die();
+						curl_close($ch);
+						if(!empty($supliers)){return $supliers;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
+					}
 				
 	}

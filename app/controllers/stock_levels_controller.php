@@ -119,15 +119,17 @@ class StockLevelsController extends AppController {
 					
 				
 				$this_week_sd = date("Y-m-d");
-				//$this_week_sd = '2017-12-24';
+				//$this_week_sd = '2018-01-11';
 				$this->StockLevel->create(); 	
 				$this->StockLevel->saveAll(array('change_date' => $this_week_sd,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'location_name' => $order->StockLevels[$i]->Location->LocationName, 'stock_lev' => $order->StockLevels[$i]->StockLevel, 'stock_val' => $order->StockLevels[$i]->StockValue, 'unit_costs' => $order->StockLevels[$i]->UnitCost, 'stock_itemid' => $order->StockLevels[$i]->StockItemId, 'stock_location_id' => $order->StockLevels[$i]->Location->StockLocationId));
    				}
 				$this->loadModel('StockItem');	
 				$today_date = date("Y-m-d");
-				//$today_date = '2017-12-24';
+				//$today_date = '2018-01-11';
+				$suppname = $order->Suppliers[0]->Supplier;	
+				$suppid = $order->Suppliers[0]->SupplierID;	
 				$this->StockItem->create(); 	
-				$this->StockItem->saveAll(array('change_date' => $today_date,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'heights' =>$order->Height, 'widths' =>$order->Width, 'depths' =>$order->Depth, 'weights' =>$order->Weight));
+				$this->StockItem->saveAll(array('change_date' => $today_date,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName,  'supp_name' =>$suppname, 'supp_id' =>$suppid, 'heights' =>$order->Height, 'widths' =>$order->Width, 'depths' =>$order->Depth, 'weights' =>$order->Weight));
 				
 				
 				$this->loadModel('CostCalculator');				
@@ -155,12 +157,14 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2017-12-20';
+					$date = '2018-01-23';
+					
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+					//print_r($lastday);die();2017-12-31
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
+					//print_r($lastmonthday);die();2017-11-30
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));
-
-
+					//print_r($lastlastmonthday);die();2017-10-31
 					$this->StockLevel->recursive = 1;
 					
 					$ukstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.change_date' => $date),'order' =>array('StockLevel.category_name  ASC')));
@@ -176,27 +180,29 @@ class StockLevelsController extends AppController {
 	   				$esfbstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.change_date' => $date),'order' =>array('StockLevel.category_name  ASC')));
 					*/
 					
-					$conditions = array('StockLevel.change_date' => $lastday);
+					$conditions = array('StockLevel.change_date' => $lastday,'StockLevel.location_name  !='=>'');
 	
 					$previousmonth =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $conditions, 'order' =>array('StockLevel.category_name  ASC')));
 					
 					$lastconditions = array('StockLevel.change_date' => $lastmonthday,'StockLevel.location_name  !='=>'');
 	
-					$lastmonth =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastconditions, 'order' =>array('StockLevel.category_name  ASC')));
-					
+					$lastmonths =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastconditions, 'order' =>array('StockLevel.category_name  ASC')));
+					//print_r($lastmonth);die();
 					$lastlastconditions = array('StockLevel.change_date' => $lastlastmonthday,'StockLevel.location_name  !='=>'');
 	
-					$lastlastmonth =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastlastconditions, 'order' =>array('StockLevel.category_name  ASC')));
+					$lastlastmonths =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastlastconditions, 'order' =>array('StockLevel.category_name  ASC')));
 					
 	   				$this->loadModel('StockItem');
 					
 					$groupin = array('StockItem.category_name');				
 					
 					$catnames =  $this->StockItem->find('all', array('fields' => array('StockItem.category_name'), 'group' => $groupin,'order' =>array('StockItem.category_name  ASC')));
-					//print_r($lastmonth);die();
+					
 					//$this->set(compact('lastmonth','lastlastmonth','catnames','ukfbstocks','waterstocks','frfbstocks','defbstocks','esfbstocks','ukstocks','previousmonth'));
-					$this->set(compact('lastmonth','previousmonth','lastlastmonth','catnames','ukstocks'));
+					$this->set(compact('previousmonth','lastlastmonths','catnames','ukstocks','lastmonths'));
 
 			}
+			
+		
 			
 }

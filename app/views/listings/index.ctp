@@ -1,6 +1,5 @@
 <?php
-
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -28,7 +27,7 @@ echo $csv->render($filename);
     <div class="panel-body">
       <div class="row">
         <div class="col-md-8 mobile-bottomspace">
-         <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
+         <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
         </div>
           <div class="col-md-4">
@@ -64,7 +63,7 @@ echo $csv->render($filename);
           <th><?php __('Tesco');?></th>
           <th><?php __('RRP(GBP)');?></th>
           <th><?php __('Daily Mail');?></th>
-          <th class="wid-70"><?php __('Action');?></th>        
+         <?php if($session->read('Auth.User.group_id')!='3') { ?><th class="wid-70"><?php __('Action');?></th><?php } ?>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +72,7 @@ echo $csv->render($filename);
           <td><?php $productid = $price_listing['Listing']['id']; echo $this->Form->input('Listing.id',array('class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?></td>
           <td><?php echo $price_listing['Listing']['linnworks_code']; ?></td>
           <td><?php echo $price_listing['MainListing']['amazon_sku']; ?></td>
-          <td><?php echo $price_listing['MainListing']['category']; ?></td>
+          <td><?php echo $price_listing['InventoryCode']['category']; ?></td>
           <td><?php echo $price_listing['Listing']['web_sku']; ?></td>
           <td><?php echo $price_listing['Listing']['web_price_uk']; ?></td>
           <td><?php echo $price_listing['Listing']['web_sale_price_uk']; ?></td>
@@ -84,8 +83,8 @@ echo $csv->render($filename);
            <td><?php echo $price_listing['Listing']['web_sale_price_tesco']; ?></td>
            <td><?php echo $price_listing['Listing']['web_price_dm']; ?></td>
            <td><?php echo $price_listing['Listing']['web_sale_price_dm']; ?></td>
-    
-          <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $price_listing['Listing']['web_sku']));  ?></td>
+    <?php if($session->read('Auth.User.group_id')!='3') { ?>
+          <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $price_listing['Listing']['web_sku']));  ?></td><?php } ?>
          </tr>        
         <?php endforeach; ?>
       </tbody>

@@ -1,5 +1,5 @@
 <?php
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -27,7 +27,7 @@ echo $csv->render($filename);
     <div class="panel-body">
       <div class="row">
         <div class="col-md-8 mobile-bottomspace">
-         <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'master_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
+           <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'master_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
         </div>
           <div class="col-md-4">
@@ -58,8 +58,9 @@ echo $csv->render($filename);
           <th><?php __('RRP(EUR)');?></th>
           <th><?php __('Amazon DE');?></th>
            <th><?php __('RRP(EUR)');?></th>
-          <th><?php __('Amazon FR');?></th> 
-          <th class="wid-70"><?php __('Action');?></th>      
+          <th><?php __('Amazon FR');?></th>          
+           <th><?php __('Cdiscount (EUR)');?></th> 
+          <?php if($session->read('Auth.User.group_id')!='3') { ?><th class="wid-70"><?php __('Action');?></th><?php } ?>
         </tr>
       </thead>
       <tbody>
@@ -67,7 +68,7 @@ echo $csv->render($filename);
         <tr>
           <td><?php $productid = $code_listing['MasterListing']['id']; echo $this->Form->input('MasterListing.id',array('class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?></td>
           <td><?php echo $code_listing['MasterListing']['linnworks_code']; ?></td>
-          <td><?php echo $code_listing['MasterListing']['category']; ?></td>
+          <td><?php echo $code_listing['InventoryCode']['category']; ?></td>
           <td><?php echo $code_listing['MasterListing']['amazon_sku']; ?></td>
           <td><?php echo $code_listing['MasterListing']['price_uk']; ?></td>
           <td><?php echo $code_listing['MasterListing']['sale_price_uk']; ?></td>
@@ -75,7 +76,8 @@ echo $csv->render($filename);
           <td><?php echo $code_listing['MasterListing']['sale_price_de']; ?></td>
           <td><?php echo $code_listing['MasterListing']['price_fr']; ?></td>
           <td><?php echo $code_listing['MasterListing']['sale_price_fr']; ?></td>
-         <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'master_listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'master_listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $code_listing['MasterListing']['amazon_sku']));  ?></td>
+           <td><?php echo $code_listing['MasterListing']['sale_price_cdiscount']; ?></td>
+         <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'master_listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'master_listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $code_listing['MasterListing']['amazon_sku']));  ?></td><?php } ?>
   
         </tr>        
         <?php endforeach; ?>

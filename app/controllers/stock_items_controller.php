@@ -7,7 +7,7 @@ class StockItemsController extends AppController {
 
     	function beforeFilter() {
         	parent::beforeFilter();
-        	$this->Auth->allow(array('category','stock_category', 'index'));
+        	$this->Auth->allow(array('minimum_level','category','stock_category', 'index'));
 	        $this->Session->activate();
     		
 	}
@@ -65,74 +65,10 @@ class StockItemsController extends AppController {
         //print_r($catgory);die();
 				        return $catgory;
 			
-	    	}
-	
-	
-   		 public function stock_withpurchase(){
-
-        //This function return only order id identifiers -pkOrderID
-
-				        $this->set('title', 'Linnworks Get Stock Channels Reports.');
-				        $userkey = $this->tokenkey();
-				        $some_data = array('token' => $userkey);		
-		
-					$stockitemids = '"e45f5539-7222-43c0-ba56-0e92daf7d2af"';
-					$StockLocationId ='"00000000-0000-0000-0000-000000000000"';
-
-					$header = array("POST:https://eu.linnworks.net/api/PurchaseOrder/GetPurchaseOrdersWithStockItems HTTP/1.1", "Connection: keep-alive", "Content-Length: 139", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-
-	
-					$url = 'https://eu1.linnworks.net//api/PurchaseOrder/GetPurchaseOrdersWithStockItems?purchaseOrder={"StockItemId":'. $stockitemids .',"LocationIds":['. $StockLocationId .']}';
-
-
-		
-				        $ch = curl_init();
-				        curl_setopt($ch, CURLOPT_URL, $url);
-				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				        curl_setopt($ch, CURLOPT_POST, 1);
-				        curl_setopt($ch, CURLOPT_POSTFIELDS, $some_data);
-				        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-				        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-				        $result = curl_exec($ch);
-				        $porders = json_decode($result);
-				       print_r($porders); die();
-				       curl_close($ch);
-				       if(!empty($porders)){return $porders ;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
-        //$this->set(compact('porders'));
-				
-	     	 }
-
-
+	    	}	
     
 				
-       		public function stock_purprice(){        
-	
-        		$this->set('title', 'Linnworks Get Stock Channels Purchase Prices.');
-	        	$userkey = $this->tokenkey();
-				$some_data = array('token' => $userkey);
-
-				$purchaseid = "2efa09b6-af37-461d-9983-4cd19eee1192";
-		
-				$header = array("POST:https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder HTTP/1.1", "Connection: keep-alive", "Content-Length: 139", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-
-			     $url = 'https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder?pkPurchaseId='.$purchaseid;
-				 $ch = curl_init();
-			        curl_setopt($ch, CURLOPT_URL, $url);
-			        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			        curl_setopt($ch, CURLOPT_POST, 1);
-			        curl_setopt($ch, CURLOPT_POSTFIELDS, $some_data);
-			        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-			        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			        $result = curl_exec($ch);
-			        $porders = json_decode($result);
-			       print_r($porders); die();
-			       curl_close($ch);
-			       if(!empty($porders)){return $porders;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
-        //$this->set(compact('porders'));
-			
-		}
+       		
     			
  		public function index(){
 		
@@ -140,7 +76,10 @@ class StockItemsController extends AppController {
 					
 					$Catname = $this->categname();
 					
-					$date = '2017-12-20';
+					
+					//$date = date('Y-m-d',strtotime("-1 days"));
+					$date = '2018-01-23';
+					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
 					
@@ -182,7 +121,8 @@ class StockItemsController extends AppController {
 					$cat = urldecode($catn);
 					//print_r($cat);die();
 						  
-					$date = '2017-12-20';		  
+					//$date = date('Y-m-d',strtotime("-1 days"));
+					$date = '2018-01-23';
 
 					$this->loadModel('StockLevel');
 					
@@ -212,6 +152,51 @@ class StockItemsController extends AppController {
 					$this->set('stocks', $this->paginate());
 					
 					$this->set(compact('esfbastocks','waterstocks','gerfbastocks','frfbastocks','ukfbastocks','ukstocks','Catname'));
-					}		
+					}
+					
+					
+					public function minimum_level(){
+		
+					$this->set('title', 'Minimum Stock level Report.');
+					
+					$firstdate = '2017-01-24';
+					$lastdate = '2018-01-24';	
+
+					$datediff = round((strtotime($lastdate)-strtotime($firstdate))/(60 * 60 * 24));
+					//print_r($datediff); die();
+						
+					$this->loadModel('ProcessedListing');
+					
+					$condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $firstdate,'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    
+									
+					
+					$groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
+					
+					
+					
+					$salesReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
+					//print_r($salesReports);die();
+					
+					//$this->StockItem->recursive = 1;
+					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
+					$this->set('stock_names', $this->paginate()); 
+					$this->set(compact('stock_names','salesReports','datediff'));
+				   
+					
+					
+									
+					//$stock_names =  $this->StockItem->find('all', array('fields' => array(), 'order' =>array()));
+					//$this->set(compact('stock_names','salesReports'));
+
+			}
+					
+					
+    
+
+
+					
 		
 		}

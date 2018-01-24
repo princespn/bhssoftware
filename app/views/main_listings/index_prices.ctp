@@ -1,19 +1,23 @@
 <?php
-
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+if($session->read('Auth.User.group_id')!='5' && $session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
-?>
-<?php
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
-
-$line = $code_listings[0]['MainListing'];
-//$mapping = array('','','SKU','','','','AM-UK Title','','','','','AM-UK Description','','','AM-UK Standard Price','','','','','','','AM-UK Sale from date','AM-UK Sale end date','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','AM-UK bullet_point 1','AM-UK bullet_point 2','AM-UK bullet_point 3','AM-UK bullet_point 4','AM-UK bullet_point 5','AM-UK Search Terms 1','AM-UK Search Terms 2','AM-UK Search Terms 3','AM-UK Search Terms 1','AM-UK Search Terms 4','AM-UK Search Terms 5','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','AM-UK Colour Map','AM-UK Size Map','','','AM-UK Material');
-//echo $csv->addRow($mapping);
-$csv->addRow(array_keys($line));
-foreach ($code_listings as $code_listing):		
-$line = $code_listing['MainListing'];
+$mapping = array('Linnworks Code','Product name','Category','Amazon SKU','RRP(GBP)','Amazon UK','RRP(EUR)','Amazon DE','RRP(EUR)','Amazon FR');
+echo $csv->addRow($mapping);
+foreach ($code_listings as $code_listing):
+$line_code = array($code_listing['MainListing']['linnworks_code']);
+$line_name = array($code_listing['InventoryCode']['product_name']);
+$line_cate = array($code_listing['InventoryCode']['category']);
+$line_ams = array($code_listing['MainListing']['amazon_sku']);
+$uk_rp = array($code_listing['MainListing']['price_uk']);
+$sale_price_uk = array($code_listing['MainListing']['sale_price_uk']);
+$rrp_de = array($code_listing['MainListing']['price_de']);
+$sale_price_de = array($code_listing['MainListing']['sale_price_de']);
+$rrp_fr = array($code_listing['MainListing']['price_fr']);
+$sale_price_fr = array($code_listing['MainListing']['sale_price_fr']);
+$line = array_merge($line_code,$line_name, $line_cate,$line_ams,$uk_rp,$sale_price_uk,$rrp_de,$sale_price_de,$rrp_fr,$sale_price_fr);
 echo $csv->addRow($line);
 endforeach;
 $filename='amazon_price_listings';
@@ -28,7 +32,7 @@ echo $csv->render($filename);
     <div class="panel-body">
       <div class="row">
         <div class="col-md-8 mobile-bottomspace">
-         <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'main_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
+           <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'main_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
         </div>
           <div class="col-md-4">
@@ -60,7 +64,7 @@ echo $csv->render($filename);
           <th><?php __('Amazon DE');?></th>
            <th><?php __('RRP(EUR)');?></th>
           <th><?php __('Amazon FR');?></th> 
-          <th class="wid-70"><?php __('Action');?></th>      
+          <?php if($session->read('Auth.User.group_id')!='3') { ?><th class="wid-70"><?php __('Action');?></th><?php } ?>
         </tr>
       </thead>
       <tbody>
@@ -68,7 +72,7 @@ echo $csv->render($filename);
         <tr>
           <td><?php $productid = $code_listing['MainListing']['id']; echo $this->Form->input('MainListing.id',array('class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?></td>
           <td><?php echo $code_listing['MainListing']['linnworks_code']; ?></td>
-          <td><?php echo $code_listing['MainListing']['category']; ?></td>
+          <td><?php echo $code_listing['InventoryCode']['category']; ?></td>
           <td><?php echo $code_listing['MainListing']['amazon_sku']; ?></td>
           <td><?php echo $code_listing['MainListing']['price_uk']; ?></td>
           <td><?php echo $code_listing['MainListing']['sale_price_uk']; ?></td>
@@ -76,7 +80,7 @@ echo $csv->render($filename);
           <td><?php echo $code_listing['MainListing']['sale_price_de']; ?></td>
           <td><?php echo $code_listing['MainListing']['price_fr']; ?></td>
           <td><?php echo $code_listing['MainListing']['sale_price_fr']; ?></td>
-         <td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'main_listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'main_listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $code_listing['MainListing']['amazon_sku']));  ?></td>
+         <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'main_listings','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'main_listings','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $code_listing['MainListing']['amazon_sku']));  ?></td><?php } ?>
   
         </tr>        
         <?php endforeach; ?>

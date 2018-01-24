@@ -1,9 +1,7 @@
 <?php
-
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
 {
 $this->requestAction('/users/logout/', array('return'));
-//$this->Session->setFlash(__('You are not authorized to access this area.', true));
 }
 ?>
 <?php echo $this->Form->create('MasterListing');?>

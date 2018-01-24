@@ -71,9 +71,9 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-       $from = '2017-10-26T00:00:00'; //min
+		$from = '2017-10-02T00:00:00'; //min
 					//$from = '2017-01-19T00:00:00';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2017-12-28:60:60'; //max
+		$to =  '2018-01-24:60:60'; //max
 					//$to = '2017-03-10T60:60:60';
         
         //$to = '';
@@ -83,7 +83,7 @@ class ProcessedOrdersController extends AppController {
         $limit = '50';
 		
         //$pagenum = isset($_GET['page']);
-       //$pagenum =  '5'; //1482,74070
+		//$pagenum =  '5'; //1482,74070
         // for process orders
 
         $header = array("POST:https://eu1.linnworks.net//api/ProcessedOrders/SearchProcessedOrdersPaged HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);

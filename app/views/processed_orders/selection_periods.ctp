@@ -39,7 +39,7 @@ $this->requestAction('/users/logout/', array('return'));
    <?php echo $this->Form->end();?>
   </div> 
    <div class="table-responsive">
-   <table id="header-fixed" class="table table-bordered table-striped table-hover"></table>
+   <!--<table id="header-fixed" class="table table-bordered table-striped table-hover"></table>-->
     <table id="table-1" class="table table-bordered table-striped table-hover">	    
          <thead><tr><th><strong><?php __('Sales Platform');?></strong></th><th><strong><?php __('Sales Channel');?></strong></th><th><strong><?php __('Currency');?></strong></th><?php $i = 1; $len = count($query_date); foreach($query_date as $firstandlast){  $yrdata = strtotime($firstandlast);   if ($i == $len - 0){ }else {?><th colspan="2"><strong><?php echo date('M-Y', $yrdata); $i++; ?></strong></th><?php } ?><?php } ?><th><strong><?php __('Total');?></strong></th><th><strong><?php __('Total');?></strong></th></tr>
         <tr><th colspan="3"></th><?php  for($i=1; $i<=$month_interval; $i++){ ?><th><strong><?php __('No of Orders');?></strong></th><th><strong><?php __('Orders value');?></strong></td><?php } ?><td><strong><?php __('No of Orders ');?></strong></th><th><strong><?php __('Order values ');?></th></tr></thead>
@@ -1184,7 +1184,7 @@ function monthDiff(d1, d2) {
 	
 });
 </script>
-<script type="text/javascript">
+<!--<script type="text/javascript">
 $.noConflict();  //Not to conflict with other scripts
 jQuery(document).ready(function($) {
 var tableOffset = $("#table-1").offset().top;
@@ -1203,4 +1203,4 @@ $(window).bind("scroll", function() {
 });
 
 });
-</script>
+</script>-->

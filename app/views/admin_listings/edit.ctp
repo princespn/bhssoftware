@@ -1,8 +1,7 @@
 <?php
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
 {
 $this->requestAction('/users/logout/', array('return'));
-
 }
 ?>
 <?php echo $this->Form->create('AdminListing');?>

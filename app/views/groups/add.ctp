@@ -1,17 +1,39 @@
 <?php 
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
 ?>
-<div class="groups form">
+<?php echo $this->Session->flash(); ?>
+<hr>
+<h1 class="sub-header"><?php __('Add new group information'); ?></h1>
+  <hr>
+ <?php echo $this->Session->flash(); ?>
+  <div class="row">
 <?php echo $this->Form->create('Group');?>
-	<fieldset>
-		<legend><?php __('Add Group'); ?></legend>
-	<?php
-		echo $this->Form->input('name');
-	?>
-	</fieldset>
-<?php echo $this->Form->end(__('Submit', true));?>
+  <div class="col-lg-5 col-lg-offset-3">
+  <div class="panel panel-info">
+    <div class="panel-heading custom-panel-heading"></div>
+    <div class="panel-body form-horizontal">
+          <div class="form-group">
+            <label for="GroupName" class="col-sm-3 control-label"><?php __('Groupname'); ?><span class="color-red">*</span></label>
+            <div class="col-sm-9">
+            <?php echo $this->Form->input('name',array('label'=>'','class'=>'form-control')); ?>
+        
+           </div>
+          </div>        
+       
+        
+      </div>
+    </div>  
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <?php echo $this->Form->button('Add new group', array('type' => 'submit','class' =>'btn btn-lg btn-primary btn-block btn-signin'));  ?>  
+            
+      </div>
+    </div>    
+  </div>  
+<?php echo $this->Form->end();?>
 </div>
+
 

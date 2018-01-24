@@ -1,5 +1,5 @@
 <?php 
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='4')
 {
 $this->requestAction('/users/logout/', array('return'));
 }

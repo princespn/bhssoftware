@@ -1,5 +1,5 @@
 <?php
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+if($session->read('Auth.User.group_id')!='5' && $session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -47,9 +47,9 @@ echo $this->Session->flash(); ?>
       <?php  echo $form->create('MainListing',array('action'=>'index','id'=>'saveForm')); ?>
         <div class="col-md-8 mobile-bottomspace">
          <?php echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php echo $this->Paginator->sort('Error', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>
-         <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'main_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
+           <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'main_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
-              <?php echo $this->Html->link(__('Replace Or Del sku', true), array('controller' => 'main_listings', 'action' => 'repdelcode'),array('class' => 'btn btn-info btn-sm')); ?>
+           <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Replace Or Del sku', true), array('controller' => 'main_listings', 'action' => 'repdelcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
         </div>
         <div class="col-md-4">
          <div class="form-group margin-bottom-0">
@@ -63,7 +63,7 @@ echo $this->Session->flash(); ?>
       </div>
     </div>
   </div> 
- <div class="table-responsive">
+ <div class="table-responsive catname">
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr id="head-table">

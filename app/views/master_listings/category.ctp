@@ -1,9 +1,8 @@
 <?php
-if($session->read('Auth.User.group_id')!='1')
+if($session->read('Auth.User.group_id')!='5' && $session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
-
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
     
 $mapping = array('Linnworks Code','Category','Product name','Amazon SKU','Web SKU','Web UK RRP','DM RRP','Amazon UK RRP','Web Sale Price UK','Web Sale Price Tesco','Web Sale Price dm','Amazon UK Sale Price','Amazon UK FBA Sale Price','Web DE RRP','Amazon DE RRP','Web FR RRP','Amazon FR RRP','Web DE Sale Price','Amazon DE Sale Price','Amazon DE FBA Sale Price','Web FR Sale Price','Amazon FR Sale Price','Amazon FBA FR Sale Price','Errors');
@@ -125,18 +124,32 @@ if(((strpos($France_prime['MasterListing']['amazon_sku'], 'FBA') !== false) && (
 }
 endforeach;
 /*  End  FBA FR Price */
-
 $sale_error = array($code_listing['MasterListing']['error']);
+//$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$sale_fbauk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$sale_fbagerman,$web_fr,$sale_price_fr,$sale_fbfrance,$sale_error);
+if(((empty($sale_fbauk)) && (!empty($sale_fbagerman))) && (!empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,array('0.00'),$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$sale_fbagerman,$web_fr,$sale_price_fr,$sale_fbfrance,$sale_error);
+} else if(((!empty($sale_fbauk)) && (empty($sale_fbagerman))) && (!empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$sale_fbauk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,array('0.00'),$web_fr,$sale_price_fr,$sale_fbfrance,$sale_error);
+} else if(((!empty($sale_fbauk)) && (!empty($sale_fbagerman))) && (empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$sale_fbauk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$sale_fbagerman,$web_fr,$sale_price_fr,array('0.00'),$sale_error);
+} else if(((empty($sale_fbauk)) && (empty($sale_fbagerman))) && (empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,array('0.00'),$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,array('0.00'),$web_fr,$sale_price_fr,array('0.00'),$sale_error);
+} else if(((empty($sale_fbauk)) && (empty($sale_fbagerman))) && (!empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,array('0.00'),$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,array('0.00'),$web_fr,$sale_price_fr,$sale_fbfrance,$sale_error);
+} else if(((empty($sale_fbauk)) && (!empty($sale_fbagerman))) && (empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,array('0.00'),$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$sale_fbagerman,$web_fr,$sale_price_fr,array('0.00'),$sale_error);
+} else if(((!empty($sale_fbauk)) && (empty($sale_fbagerman))) && (empty($sale_fbfrance))){
+$line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$sale_fbauk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,array('0.00'),$web_fr,$sale_price_fr,array('0.00'),$sale_error);
+} else{
 $line = array_merge($line_code, $line_cate,$line_name,$line_ams,$line_sku,$web_uk_rp,$tasko_rp,$uk_rp,$web_uk,$web_tasko,$web_dm,$sale_price_uk,$sale_fbauk,$web_rrp_de,$rrp_de,$web_rrp_fr,$rrp_fr,$web_de,$sale_price_de,$sale_fbagerman,$web_fr,$sale_price_fr,$sale_fbfrance,$sale_error);
+}
 echo $csv->addRow($line);
 endforeach;
-
 $filename='code_listings';
 echo $csv->render($filename);
 }else{	
 echo $this->Session->flash(); ?>
- <hr>
- 
+<hr>
 <?php $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
  <h1 class="sub-header"><?php __('Master listing database');?></h1>
 <div class="panel panel-default">
@@ -145,9 +158,9 @@ echo $this->Session->flash(); ?>
       <?php  echo $form->create('MasterListing',array('action'=>'index','id'=>'saveForm')); ?>
         <div class="col-md-8 mobile-bottomspace">
          <!--<?php //echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php //echo $this->Paginator->sort('Error', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>-->
-         <?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'master_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?>
+        <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Prices', true), array('controller' => 'master_listings', 'action' => 'importcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
-         <?php echo $this->Html->link(__('Replace Or Del sku', true), array('controller' => 'master_listings', 'action' => 'repdelcode'),array('class' => 'btn btn-info btn-sm')); ?>
+         <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Replace Or Del sku', true), array('controller' => 'master_listings', 'action' => 'repdelcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
         </div>
         <div class="col-md-4">
           <div class="form-group margin-bottom-0">
@@ -161,7 +174,7 @@ echo $this->Session->flash(); ?>
       </div>
     </div>
   </div> 
- <div class="table-responsive">
+ <div class="table-responsive catname">
     <table class="table table-bordered table-striped table-hover">
       <thead>
         <tr id="head-table">
@@ -359,11 +372,15 @@ echo $this->Session->flash(); ?>
         <?php } ?>
         <?php endforeach; ?></td>
           
-        <?php if(!empty($code_listing['MasterListing']['sale_price_cdiscount'])) { ?>
-        <td><?php  echo $code_listing['MasterListing']['sale_price_cdiscount']; ?></td>  
-        <?php }else { ?>
-        <td><?php echo 'NA';?></td>
-        <?php } ?>    
+        <td><?php foreach ($Cdiscount_primes as $Cdiscount_prim): ?>
+       <?php if(($code_listing['MasterListing']['linnworks_code']) === ($Cdiscount_prim['MasterListing']['linnworks_code'])){  ?>  
+        <?php if((strpos($Cdiscount_prim['MasterListing']['amazon_sku'], 'FBA') === false) && ((!empty($Cdiscount_prim['MasterListing']['sale_price_cdiscount'])) && (!empty($code_listing['AdminListing']['web_sale_price_fr']))) && ($Cdiscount_prim['MasterListing']['sale_price_cdiscount'] !==($code_listing['AdminListing']['web_sale_price_fr']))){  ?>
+        <div class="red-info" title="<?php  echo "Cdiscount price (".$Cdiscount_prim['MasterListing']['sale_price_cdiscount'].") = Web Price (".$code_listing['AdminListing']['web_sale_price_fr'].") Not Match."; ?>"><?php echo $Cdiscount_prim['MasterListing']['sale_price_cdiscount']; ?></div>
+        <?php } else if((strpos($Cdiscount_prim['MasterListing']['amazon_sku'], 'FBA') === false) && (!empty($Cdiscount_prim['MasterListing']['sale_price_cdiscount']))){  ?>
+        <?php echo $Cdiscount_prim['MasterListing']['sale_price_cdiscount']; ?>
+        <?php break; } ?>
+        <?php } ?>
+        <?php endforeach; ?></td>    
         </tr>
     <?php endforeach; ?>
     <?php echo $this->Form->end();?>

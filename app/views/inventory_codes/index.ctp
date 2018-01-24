@@ -1,6 +1,5 @@
 <?php
-
-if($session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2')
+if($session->read('Auth.User.group_id')!='4' && $session->read('Auth.User.group_id')!='1' && $session->read('Auth.User.group_id')!='2' && $session->read('Auth.User.group_id')!='3')
 {
 $this->requestAction('/users/logout/', array('return'));
 }
@@ -28,8 +27,7 @@ echo $csv->render($filename);
     <div class="panel-body">
       <div class="row">
         <div class="col-md-8 mobile-bottomspace">       
-        <?php echo $form->checkbox('error',array('label'=>'','value'=>'error','class'=>'wid-20')); ?><?php echo $this->Paginator->sort('Error', 'error', array('direction' => 'desc','class'=>'btn btn-info btn-sm')); ?>
-        <?php echo $this->Html->link(__('Import Linnworks codes', true), array('controller' => 'inventory_codes', 'action' => 'linnworkcode'),array('class' => 'btn btn-info btn-sm')); ?>
+        <?php if($session->read('Auth.User.group_id')!='3') { ?><?php echo $this->Html->link(__('Import Linnworks codes', true), array('controller' => 'inventory_codes', 'action' => 'linnworkcode'),array('class' => 'btn btn-info btn-sm')); ?><?php } ?>
          <button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
         </div>
           <div class="col-md-4">
@@ -52,7 +50,7 @@ echo $csv->render($filename);
            <th><?php __('Linnworks code');?></th>          
             <th><?php __('Product name');?></th>
           <th><?php __('Category');?></th>          
-          <th><?php __('Action');?></th>
+         <?php if($session->read('Auth.User.group_id')!='3') { ?> <th><?php __('Action');?></th><?php } ?>
         </tr>
       </thead>
       <tbody>
@@ -64,7 +62,8 @@ echo $csv->render($filename);
           <td><?php echo $inventory_code['InventoryCode']['linnworks_code']; ?></td>          
           <td><?php echo $inventory_code['InventoryCode']['product_name']; ?></td>
           <td><?php echo $inventory_code['InventoryCode']['category']; ?></td>
-          <td></td>
+           <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'inventory_codes','action'=>'edit', $productid),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'inventory_codes','action' => 'delete',$productid), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $inventory_code['InventoryCode']['linnworks_code']));  ?></td><?php } ?>
+  
       </tr>        
         <?php endforeach; ?>
       </tbody>

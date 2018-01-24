@@ -235,6 +235,12 @@ color: #fff;
 	text-align: center;
 color: #fff;
 }
+.redcolor{background-color:#FF0000;
+	display: block;
+	padding: 5px 0px;
+	text-align: center;
+color: #fff;
+}
 .btn-update {
 display: block;
 padding: 5px 0px;

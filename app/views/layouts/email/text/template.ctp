@@ -19,4 +19,3 @@
 ?>
 <?php echo $content_for_layout;?>
 
-<p>This email was sent <a href="http://greyb.com">greyb</a> leave management system for  approval and disapproval.</p>

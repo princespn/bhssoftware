@@ -7,20 +7,25 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <?php echo $this->Html->image('hs-logo.svg', array('width' => '200px','alt'=>'')); ?></div>
+      <?php // echo $this->Html->image('hs-logo.svg', array('width' => '200px','alt'=>'')); ?></div>
     <div class="navbar-collapse collapse" id="navbar">
       <ul class="nav navbar-nav">
-      <?php if($session->read('Auth.User.group_id')=='1') { ?>
+     
         <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Master Prices<span class="caret"></span></a>
           <ul class="dropdown-menu">
                <li><?php echo $this->Html->link(__('Master Prices', true), array('controller' => 'master_listings', 'action' => 'index')); ?></li>
                 <li><?php echo $this->Html->link(__('Website Prices', true), array('controller' => 'admin_listings', 'action' => 'index')); ?></li>
-                <li><?php echo $this->Html->link(__('Linnworks Code', true), array('controller' => 'inventory_codes', 'action' => 'index')); ?></li>
-                <li><?php echo $this->Html->link(__('Cost Calculator', true), array('controller' => 'purchase_orders', 'action' => 'index')); ?></li>
-                <li><?php echo $this->Html->link(__('Cost Settings', true), array('controller' => 'purchase_orders', 'action' => 'settings')); ?></li>
-            </ul>
+                <li><?php echo $this->Html->link(__('Amazon Prices', true), array('controller' => 'master_listings', 'action' => 'index_prices')); ?></li>
+                <li><?php echo $this->Html->link(__('Upload New Code', true), array('controller' => 'inventory_codes', 'action' => 'index')); ?></li>
+                <?php if($session->read('Auth.User.group_id')=='4') { ?> 
+                <li><?php echo $this->Html->link(__('Cost Calculator', true), array('controller' => 'cost_calculators', 'action' => 'index')); ?></li>
+                <li><?php echo $this->Html->link(__('Cost Settings', true), array('controller' => 'cost_calculators', 'action' => 'settings')); ?></li>
+            <?php } else if($session->read('Auth.User.group_id')=='1') { ?> 
+            <li><?php echo $this->Html->link(__('Cost Calculator', true), array('controller' => 'cost_calculators', 'action' => 'index')); ?></li>
+           <?php } ?>
+         </ul>
         </li>
-        <?php } ?>
+       
         <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Diagnosis Prices<span class="caret"></span></a>
           <ul class="dropdown-menu">
                <li><?php echo $this->Html->link(__('Diagnosis Prices', true), array('controller' => 'main_listings', 'action' => 'index')); ?></li>
@@ -28,7 +33,50 @@
                 <li><?php echo $this->Html->link(__('Amazon Prices', true), array('controller' => 'main_listings', 'action' => 'index_prices')); ?></li>
             </ul>
         </li>
-   
+       <?php if(($session->read('Auth.User.group_id')==='5')) { ?> 
+       <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Processed Reports<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Channels<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_orders', 'action' => 'channel_weekly')); ?></li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_orders', 'action' => 'channel_monthly')); ?></li></li></ul>
+                </li>
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Category<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'category_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'category_monthly')); ?></li></li></ul>
+                </li>
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Product SKU<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'productsku_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'productsku_monthly')); ?></li></li></ul>
+                </li>
+				<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
+            
+                <li><?php echo $this->Html->link(__('Reports', true), array('controller' => 'processed_orders', 'action' => '?page=1')); ?></li>
+			</ul>
+        </li>
+         <?php } else if(($session->read('Auth.User.group_id')==='4')) {?>
+		    <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Processed Reports<span class="caret"></span></a>
+			<ul class="dropdown-menu">
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Channels<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_orders', 'action' => 'channel_weekly')); ?></li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_orders', 'action' => 'channel_monthly')); ?></li><li><?php echo $this->Html->link(__('Evolution Periodic', true), array('controller' => 'processed_orders', 'action' => 'selection_periods')); ?></li></li></ul>
+                </li>
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Category<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'category_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'category_monthly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Periodic', true), array('controller' => 'processed_listings', 'action' => 'selection_categories')); ?></li></li></ul>
+                </li>
+                <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Product SKU<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'productsku_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'productsku_monthly')); ?></li></li></ul>
+                </li> 
+				<li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Stock Report<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Report By Items', true), array('controller' => 'stock_items', 'action' => 'index')); ?></li><li><li><?php echo $this->Html->link(__('Report By Category', true), array('controller' => 'stock_levels', 'action' => 'stock_category')); ?></li></li></ul>
+                </li> 
+				<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
+            				
+                <li><?php echo $this->Html->link(__('Reports', true), array('controller' => 'processed_orders', 'action' => '?page=1')); ?></li>
+            </ul>
+        </li><?php } else if(($session->read('Auth.User.group_id')==='3')) {?>
+		    <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Processed Reports<span class="caret"></span></a>
+			<ul class="dropdown-menu">              
+				<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
+            </ul>
+        </li>
+		<?php } ?>
+          <?php if(($session->read('Auth.User.group_id')=='1') && ($session->read('Auth.User.group_id')=='4')) { ?>
         <li class="dropdown"> <a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Product Code <span class="caret"></span></a>
           <ul class="dropdown-menu">
              <li><?php echo $this->Html->link(__('Linnworks Code', true), array('controller' => 'stocks', 'action' => 'index/?page=1')); ?></li>
@@ -81,14 +129,15 @@
            <li><?php echo $this->Html->link(__('Update Amazon DE Listing', true), array('controller' => 'german_listings', 'action' => 'update')); ?></li>
 	</ul>
         </li>
+         <?php } ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li class="dropdown"> <a data-toggle="dropdown" class="dropdown-toggle" href="#">My Account <b class="caret"></b></a> <span class="dropdown-arrow dropdown-arrow-inverse"></span>
           <ul class="dropdown-menu dropdown-inverse">
             <li><?php echo $this->Html->link(__('Users', true), array('controller' => 'users','action' => 'index'));?></li>
-            <?php if($session->read('Auth.User.group_id')=='1') { ?>
+            <?php if(($session->read('Auth.User.group_id')=='4') || ($session->read('Auth.User.group_id')=='1')) { ?>
             <li><?php echo $this->Html->link(__('Add New User', true), array('controller' => 'users', 'action' => 'add')); ?></li>
-             <?php } ?>
+           <?php } ?>
              <li><a href="<?php echo $this->Html->url('/users/logout', true); ?>">logout</a></li>          
             
            
