@@ -45,7 +45,8 @@
 			<?php foreach ($salesReports as $salesReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){?>
 			<?php $totalqty = $salesReport[0]['sales_qty']; ?>
-			<?php } ?>
+			<?php break;
+					} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $totalqty; ?></td>
 			<td></td>
@@ -56,9 +57,19 @@
 			<td><?php //$avgsales_12month =($totalqty/$datediff)*30; echo $avgsales_12month;?></td>
 			<td></td>
 			<td></td>
+			<?php foreach ($salesLastMonthReports as $salesLastMonthReport): ?>
+			<?php if($stock_name['StockItem']['item_number'] === $salesLastMonthReport['ProcessedListing']['product_sku']){?>
+			<?php $lastmonthtotalqty = $salesLastMonthReport[0]['sales_qty']; ?>
+			<?php break;} ?>
+			<?php endforeach; ?>  
+			<td><?php echo $lastmonthtotalqty; ?></td>
 			<td></td>
-			<td></td>
-			<td></td>
+			<?php foreach ($Cuurentstocks as $Cuurentstock): ?>
+			<?php if($stock_name['StockItem']['item_number'] === $Cuurentstock['StockLevel']['item_number']){?>
+			<?php $currentstock = $Cuurentstock['StockLevel']['stock_lev']; ?>
+			<?php break;} ?>
+			<?php endforeach; ?>  
+			<td><?php echo $currentstock; ?></td>
 			<td></td>
 			<td></td>
 			<td></td>
