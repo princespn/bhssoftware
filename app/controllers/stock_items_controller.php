@@ -78,7 +78,7 @@ class StockItemsController extends AppController {
 					
 					
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-01-23';
+					$date = '2018-01-27';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -122,7 +122,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-01-23';
+					$date = '2018-01-27';
 
 					$this->loadModel('StockLevel');
 					
@@ -159,8 +159,8 @@ class StockItemsController extends AppController {
 		
 					$this->set('title', 'Minimum Stock level Report.');
 					
-					$firstdate = '2017-01-24';
-					$lastdate = '2018-01-24';
+					$firstdate = '2017-01-01';
+					$lastdate = '2018-01-01';
 					
 					$lastmonthfirst = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
 					$lastmonthend =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
@@ -169,7 +169,10 @@ class StockItemsController extends AppController {
 					$this->loadModel('ProcessedListing');
 
 					$groupby = array(('ProcessedListing.product_sku'),
-         'AND'=> 'ProcessedListing.cat_name');
+							'AND'=> 'ProcessedListing.cat_name');
+						
+						$groupmax = array(('ProcessedListing.product_sku'),
+							'AND'=> 'month_name');
 						
 					
 					
@@ -183,6 +186,9 @@ class StockItemsController extends AppController {
 					
 					$salesReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
+					$MaxReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'MONTHNAME(ProcessedListing.order_date) as month_name','sum(ProcessedListing.quantity) as max_qty'), 'conditions' =>$condition, 'group' => $groupmax, 'order' => array('ProcessedListing.product_sku ASC')));
+					
+					//print_r($MaxReports);die();
 					//Last Month sales
 					
 					$salesLastMonthReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condlastmonth, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
@@ -202,7 +208,7 @@ class StockItemsController extends AppController {
 					//$this->StockItem->recursive = 1;
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
-					$this->set(compact('Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
+					$this->set(compact('MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
 				   
 					
 					

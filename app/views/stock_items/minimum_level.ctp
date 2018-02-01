@@ -1,5 +1,5 @@
 <hr>
-<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
+<?php //print_r($salesReports);die(); $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
 <h1 class="sub-header"><?php __('Minimum Stock level Report');?></h1>
 <div class="table-responsive">
    <table id="table-1"  class="table table-bordered table-striped table-hover">
@@ -49,7 +49,15 @@
 					} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $totalqty; ?></td>
-			<td></td>
+			<?php foreach ($MaxReports as $MaxReport): ?>
+			<?php if($stock_name['StockItem']['item_number'] === $MaxReport['ProcessedListing']['product_sku']){?>
+			<?php for ($i = 0;$i<=count($MaxReport->ProcessedListing); $i++){ ?>             
+         	<?php $maxmonth = $MaxReport[$i]['month_name']; $Maxquenty = $MaxReport[0]['max_qty']; ?>
+			<?php } ?>
+			<?php break;
+					} ?>
+			<?php endforeach; ?>
+			<td><?php echo $Maxqty; ?></td>
 			<td></td>
 			<td></td>
 			<td></td>
