@@ -42,25 +42,24 @@
 			<td><?php echo $stock_name['StockItem']['item_title']; ?></td>
 			<td><?php echo $stock_name['StockItem']['category_name']; ?></td>
 			<td><?php echo $stock_name['StockItem']['supp_name']; ?></td>
-			<?php foreach ($salesReports as $salesReport): ?>
+			<?php $b=0;foreach ($salesReports as $salesReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){?>
 			<?php $totalqty = $salesReport[0]['sales_qty']; ?>
 			<?php break;
 					} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $totalqty; ?></td>
-			<?php foreach ($MaxReports as $MaxReport): ?>
+			<?php $b =array(); $name =array();foreach ($MaxReports as $MaxReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $MaxReport['ProcessedListing']['product_sku']){?>
-			<?php for ($i = 0;$i<=count($MaxReport->ProcessedListing); $i++){ ?>             
-         	<?php $maxmonth = $MaxReport[$i]['month_name']; $Maxquenty = $MaxReport[0]['max_qty']; ?>
-			<?php } ?>
-			<?php break;
-					} ?>
+			<?php  $name[] = $MaxReport[0]['month_name']."=>".$MaxReport[0]['total_qty']; ?>             
+         	<?php    ?>
+			<?php 
+				} ?>
 			<?php endforeach; ?>
-			<td><?php echo $Maxqty; ?></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td><?php print_r($name); //$top_name = array_search(max($name),$name); echo $top_name; ?></td>
+			<td><?php //echo Max($b); ?></td>
+			<td><?php //echo $maxmonth; ?></td>
+			<td><?php //echo Min($b); ?></td>
 			<td></td>
 			<td><?php //$avgsales_12month =($totalqty/$datediff)*30; echo $avgsales_12month;?></td>
 			<td></td>
@@ -81,8 +80,7 @@
 			<td></td>
 			<td></td>
 			<td></td>
-			<td></td>
-			
+			<td></td>			
 		</tr>		 
 <?php endforeach; ?>   
 </table>
@@ -98,5 +96,5 @@
          <li><?php echo $this->Paginator->prev('<< ' . __('Previous', true), array(), null, array('class'=>'disabled'));?></li>
          <li><?php echo $this->Paginator->numbers();?></li>
          <li><?php echo $this->Paginator->next(__('Next', true) . ' >>', array(), null, array('class' => 'disabled'));?></li>
-     </ul>
+</ul>
 </nav>
