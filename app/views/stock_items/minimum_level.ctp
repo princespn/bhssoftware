@@ -1,5 +1,5 @@
 <hr>
-<?php //print_r($salesReports);die(); $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
+<?php //print_r($MaxReports);die(); $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
 <h1 class="sub-header"><?php __('Minimum Stock level Report');?></h1>
 <div class="table-responsive">
    <table id="table-1"  class="table table-bordered table-striped table-hover">
@@ -42,26 +42,42 @@
 			<td><?php echo $stock_name['StockItem']['item_title']; ?></td>
 			<td><?php echo $stock_name['StockItem']['category_name']; ?></td>
 			<td><?php echo $stock_name['StockItem']['supp_name']; ?></td>
-			<?php $b=0;foreach ($salesReports as $salesReport): ?>
+			<?php foreach ($salesReports as $salesReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){?>
 			<?php $totalqty = $salesReport[0]['sales_qty']; ?>
 			<?php break;
 					} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $totalqty; ?></td>
-			<?php $b =array(); $name =array();foreach ($MaxReports as $MaxReport): ?>
+			<?php $Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxname = ''; $Acurmin = '';  $Amin = 10000; $AcurrMinname = ''; $Aminname = ''; foreach($MaxReports as $MaxReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $MaxReport['ProcessedListing']['product_sku']){?>
-			<?php  $name[] = $MaxReport[0]['month_name']."=>".$MaxReport[0]['total_qty']; ?>             
-         	<?php    ?>
-			<?php 
-				} ?>
+			<?php $Acurr = $MaxReport[0]['total_qty']; $Acurrname = $MaxReport[0]['month_name']; $Acurmin = $MaxReport[0]['total_qty']; $AcurrMinname = $MaxReport[0]['month_name']; 		
+				// count Mix Sales	
+				if($Acurr >= $Amax) {
+					$Amax = $Acurr; 
+					$Amaxname = $Acurrname;
+						} 
+				// count Min Sales	
+				
+					if($Acurmin < $Amin){
+					$Amin = $Acurmin; 
+					$Aminname = $AcurrMinname;
+						}?> 
+						
+				<?php } ?>
 			<?php endforeach; ?>
-			<td><?php print_r($name); //$top_name = array_search(max($name),$name); echo $top_name; ?></td>
-			<td><?php //echo Max($b); ?></td>
-			<td><?php //echo $maxmonth; ?></td>
-			<td><?php //echo Min($b); ?></td>
+			<td><?php echo $Amaxname; ?></td>
+			<td><?php echo $Amax; ?></td>
+			<td><?php echo $Aminname; ?></td>
+			<td><?php if($Amin!==10000){ echo $Amin;} ?></td>
+			<?php foreach ($Last_12_month_stocks as $Last_12_month_stock): ?>
+			<?php if($stock_name['StockItem']['item_number'] === $Last_12_month_stocks['StockLevel']['item_number']){?>
+			<?php $nomberdays = $Last_12_month_stock[0]['No_of_days']; ?>
+			<?php break;
+					} ?>
+			<?php endforeach; ?>	
+			<td><?php echo $nomberdays;?></td>
 			<td></td>
-			<td><?php //$avgsales_12month =($totalqty/$datediff)*30; echo $avgsales_12month;?></td>
 			<td></td>
 			<td></td>
 			<?php foreach ($salesLastMonthReports as $salesLastMonthReport): ?>

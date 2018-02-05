@@ -78,7 +78,7 @@ class StockItemsController extends AppController {
 					
 					
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-01';
+					$date = '2018-02-05';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -122,7 +122,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-01';
+					$date = '2018-02-05';
 
 					$this->loadModel('StockLevel');
 					
@@ -164,6 +164,7 @@ class StockItemsController extends AppController {
 					$firstdate = date('Y-m-d', $ts); //2017-02-01
 					
 					$lastmonthfirst = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1)); //2017-12-01
+					
 					$lastmonthend =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0)); //2017-12-31
 					//print_r($lastmonthend);die();
 
@@ -201,14 +202,21 @@ class StockItemsController extends AppController {
 					
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 					
+					//No of days out of stock in last 12 months
 					
+					$stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+                    'StockLevel.change_date >= ' => $firstdate,'StockLevel.location_name'=>'Default','StockLevel.stock_lev'=>'0');
+                    
+					$grouplast = array(('StockLevel.item_number'));
 					
-					//print_r($Cuurentstocks);die();
+					$Last_12_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					
+					//print_r($Last_12_month_stocks);die();
 					
 					//$this->StockItem->recursive = 1;
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
-					$this->set(compact('MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
+					$this->set(compact('Last_12_month_stocks','MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
 				   
 					
 					
