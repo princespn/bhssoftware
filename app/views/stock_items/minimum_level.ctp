@@ -71,7 +71,7 @@
 			<td><?php echo $Aminname; ?></td>
 			<td><?php if($Amin!==10000){ echo $Amin;} ?></td>
 			<?php foreach ($Last_12_month_stocks as $Last_12_month_stock): ?>
-			<?php if($stock_name['StockItem']['item_number'] === $Last_12_month_stocks['StockLevel']['item_number']){?>
+			<?php if($stock_name['StockItem']['item_number'] === $Last_12_month_stock['StockLevel']['item_number']){?>
 			<?php $nomberdays = $Last_12_month_stock[0]['No_of_days']; ?>
 			<?php break;
 					} ?>
