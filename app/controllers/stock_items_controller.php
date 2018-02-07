@@ -78,7 +78,7 @@ class StockItemsController extends AppController {
 					
 					
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-05';
+					$date = '2018-02-06';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -122,7 +122,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-05';
+					$date = '2018-02-06';
 
 					$this->loadModel('StockLevel');
 					
@@ -159,14 +159,15 @@ class StockItemsController extends AppController {
 		
 					$this->set('title', 'Minimum Stock level Report.');
 					
-					$lastdate = date("Y-m-d"); //2018-02-01
+					$lastdate = date("Y-m-d"); //2018-02-06
 					$ts = strtotime("last year", strtotime($lastdate));
 					$firstdate = date('Y-m-d', $ts); //2017-02-01
 					
+									
 					$lastmonthfirst = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1)); //2017-12-01
 					
 					$lastmonthend =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0)); //2017-12-31
-					//print_r($lastmonthend);die();
+					
 
 					$this->loadModel('ProcessedListing');
 
@@ -194,20 +195,58 @@ class StockItemsController extends AppController {
 					
 					$salesLastMonthReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condlastmonth, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
-					// Current Stock 
 					
-					$currentdate = '2018-02-01';
-
 					$this->loadModel('StockLevel');
 					
+					/* Start Calculation last 6 month */
+					
+					$six_firstdate = date('Y-m-d', strtotime("-6 months", strtotime($lastdate)));//2017-08-06
+					
+					$six_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $six_firstdate,'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    
+					$sixmonth_Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$six_condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
+					
+					$six_stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+                    'StockLevel.change_date >= ' => $six_firstdate,'StockLevel.location_name'=>'Default','StockLevel.stock_lev !='=>'0');
+					
+					$grouplast = array(('StockLevel.item_number'));
+					
+					$Last_6_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $six_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					
+					/* End Calculation last 6 month */
+					
+					/* Start Calculation last 3 month */
+					
+					$three_firstdate = date('Y-m-d', strtotime("-3 months", strtotime($lastdate)));//2017-08-06
+					
+					$three_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $three_firstdate,'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                    
+					$three_month_Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$three_condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
+					
+					$three_stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+                    'StockLevel.change_date >= ' => $three_firstdate,'StockLevel.location_name'=>'Default','StockLevel.stock_lev !='=>'0');
+					
+					//$grouplast = array(('StockLevel.item_number'));
+					
+					$Last_3_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $three_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					
+					
+					//print_r($Last_6_month_stocks);die();
+					/* End Calculation last 3 month */
+					
+					
+					/* Current Stock  */
+					
+					$currentdate = '2018-02-06';
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 					
 					//No of days out of stock in last 12 months
-					
 					$stock_condition = array('StockLevel.change_date <= ' => $lastdate,
-                    'StockLevel.change_date >= ' => $firstdate,'StockLevel.location_name'=>'Default','StockLevel.stock_lev'=>'0');
-                    
-					$grouplast = array(('StockLevel.item_number'));
+                    'StockLevel.change_date >= ' => $firstdate,'StockLevel.location_name'=>'Default','StockLevel.stock_lev !='=>'0');
+					
+					//$grouplast = array(('StockLevel.item_number'));
 					
 					$Last_12_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
@@ -216,14 +255,8 @@ class StockItemsController extends AppController {
 					//$this->StockItem->recursive = 1;
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
-					$this->set(compact('Last_12_month_stocks','MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
+					$this->set(compact('three_month_Reports', 'Last_3_month_stocks', 'Last_6_month_stocks', 'sixmonth_Reports', 'Last_12_month_stocks','MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
 				   
-					
-					
-									
-					//$stock_names =  $this->StockItem->find('all', array('fields' => array(), 'order' =>array()));
-					//$this->set(compact('stock_names','salesReports'));
-
 			}
 					
 					

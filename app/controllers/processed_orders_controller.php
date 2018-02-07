@@ -73,7 +73,7 @@ class ProcessedOrdersController extends AppController {
     
 		$from = '2017-11-22T00:00:00'; //min
 					//$from = '2017-01-19T00:00:00';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-02-05:60:60'; //max
+		$to =  '2018-02-07:60:60'; //max
 					//$to = '2017-03-10T60:60:60';
         
         //$to = '';
