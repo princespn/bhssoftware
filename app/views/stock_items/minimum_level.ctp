@@ -125,7 +125,6 @@
 			<td><?php echo $currentstock; ?></td>
 			<td></td>
 			<td><?php $stock_availability = (($currentstock)/($aveg_of_aveg)); echo round($stock_availability,2); ?></td>
-			
 			<td></td>
 			<td></td>			
 		</tr>		 

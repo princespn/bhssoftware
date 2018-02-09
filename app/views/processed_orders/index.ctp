@@ -22,7 +22,6 @@
 
 <?php foreach ($orders as $order): ?>  
       <tr>     
-     
         <td><?php echo $order->GeneralInfo->ExternalReferenceNum; ?></td>       
         <td><?php echo $order->TotalsInfo->Currency;?></td>  
         <td><?php echo $order->GeneralInfo->Source;?></td> 
@@ -60,7 +59,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=1200; $i<=1600; $i++){ ?>
+<?php for ($i=800; $i<=1200; $i++){ ?>
  window.open("http://ukwalahome.com/processed_orders/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

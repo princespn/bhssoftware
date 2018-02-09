@@ -71,10 +71,10 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2017-11-22T00:00:00'; //min
-					//$from = '2017-01-19T00:00:00';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-02-07:60:60'; //max
-					//$to = '2017-03-10T60:60:60';
+		$from = '2017-11-29T00:00:00'; //min
+		//$from = '';   // 2017-04-03 - TO - 2017-04-09
+		$to =  '2018-02-06:60:60'; //max
+		//$to = '';
         
         //$to = '';
         $datetype = '1';
@@ -298,13 +298,12 @@ $end_week = strtotime("next sunday",$start_week);
 $this_week_sd = date("Y-m-d",$start_week);
 $this_week_ed = date("Y-m-d",$end_week);
  
- $this->loadModel('ProcessedListing');
+ //$this->loadModel('ProcessedListing');
 
  $conditions = array('ProcessedOrder.order_date <=' => $this_week_ed,
-     'ProcessedOrder.order_date >=' => $this_week_sd,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
+     'ProcessedOrder.order_date >=' => $this_week_sd,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'');
 
-    //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-      $groupby = array(('ProcessedOrder.plateform'),
+	$groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
         $dataweek1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
         //print_r($dataweek1);die();
@@ -344,7 +343,7 @@ $conditions = array('ProcessedOrder.order_date <=' => $end_week,
      'ProcessedOrder.order_date >=' => $start_week,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
 
  $groupby = array(('ProcessedOrder.plateform'),
-         'AND'=> 'ProcessedOrder.subsource','ProcessedOrder.currency');
+         'AND'=> 'ProcessedOrder.subsource');
 
 //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
        

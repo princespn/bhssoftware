@@ -75,8 +75,7 @@ class StockItemsController extends AppController {
 					$this->set('title', 'Linnworks Get Stock Items Information.');
 					
 					$Catname = $this->categname();
-					
-					
+										
 					//$date = date('Y-m-d',strtotime("-1 days"));
 					$date = '2018-02-06';
 					//print_r($date);die();
@@ -256,13 +255,7 @@ class StockItemsController extends AppController {
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
 					$this->set(compact('three_month_Reports', 'Last_3_month_stocks', 'Last_6_month_stocks', 'sixmonth_Reports', 'Last_12_month_stocks','MaxReports','Cuurentstocks','salesLastMonthReports','stock_names','salesReports','datediff'));
-				   
 			}
-					
-					
-    
-
-
-					
+							
 		
 		}
