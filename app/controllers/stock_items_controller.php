@@ -77,7 +77,7 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();
 										
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-06';
+					$date = '2018-02-17';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -121,7 +121,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-02-06';
+					$date = '2018-02-17';
 
 					$this->loadModel('StockLevel');
 					
@@ -189,7 +189,7 @@ class StockItemsController extends AppController {
 					
 					$MaxReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'MONTHNAME(ProcessedListing.order_date) as month_name','sum(ProcessedListing.quantity) as total_qty'), 'conditions' =>$condition, 'group' => $groupmax, 'order' => array('ProcessedListing.product_sku ASC')));
 					
-					//print_r($MaxReports);die();
+					print_r($MaxReports);die();
 					//Last Month sales
 					
 					$salesLastMonthReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condlastmonth, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
@@ -238,7 +238,7 @@ class StockItemsController extends AppController {
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-02-06';
+					$currentdate = '2018-02-17';
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 					
 					//No of days out of stock in last 12 months

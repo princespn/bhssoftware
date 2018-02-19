@@ -62,7 +62,7 @@ class ProcessedOrdersController extends AppController {
     }
 
 
-    public function getallprocess ($pagenum){
+    public function getallprocess($pagenum){
 
         //This function return only order id identifiers -pkOrderID
 
@@ -71,10 +71,10 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2017-11-29T00:00:00'; //min
-		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-02-06:60:60'; //max
-		//$to = '';
+		//$from = '2018-01-01T00:00:00'; //min
+		$from = '';   // 2017-04-03 - TO - 2017-04-09
+		//$to =  '2018-02-04:60:60'; //max
+		$to = '';
         
         //$to = '';
         $datetype = '1';
@@ -229,7 +229,7 @@ class ProcessedOrdersController extends AppController {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         $orders = json_decode($result);
-//print_r($result); die();
+        //print_r($result); die();
         curl_close($ch);
        
             if (!empty($orders)) {
@@ -273,8 +273,8 @@ if((count($order->Items)) > '1'){$ordertitle = $order->Items[$i]->Title."Name-".
 
     $this_week_sd = date("Y-m-d",$days);
     
-   $ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
-    
+   //$ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
+   $ordervalue = $order->TotalsInfo->TotalCharge;
    $this->ProcessedOrder->create();
    
    $this->ProcessedOrder->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
@@ -298,7 +298,7 @@ $end_week = strtotime("next sunday",$start_week);
 $this_week_sd = date("Y-m-d",$start_week);
 $this_week_ed = date("Y-m-d",$end_week);
  
- //$this->loadModel('ProcessedListing');
+
 
  $conditions = array('ProcessedOrder.order_date <=' => $this_week_ed,
      'ProcessedOrder.order_date >=' => $this_week_sd,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'');
@@ -323,32 +323,15 @@ $this_week_ed = date("Y-m-d",$end_week);
         $start_week = date("Y-m-d",$second_week);
         $end_week = date("Y-m-d",$send_week);
 
-       // echo $start_week.' '.$end_week ;
-        
-        /*
-         $present_week = strtotime("-2 week +1 day");
-
-$second_week = strtotime("last monday midnight",$present_week);
-$send_week = strtotime("next sunday",$second_week);
-
-$start_week = date("Y-m-d",$second_week);
-$end_week = date("Y-m-d",$send_week);       
-         
-
-
-$conditions = array('ProcessedOrder.order_date <= ' => $end_week,
-      'ProcessedOrder.order_date >= ' => $start_week,'ProcessedOrder.order_value  !='=>'0');*/
+    
 
 $conditions = array('ProcessedOrder.order_date <=' => $end_week,
-     'ProcessedOrder.order_date >=' => $start_week,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com');
+     'ProcessedOrder.order_date >=' => $start_week,'ProcessedOrder.order_value  !='=>'0','ProcessedOrder.subsource  !='=>'http://dev.homescapesonline.com','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'');
 
  $groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
 
-//$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-       
-        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week));
-        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.currency','ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+		$dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.currency','ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
       //print_r($dataprevweeks);die();     
         return $dataprevweeks;
 
@@ -408,9 +391,7 @@ $main_end_week = date("Y-m-d",$end_year_week);
     }
     
     
-    /* Add monthly  */
-    
-    
+    /* Add monthly  */    
     
     
     public function currentmonths(){
@@ -419,29 +400,7 @@ $main_end_week = date("Y-m-d",$end_year_week);
  $this_week_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
 $this_week_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
         
-    /*    $start_week = strtotime("first day of last month");
-        //$end_week = strtotime("next month",$start_week);
-        $end_week = strtotime("last day of last month");
-
-
-$this_week_sd = date("Y-m-d",$start_week);
-$this_week_ed = date("Y-m-d",$end_week);
-
-$previous_week = strtotime("-1 month +1 day");
-
-$start_week = strtotime("last monday midnight",$previous_week);
-$end_week = strtotime("next month",$start_week);
-
-$this_week_sd = date("Y-m-d",$start_week);
-$this_week_ed = date("Y-m-d",$end_week);
- 
-//echo "Current week range from $this_week_sd to $this_week_ed ";
-
-$start_week = strtotime("first day of last month");
-$end_week = strtotime("next month",$start_week);
-
-$this_week_sd = date("Y-m-d",$start_week);
-$this_week_ed = date("Y-m-d",$end_week);*/
+    
 
 
 
@@ -450,12 +409,9 @@ $this_week_ed = date("Y-m-d",$end_week);*/
 $conditions = array('ProcessedOrder.order_date <= ' => $this_week_ed,
       'ProcessedOrder.order_date >= ' => $this_week_sd,'ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
   
-
-    //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-       $groupby = array(('ProcessedOrder.plateform'),
+	$groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
 
-        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$this_week_sd,$this_week_ed));
         $dataweek1 =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
         //print_r($dataweek1);die();
        return $dataweek1;
@@ -469,33 +425,7 @@ $conditions = array('ProcessedOrder.order_date <= ' => $this_week_ed,
         $start_week = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
         $end_week =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
         
-          /*$start_week = strtotime("first day of last month");        
-        $present_week = strtotime("-1 month",$start_week);
-        $send_week = strtotime("next month",$present_week);
-        $day_week = strtotime("-1 day",$send_week);
-
-        $start_week = date("Y-m-d",$present_week);
-        $end_week = date("Y-m-d",$day_week);
-
-
-
-       $present_week = strtotime("-2 month -1 day");
-
-        //$second_week = strtotime("last monday midnight",$present_week);
-        $send_week = strtotime("next month",$present_week);
-
-        $start_week = date("Y-m-d",$present_week);
-        $end_week = date("Y-m-d",$send_week);
-
-       // echo $start_week.' '.$end_week ;
-        
-$present_week = strtotime("-1 month",$start_week);
-$send_week = strtotime("next month",$present_week);
-
-$start_week = date("Y-m-d",$present_week);
-$end_week = date("Y-m-d",$send_week);*/
-
-
+          
 
 
 $conditions = array('ProcessedOrder.order_date <= ' => $end_week,
@@ -505,10 +435,7 @@ $conditions = array('ProcessedOrder.order_date <= ' => $end_week,
 $groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
 
-//$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week),'ProcessedOrder.subsource  !='=>'','ProcessedOrder.order_value  !='=>'0');
-       
-        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$start_week,$end_week));
-        $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
+$dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
       //print_r($dataprevweeks);die();     
         return $dataprevweeks;
 
@@ -521,28 +448,7 @@ $groupby = array(('ProcessedOrder.plateform'),
         $main_last_week = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
         $main_end_week = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
         
-         /*$present_year_week = strtotime("first day of last Year last month");
-        //$end_year_week = strtotime("next month",$present_year_week);
-        $end_year_week = strtotime("last day of last Year last month");
-
-        $main_last_week = date("Y-m-d",$present_year_week);
-        $main_end_week = date("Y-m-d",$end_year_week);
-
-        
-       $present_year_week = strtotime("-13 month -1 day");
-
-        //$last_year_week = strtotime("last monday midnight",$present_year_week);
-        $end_year_week = strtotime("next month",$present_year_week);
-
-        $main_last_week = date("Y-m-d",$present_year_week);
-        $main_end_week = date("Y-m-d",$end_year_week);
-        
-$present_year_week = strtotime("first day of last Year last month");
-$end_year_week = strtotime("next month",$present_year_week);
-
-$main_last_week = date("Y-m-d",$present_year_week);
-$main_end_week = date("Y-m-d",$end_year_week);*/
-
+         
         
 
  $conditions = array('ProcessedOrder.order_date <= ' => $main_end_week,
@@ -552,7 +458,6 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
          'AND'=> 'ProcessedOrder.subsource');
 
 
-        //$conditions = array('ProcessedOrder.order_date' =>array('Between',$main_last_week,$main_end_week));
         $lastmonths =  $this->ProcessedOrder->find('all', array('fields' => array('ProcessedOrder.plateform','ProcessedOrder.subsource','count(ProcessedOrder.order_id) as orderid','ProcessedOrder.currency','sum(ProcessedOrder.order_value) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedOrder.currency  DESC','ProcessedOrder.subsource ASC')));
        //print_r($dataprevweeks);die();   
         return $lastmonths;
@@ -587,12 +492,7 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
     }
     
 
-    /*
-     * Import CSV Processed Orders
-     * 
-     * 
-     * 
-     */
+    /* Import CSV Processed Orders */
 
             public function importprocessed(){    
 
@@ -679,9 +579,7 @@ $main_end_week = date("Y-m-d",$end_year_week);*/
                   
                    $query_date = $this->get_months($first_date, $next_date);
 				   
-				   //$month_interval =  (int)abs((strtotime($first_date) - strtotime($next_date))/(60*60*24*29)); 
-                  
-                  $month_interval = 1 + (date('Y',strtotime($next_date)) - date('Y',strtotime($first_date))) * 12   +   (date('m',strtotime($next_date)) - date('m',strtotime($first_date))); 
+				  $month_interval = 1 + (date('Y',strtotime($next_date)) - date('Y',strtotime($first_date))) * 12   +   (date('m',strtotime($next_date)) - date('m',strtotime($first_date))); 
                   
 				  //print_r($query_date);die();
 				  $firstdate = array();  $lastdate = array();
