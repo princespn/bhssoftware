@@ -32,7 +32,7 @@
 	<th><?php __('No of'); ?><br><?php __('Months'); ?><br><?php __('Stock'); ?><br><?php __('availability'); ?></th>	
 	<th><?php __('Minimum'); ?><br><?php __('Stock'); ?><br><?php __('Level'); ?><br><?php __('Recommended'); ?></th>	
 	<th><?php __('Minimum'); ?><br><?php __('Stock'); ?><br><?php __('Level'); ?></th>	
-	
+	<th><?php ?></th>
 	
 	</tr>
     </thead>  
@@ -42,7 +42,7 @@
 			<td><?php echo $stock_name['StockItem']['item_title']; ?></td>
 			<td><?php echo $stock_name['StockItem']['category_name']; ?></td>
 			<td><?php echo $stock_name['StockItem']['supp_name']; ?></td>
-			<?php foreach ($salesReports as $salesReport): ?>
+			<?php $totalqty = 0; foreach ($salesReports as $salesReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){?>
 			<?php $totalqty = $salesReport[0]['sales_qty']; ?>
 			<?php break;
@@ -72,7 +72,7 @@
 			<td><?php if($Amin!==10000){ echo $Amin;} ?></td>
 			
 			<?php /* Total sales last 12 months */
-			foreach ($Last_12_month_stocks as $Last_12_month_stock): ?>
+			$nomberdays = 0; foreach ($Last_12_month_stocks as $Last_12_month_stock): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $Last_12_month_stock['StockLevel']['item_number']){?>
 			<?php $nomberdays = $Last_12_month_stock[0]['No_of_days']; ?>
 			<?php break;
@@ -82,13 +82,13 @@
 			<td><?php $Average_month =($totalqty/$nomberdays)*30; echo round($Average_month,2);?></td>
 			
 			<?php /* Total sales last 6 months */
-			 foreach ($sixmonth_Reports as $sixmonth_Report): ?>
+			 $totalsell = 0; foreach ($sixmonth_Reports as $sixmonth_Report): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $sixmonth_Report['ProcessedListing']['product_sku']){?>
 			<?php $totalsell = $sixmonth_Report[0]['sales_qty']; ?>
 			<?php break;
 					} ?>
 			<?php endforeach; ?>
-			<?php foreach ($Last_6_month_stocks as $Last_6_month_stock): ?>
+			<?php $days_six = 0; foreach ($Last_6_month_stocks as $Last_6_month_stock): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $Last_6_month_stock['StockLevel']['item_number']){?>
 			<?php $days_six = $Last_6_month_stock[0]['No_of_days']; ?>
 			<?php break;
@@ -97,27 +97,27 @@
 			<td><?php $Average_six_month =($totalsell/$days_six)*30; echo round($Average_six_month,2);?></td>
 			
 			<?php /* Total sales last 3 months */
-			 foreach ($three_month_Reports as $three_month_Report): ?>
+			 $totalsell_3month = 0; foreach ($three_month_Reports as $three_month_Report): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $three_month_Report['ProcessedListing']['product_sku']){?>
 			<?php $totalsell_3month = $three_month_Report[0]['sales_qty']; ?>
 			<?php break;
 					} ?>
 			<?php endforeach; ?>
-			<?php foreach ($Last_3_month_stocks as $Last_3_month_stock): ?>
+			<?php $days_3month = 0; foreach ($Last_3_month_stocks as $Last_3_month_stock): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $Last_3_month_stock['StockLevel']['item_number']){?>
 			<?php $days_3month = $Last_3_month_stock[0]['No_of_days']; ?>
 			<?php break;
 					} ?>
 			<?php endforeach; ?>
 			<td><?php $Average_3month =($totalsell_3month/$days_3month)*30; echo round($Average_3month,2);?></td>
-			<?php foreach ($salesLastMonthReports as $salesLastMonthReport): ?>
+			<?php $lastmonthtotalqty = 0; foreach ($salesLastMonthReports as $salesLastMonthReport): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $salesLastMonthReport['ProcessedListing']['product_sku']){?>
 			<?php $lastmonthtotalqty = $salesLastMonthReport[0]['sales_qty']; ?>
 			<?php break;} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $lastmonthtotalqty; ?></td>
 			<td><?php $aveg_of_aveg = ($Average_month+$Average_six_month+$Average_3month)/3; echo round($aveg_of_aveg,2); ?></td>
-			<?php foreach($Cuurentstocks as $Cuurentstock): ?>
+			<?php $currentstock = 0; foreach($Cuurentstocks as $Cuurentstock): ?>
 			<?php if($stock_name['StockItem']['item_number'] === $Cuurentstock['StockLevel']['item_number']){?>
 			<?php $currentstock = $Cuurentstock['StockLevel']['stock_lev']; ?>
 			<?php break;} ?>

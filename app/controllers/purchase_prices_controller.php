@@ -133,7 +133,7 @@ class PurchasePricesController extends AppController {
 								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 								$result = curl_exec($ch);
 								$porders = json_decode($result);
-								//print_r($porders); die();
+								print_r($porders); 
 								curl_close($ch);
 								$days = strtotime($porders->PurchaseOrderHeader->DateOfDelivery);
 								$date = date("Y-m-d",$days);
