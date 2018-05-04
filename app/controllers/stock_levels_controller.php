@@ -179,7 +179,32 @@ class StockLevelsController extends AppController {
 					//$this->CostCalculator->updateAll(array('CostCalculator.supplier' => $suppname,'CostCalculator.category' => $order->CategoryName,'CostCalculator.product_name' =>$order->ItemTitle,'invoice_currency' =>$suppcurr), array('CostCalculator.linnworks_code' => $pcodes[0]['CostCalculator']['linnworks_code'], 'CostCalculator.id' => $pcodes[0]['CostCalculator']['id']));
        
 						
-						}				
+						}	
+							
+							
+				$this->loadModel('InventoryCode');
+				$Maincodes = $this->InventoryCode->find('all', array('conditions' => array('InventoryCode.linnworks_code' => $order->ItemNumber)));
+				
+				if (($order->ItemNumber !== $Maincodes[0]['InventoryCode']['linnworks_code']) && (!empty($order->ItemTitle))){
+						
+					
+				$this->InventoryCode->create(); 	
+				$this->InventoryCode->saveAll(array('linnworks_code' => $order->ItemNumber,'product_name' => $order->ItemTitle, 'category' => $order->CategoryName));
+				
+								
+					}else {
+						
+						
+					$db = $this->InventoryCode->getDataSource();
+                    $value = $db->value($order->ItemTitle, 'string');
+					
+					
+					
+                    $this->InventoryCode->updateAll(
+                        array('InventoryCode.product_name' => $value),
+                        array('InventoryCode.linnworks_code' => $Maincodes[0]['InventoryCode']['linnworks_code'],'InventoryCode.id' => $Maincodes[0]['InventoryCode']['id']));
+						
+					    }	
 				}
 		   }  		   
        	$this->set(compact('orders','pagination','this_week_sd'));
