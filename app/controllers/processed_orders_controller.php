@@ -42,8 +42,8 @@ class ProcessedOrdersController extends AppController {
 
         $userkey = $this->tokenkey();
         $some_data = array('token' => $userkey);
-        $header = array("POST:https://eu1.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-        $url = 'https://eu1.linnworks.net//api/Inventory/GetCategories';
+        $header = array("POST:https://eu-ext.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+        $url = 'https://eu-ext.linnworks.net//api/Inventory/GetCategories';
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -71,10 +71,10 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		//$from = '2018-01-01T00:00:00'; //min
-		$from = '';   // 2017-04-03 - TO - 2017-04-09
-		//$to =  '2018-02-04:60:60'; //max
-		$to = '';
+		$from = '2018-04-19T00:00:00'; //min
+		//$from = '';   // 2017-04-03 - TO - 2017-04-09
+		$to =  '2018-05-04:60:60'; //max
+		//$to = '';
         
         //$to = '';
         $datetype = '1';
@@ -86,8 +86,8 @@ class ProcessedOrdersController extends AppController {
 		//$pagenum =  '5'; //1482,74070
         // for process orders
 
-        $header = array("POST:https://eu1.linnworks.net//api/ProcessedOrders/SearchProcessedOrdersPaged HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-        $url = 'https://eu1.linnworks.net//api/ProcessedOrders/SearchProcessedOrdersPaged?from=' . $from . '&to=' . $to . '&dateType=' . $datetype . '&searchField=' . $sfield . '&exactMatch=true&searchTerm=' . $sterm . '&pageNum=' . $pagenum . '&numEntriesPerPage='.$limit;
+        $header = array("POST:https://eu-ext.linnworks.net//api/ProcessedOrders/SearchProcessedOrdersPaged HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+        $url = 'https://eu-ext.linnworks.net//api/ProcessedOrders/SearchProcessedOrdersPaged?from=' . $from . '&to=' . $to . '&dateType=' . $datetype . '&searchField=' . $sfield . '&exactMatch=true&searchTerm=' . $sterm . '&pageNum=' . $pagenum . '&numEntriesPerPage='.$limit;
 
 
         $ch = curl_init();
@@ -216,9 +216,9 @@ class ProcessedOrdersController extends AppController {
         }
 
         //end
-       $header = array("POST:https://eu1.linnworks.net//api/Orders/GetOrdersById HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-       //$url = "https://eu1.linnworks.net//api/Orders/GetOrdersById?pkOrderIds=['a37893d2-d7cd-4355-85a2-15d2a6b37b6b','468fd6ab-2702-4887-86ba-15d2c3313d37','b75db8cd-7402-4296-a6fe-15d2c682e4de','e2d35a52-4ba8-400f-a142-15cf39e7121b','271aad0b-cf8f-4cac-9218-15cf4ae15134','105e7d07-df43-4884-bdf1-15ce5910ce32','6fe4e55d-18a5-4157-9682-15d08056d052','d99cdd07-305e-4623-aeac-15d09ef2d96d']";
-       $url = "https://eu1.linnworks.net//api/Orders/GetOrdersById?pkOrderIds=[".$Processedkid."]";
+       $header = array("POST:https://eu-ext.linnworks.net//api/Orders/GetOrdersById HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+       //$url = "https://eu-ext.linnworks.net//api/Orders/GetOrdersById?pkOrderIds=['a37893d2-d7cd-4355-85a2-15d2a6b37b6b','468fd6ab-2702-4887-86ba-15d2c3313d37','b75db8cd-7402-4296-a6fe-15d2c682e4de','e2d35a52-4ba8-400f-a142-15cf39e7121b','271aad0b-cf8f-4cac-9218-15cf4ae15134','105e7d07-df43-4884-bdf1-15ce5910ce32','6fe4e55d-18a5-4157-9682-15d08056d052','d99cdd07-305e-4623-aeac-15d09ef2d96d']";
+       $url = "https://eu-ext.linnworks.net//api/Orders/GetOrdersById?pkOrderIds=[".$Processedkid."]";
        $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

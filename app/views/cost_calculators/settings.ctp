@@ -50,7 +50,7 @@ $this->requestAction('/users/logout/', array('return'));
            <td><?php  $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency']; $to =  $exchange_rate['CostSetting']['sale_base_currency'];
                                     //$url  = "http://www.google.com/finance/converter?a=$amount&from=$from&to=$to";
                                    //$url  = "http://rate-exchange.herokuapp.com/fetchRate?from=$from&to=$to";
-								   $url  = "https://finance.google.com/finance/converter?a=$amount&from=$from&to=$to";
+								 /*  $url  = "https://finance.google.com/finance/converter?a=$amount&from=$from&to=$to";
                                    
 								   $data = file_get_contents($url);
 								   $get = explode("<span class=bld>",$data);
@@ -61,7 +61,7 @@ $this->requestAction('/users/logout/', array('return'));
 								   //print_r($converted_amount);die();
                                    //$converted = $yummy->{'Rate'};
                                    $ExRate = round($converted, 2);                          
-                                   if($ExRate =='0'){echo "1";}else {echo $ExRate;}                                 
+                                   if($ExRate =='0'){echo "1";}else {echo $ExRate;}*/                                 
                                    ?></td> 
             <td><?php echo $exchange_rate['CostSetting']['variation']; ?></td>
           </tr>

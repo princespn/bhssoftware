@@ -47,8 +47,8 @@ class PurchasePricesController extends AppController {
 	
         				$userkey = $this->tokenkey();
 				        $some_data = array('token' => $userkey);
-				        $header = array("POST:https://eu1.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-				        $url = 'https://eu1.linnworks.net//api/Inventory/GetCategories';
+				        $header = array("POST:https://eu-ext.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+				        $url = 'https://eu-ext.linnworks.net//api/Inventory/GetCategories';
 
 				        $ch = curl_init();
 				        curl_setopt($ch, CURLOPT_URL, $url);
@@ -77,9 +77,9 @@ class PurchasePricesController extends AppController {
 
 						$some_data = array('token' => $userkey);
 						
-						$header = array("POST:https://eu1.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu1.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","EntriesPerPage":80,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","EntriesPerPage":80,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -118,9 +118,9 @@ class PurchasePricesController extends AppController {
 	   
 						//$pkpurchaseid = '4f3edaeb-f224-4fd7-ba74-408ff05a9c44';
 				
-						$header = array("POST:https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder HTTP/1.1", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder HTTP/1.1", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 
-						$url = "https://eu1.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder?pkPurchaseId=".$pkid[$i];
+						$url = "https://eu-ext.linnworks.net//api/PurchaseOrder/Get_PurchaseOrder?pkPurchaseId=".$pkid[$i];
 
 					  
 								$ch = curl_init();
@@ -133,7 +133,7 @@ class PurchasePricesController extends AppController {
 								curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 								$result = curl_exec($ch);
 								$porders = json_decode($result);
-								print_r($porders); 
+								//print_r($porders); 
 								curl_close($ch);
 								$days = strtotime($porders->PurchaseOrderHeader->DateOfDelivery);
 								$date = date("Y-m-d",$days);
@@ -149,6 +149,7 @@ class PurchasePricesController extends AppController {
 							$purprices = round((($order->Cost-$order->Tax)/$order->Quantity),2);
 											
 							$this->loadModel('PurchasePrice');
+							
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
 							
 							$oldd = strtotime($data[0]['PurchasePrice']['purchase_date']);
@@ -156,12 +157,24 @@ class PurchasePricesController extends AppController {
 							$diff = floor(($days-$oldd)/$lang);
 							
 							
-							if ((($purprices)!=='0') && (!empty($oldd)) && ($diff>1)){ //echo "hello"; die();
+							if ((!empty($oldd)) && ($diff>1)){ //echo "hello"; die();
 								
-							
+											
+								$db = $this->PurchasePrice->getDataSource();
+								$value = $db->value($purprices, 'string');
+								
+								
+								
+								$this->PurchasePrice->updateAll(
+									array('PurchasePrice.purchase_price' => $value),
+									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
+						
+						
+								/*
 								$this->PurchasePrice->updateAll(
 								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices),
 								array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' =>$data[0]['PurchasePrice']['id']));
+								*/
 								
 							}else { 
 							
@@ -184,9 +197,9 @@ class PurchasePricesController extends AppController {
 
 						$some_data = array('token' => $userkey);
 						
-						$header = array("POST:https://eu1.linnworks.net//api/Inventory/GetSuppliers HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+						$header = array("POST:https://eu-ext.linnworks.net//api/Inventory/GetSuppliers HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu1.linnworks.net//api/Inventory/GetSuppliers';
+						$url ='https://eu-ext.linnworks.net//api/Inventory/GetSuppliers';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);

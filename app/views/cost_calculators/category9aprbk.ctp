@@ -55,7 +55,7 @@ echo $this->Session->flash(); ?>
                                     <tr>
                                     <td><?php echo $exchange_rate['CostSetting']['sale_base_currency']; ?></td>
                                     <td><?php echo $exchange_rate['CostSetting']['invoice_currency']; ?></td>
-                                     <?php /* $normalRate = $exchange_rate['CostSetting']['exchange_rate'];
+                                     <?php $normalRate = $exchange_rate['CostSetting']['exchange_rate'];
                                      $amount = "1"; $from = $exchange_rate['CostSetting']['invoice_currency']; $to =  $exchange_rate['CostSetting']['sale_base_currency'];
                                    $url  = "https://finance.google.com/finance/converter?a=$amount&from=$from&to=$to";
                                    
@@ -74,7 +74,7 @@ echo $this->Session->flash(); ?>
                                             <?php } else { ?>
                                             <td><?php echo $normalRate; ?></td>
                                             <?php } ?>                                                                        
-                                          <td><?php   if($ApiRate =='0'){echo "1";}else {echo $ApiRate;}*/ ?></td>
+                                          <td><?php   if($ApiRate =='0'){echo "1";}else {echo $ApiRate;} ?></td>
                                       </tr>
                                  <?php endforeach; ?> 
 			</table>

@@ -1,88 +1,3 @@
-<?php
-
-if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
-
-//$headmapp = array('','','','','','MAXIMUM..','...SALE','MINIMUM...','...SALE','','AVERAGE...','...SALES','....(WITH IN STOCK ASSUMPTION)','','','','','','','');
-$headmapp = array('','','','','','MAXIMUM..','...SALE','MINIMUM...','...SALE','','','','','','','','','');
-echo $csv->addRow($headmapp);
-$mapping = array('Item SKU','Item Description','Category','Supplier','Sales Qty last 12 months','Month','Quantity','Month','Quantity','No of days The Item was in stock in last 12 months','Last Month Sales Quanity','Current Stock','Quantity on Order','Minimum Stock Level');
-echo $csv->addRow($mapping);
-
-foreach ($stockall_reports as $stockall_report):
-
-
-$sku = array($stockall_report['StockItem']['item_number']);
-$desc = array($stockall_report['StockItem']['item_title']);
-$catname = array($stockall_report['StockItem']['category_name']);
-$suppname = array($stockall_report['StockItem']['supp_name']);
-
-$totalqty = array();  foreach ($salesReports as $salesReport):
-				if($stockall_report['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){
-				$totalqty[0] = $salesReport[0]['sales_qty']; 
-				break;
-					} 
-				endforeach;
-				
-$Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxvalue = array(); $Amaxname = array(); $Acurmin = ''; $Aminvalue = array(); $Aminname = array(); $Amin = 10000; $AcurrMinname = '';   foreach($MaxReports as $MaxReport):
-			 if($stockall_report['StockItem']['item_number'] === $MaxReport['ProcessedListing']['product_sku']){
-			 $Acurr = $MaxReport[0]['total_qty']; $Acurrname = $MaxReport[0]['month_name']; $Acurmin = $MaxReport[0]['total_qty']; $AcurrMinname = $MaxReport[0]['month_name']; 		
-			
-				if($Acurr >= $Amax) {
-					$Amaxvalue[0] = $Acurr; 
-					$Amaxname[0] = $Acurrname;
-					$Amax = $Amaxvalue[0];
-					$Acurrname = $Amaxname[0];
-						} 
-								
-					if($Acurmin < $Amin){
-					$Aminvalue[0] = $Acurmin; 
-					$Aminname[0] = $AcurrMinname;
-					$Amin = $Aminvalue[0];
-					$AcurrMinname = $Aminname[0];
-						} 
-						
-					} 
-				endforeach; 
-			
-		
-			$nomberdays = array(); foreach ($Last_12_month_stocks as $Last_12_month_stock):
-			if($stockall_report['StockItem']['item_number'] === $Last_12_month_stock['StockLevel']['item_number']){
-			$nomberdays[0] = $Last_12_month_stock[0]['No_of_days'];
-			break;
-					} 
-			endforeach;
-			
-		//$Average_month[0] = round(($totalqty[0]/$nomberdays[0])*30,2);			
-
-		 $lastmonthtotalqty = array(); foreach ($salesLastMonthReports as $salesLastMonthReport):
-			if($stockall_report['StockItem']['item_number'] === $salesLastMonthReport['ProcessedListing']['product_sku']){
-			$lastmonthtotalqty[0] = $salesLastMonthReport[0]['sales_qty'];
-			break;}
-			endforeach;
-			
-			
-			$currentstock = array(); $duestock = array(); foreach($Cuurentstocks as $Cuurentstock):
-			if($stockall_report['StockItem']['item_number'] === $Cuurentstock['StockLevel']['item_number']){
-			$currentstock[0] = $Cuurentstock[0]['stock_lev'];
-			$duestock[0] = $Cuurentstock[0]['due_level'];
-			break;}
-			endforeach;
-			
-			
-			$minimumlevel = array(); foreach($Minimum_stocks as $Minimum_stock):
-			if($stockall_report['StockItem']['item_number'] === $Minimum_stock['StockLevel']['item_number']){
-			$minimumlevel[0] = $Minimum_stock[0]['minimum_level'];
-			break;}
-			endforeach;
-		
-$line = array_merge($sku, $desc,$catname,$suppname,$totalqty,$Amaxname,$Amaxvalue,$Aminname,$Aminvalue,$nomberdays,$lastmonthtotalqty,$currentstock,$duestock,$minimumlevel);
-echo $csv->addRow($line);
-endforeach;
-$filename = 'minimum_level';
-echo $csv->render($filename);
-}
-else
-{ ?>
 <hr>
 <?php $actual_link = 'http://'.$_SERVER['HTTP_HOST'];  //print_r($Amazonuk[]);?>
 <h1 class="sub-header"><?php __('Minimum Stock level Report');?></h1>
@@ -160,7 +75,7 @@ else
     </thead>  
 <?php foreach ($stock_names as $stock_name): ?>  
 		<tr>
-		 <td><?php $productid = $stock_name['StockItem']['id']; echo $this->Form->input('StockItem.id',array('type'=>'checkbox','class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]')); ?></td>
+		 <td><?php $productid = $stock_name['StockItem']['id']; echo $this->Form->input('StockItem.id',array('class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]', 'type'=>'checkbox')); ?></td>
          
 		 	<td><?php echo $stock_name['StockItem']['item_number']; ?></td>
 			<td><?php echo $stock_name['StockItem']['item_title']; ?></td>
@@ -318,4 +233,25 @@ $(document).ready(function() {
    
 });
 </script>
-<?php } ?>
+<?php
+
+if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
+
+$headmapp = array('','','','','','MAXIMUM SALE','MINIMUM SALE','','AVERAGE SALES (WITH IN STOCK ASSUMPTION)','','','','','','','');
+echo $csv->addRow($headmapp);
+$mapping = array('Item SKU','Item Description','Category','Supplier','Sales Qty last 12 months','Month','Quantity','Month','Quantity','No of days The Item was in stock in last 12 months','12 Month Average Sales/Month','6 Month Average Sales/Month','3 Month Average Sales/Month','Last Month Sales Quanity','Average of Average Sales/Month','Current Stock','Quantity on Order','No of Months Stock availability','Minimum Stock Level Recommended','Minimum Stock Level');
+echo $csv->addRow($mapping);
+
+foreach ($stock_names as $stock_name):
+
+$sku = array($stock_name['StockItem']['item_number']);
+$desc = array($stock_name['StockItem']['item_title']);
+$catname = array($stock_name['StockItem']['category_name']);
+$suppname = array($stock_name['StockItem']['supp_name']);
+
+$line = array_merge($sku, $desc,$catname,$suppname);
+echo $csv->addRow($line);
+endforeach;
+$filename = 'minimum_level';
+echo $csv->render($filename);
+}?>
