@@ -73,7 +73,7 @@ echo $this->Session->flash(); ?>
 <script>
 function pageloader()
 {
-<?php for ($i=1; $i<=50; $i++) { ?>
+<?php for ($i=1; $i<=100; $i++) { ?>
  window.open("http://ukwalahome.com/purchase_prices/index?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

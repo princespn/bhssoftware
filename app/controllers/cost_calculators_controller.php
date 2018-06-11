@@ -9,7 +9,7 @@ class CostCalculatorsController extends AppController {
         public function beforeFilter() {
               
                 parent::beforeFilter();
-                $this->Auth->allow(array('update_invoice','categname','category','getsupp','edit','index','importdata','settings','categories','suppliers','country','index_last'));
+                $this->Auth->allow(array('update_invoice','categname','category','getsupp','edit','index','importdata','settings','categories','suppliername','country','index_last'));
                 
                 }
                
@@ -39,16 +39,15 @@ class CostCalculatorsController extends AppController {
                         $Token = $yummy->{'Token'};
                         if(!empty($Token)){return $Token ;}else{throw new MissingWidgetHelperException('Token not authorized to view this page.', 401);}
     }   
-            
-          public function getsupp() {
+           
+			public function suppliername() {
+				
                 $userkey = $this->token_value();
-                $id = "c006a3fe-a7d1-49a8-995e-cdbad6679e4e";
-                $some_data = array('token' => $userkey);
-                //$header = array("POST:https://eu1.linnworks.net//api/CostCalculator/Get_CostCalculator HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, ; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-               //$url = 'https://eu1.linnworks.net//api/CostCalculator/Get_CostCalculator?pkPurchaseId=' . $id . '';
-
-              $header = array("POST:https://eu1.linnworks.net//api/Inventory/GetSuppliers HTTP/1.1", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, ; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-              $url = 'https://eu1.linnworks.net//api/Inventory/GetSuppliers';
+				
+				$some_data = array('token' => $userkey);
+               
+              $header = array("POST:https://eu-ext.linnworks.net//api/Inventory/GetSuppliers HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, ; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+              $url = 'https://eu-ext.linnworks.net//api/Inventory/GetSuppliers';
 
 
               $ch = curl_init();
@@ -63,10 +62,10 @@ class CostCalculatorsController extends AppController {
                 $result = curl_exec($ch);
                 $supplier = json_decode($result);
                 curl_close($ch);
-               // print_r($supplier);die();
+              // print_r($supplier);die();
                 return $supplier;
     }
-
+          
     public function categname() {
         $userkey = $this->token_value();
         $some_data = array('token' => $userkey);
@@ -174,29 +173,22 @@ class CostCalculatorsController extends AppController {
             $this->autoLayout = false;
             Configure::write('debug', '2');
         } else {
-            $this->CostCalculator->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC');
-           $this->set('purchase_orders', $this->paginate());
-            //$this->set(compact('categories','getCost','getsupp'));
-            
-            /* Add Sp1 and Sp2,Sp3 in DB  */
-            // $purchase_orders = $this->paginate();            
-            $this->set(compact('categories','getCost','getsupp'));
-           // print_r($purchase_orders); die();
-            
-                        foreach ($purchase_orders as $purchase_order){
-                            
+			//print_r($getCost);die();
+                           
+			foreach ($purchase_orders as $purchase_order){
+							
+							 
                                      foreach ($getCost as $exchange_rate){
-                                        if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['CostCalculator']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')){
+                                        if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchasePrice']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')){
                                         $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchasePrice']['purchase_price'])*($purchase_order['Multiplier']['multiplier']);
-                                            break;                                        
+                                           echo $$exchange_rate['CostSetting']['invoice_currency'];  break;                                        
                                         }
                                        
                                      }
                                      foreach ($getCost as $exchange_rate){
-                                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['CostCalculator']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')){
+                                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purchase_order['PurchasePrice']['invoice_currency']) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')){
                                         $EurLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchasePrice']['purchase_price'])*($purchase_order['Multiplier']['multiplier']);
-                                            break;                                        
+                                           echo $$exchange_rate['CostSetting']['invoice_currency'];  break;                                        
                                         }
                                      }
                                      
@@ -219,12 +211,18 @@ class CostCalculatorsController extends AppController {
                                               break;
                                                  }
                                             }
+												
                                             
                                                  
                  $this->CostCalculator->updateAll(array('CostCalculator.landed_price_gbp' => round($GbpLP, 2),'CostCalculator.sp1_value_gbp' =>round($GbpLP*$sp1, 2),'CostCalculator.sp2_value_gbp' =>round($GbpLP*$sp2, 2),'CostCalculator.sp3_value_gbp' =>round($GbpLP*$sp3, 2),'CostCalculator.landed_price_eur' =>round($EurLP, 2),'CostCalculator.sp1_value_eur' =>round($EurLP*$Eursp1, 2),'CostCalculator.sp2_value_eur' =>round($EurLP*$Eursp2, 2),'CostCalculator.sp3_value_eur' =>round($EurLP*$Eursp3, 2)), array('CostCalculator.linnworks_code' => $purchase_order['CostCalculator']['linnworks_code'], 'CostCalculator.id' => $purchase_order['CostCalculator']['id']));
        
                      }
-                /* End Sp1 and Sp2,Sp3 in DB  */
+            $this->CostCalculator->recursive = 1;
+            $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC');
+           $this->set('purchase_orders', $this->paginate());
+           $this->set(compact('categories','getCost','getsupp'));
+           // print_r($purchase_orders); die();
+            
         }
 
 
@@ -401,7 +399,7 @@ class CostCalculatorsController extends AppController {
          $this->set('title', 'Setting Cost Calculator');
          $download = urldecode($catn);
          $categories = $this->categname();
-         $suppname = $this->getsupp();
+         $suppname = $this->suppliername();
          $countryname = $this->country();
          $catname = urldecode($this->data['CostCalculator']['category']);
          $subname = urldecode($this->data['CostCalculator']['supplier']);

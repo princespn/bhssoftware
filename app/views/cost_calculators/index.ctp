@@ -34,7 +34,8 @@ echo $csv->addRow($line);
 endforeach;
 $filename='cost_calculators';
 echo $csv->render($filename);
-}else{	
+}else{	//print_r($purchase_orders); die();
+           
 echo $this->Session->flash(); ?>
  <hr>
  <?php  echo $form->create('CostCalculator',array('action'=>'index','id'=>'saveForm')); ?>

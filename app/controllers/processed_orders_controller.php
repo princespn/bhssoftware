@@ -6,7 +6,7 @@ class ProcessedOrdersController extends AppController {
 
     function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow(array('index', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
+        $this->Auth->allow(array('index', 'dailysales_category', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
         $this->Session->activate();
 
     }
@@ -71,9 +71,9 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2018-04-19T00:00:00'; //min
+		$from = '2018-05-10T00:00:00'; //min
 		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-05-04:60:60'; //max
+		$to =  '2018-06-11T60:60:60'; //max
 		//$to = '';
         
         //$to = '';
@@ -258,7 +258,9 @@ for ($i = 0;$i<=count($order->Items); $i++) {
 
     $this_week_sd = date("Y-m-d",$days);
     
-if((count($order->Items)) > '1'){$ordertitle = $order->Items[$i]->Title."Name-".$i;}else {$ordertitle = $order->Items[$i]->Title;}
+if((count($order->Items)) >= '1'){
+	
+	$ordertitle = $order->Items[$i]->Title."Name-".$i;}else {$ordertitle = $order->Items[$i]->Title;}
      
      $this->loadModel('ProcessedListing');
       
@@ -272,13 +274,15 @@ if((count($order->Items)) > '1'){$ordertitle = $order->Items[$i]->Title."Name-".
     $days = strtotime($order->GeneralInfo->ReceivedDate);
 
     $this_week_sd = date("Y-m-d",$days);
-    
-   //$ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
+	
+	   //$ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
    $ordervalue = $order->TotalsInfo->TotalCharge;
    $this->ProcessedOrder->create();
-   
-   $this->ProcessedOrder->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
-             
+	
+	if(($order->GeneralInfo->Source === 'MAGENTO') && ($order->GeneralInfo->SubSource === 'https://www.smartparcelbox.com')){$smart_orderid = "SPB100000999".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	
+    $this->ProcessedOrder->saveAll(array('order_id' => $smart_orderid, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
+	  
      
 
 }
@@ -801,7 +805,17 @@ $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('Pr
 
             } 
 	
- 
+			// Daily Sales Report per category:
+
+				
+			public function dailysales_category(){
+				
+					$this->set('title', 'Daily Sales Report per category.');
+					
+					
+				
+			}
+			
              
 /* SELECT * FROM `processed_listings` WHERE `order_date` >= '2017-07-10' AND `order_date` <= '2017-07-16' AND `subsource`='http://www.smartparcelbox.com'
  * 

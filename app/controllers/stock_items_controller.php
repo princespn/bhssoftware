@@ -97,22 +97,22 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();
 										
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-05-04';
+					$date = '2018-06-10';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
 					
-					$ukstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $date)));
+					$ukstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 					
-					$waterstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'WATERFALL LANE','StockLevel.change_date' => $date)));
+					$waterstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'WATERFALL LANE','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 					
-					$ukfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'United Kingdom FBA','StockLevel.change_date' => $date)));
+					$ukfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'United Kingdom FBA','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 					
-					$frfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'France FBA','StockLevel.change_date' => $date)));
+					$frfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'France FBA','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 
-					$gerfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Germany FBA','StockLevel.change_date' => $date)));
+					$gerfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Germany FBA','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 					
-					$esfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.change_date' => $date)));
+					$esfbastocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
 
 					if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['StockItem']['all_item']))) {
             		$string = trim($this->data['StockItem']['all_item']);   
@@ -141,7 +141,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-05-04';
+					$date = '2018-06-10';
 
 					$this->loadModel('StockLevel');
 					
@@ -234,15 +234,19 @@ class StockItemsController extends AppController {
                     
 					$sixmonth_Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$six_condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
-					
-					 $six_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $six_firstdate),
+					$six_stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+							'StockLevel.change_date >= ' => $six_firstdate,'StockLevel.stock_lev !='=>'0','StockLevel.location_name' => 'Default');
+
+					 /*$six_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $six_firstdate),
 							'OR' => array(
-							array('StockLevel.location_name' => 'Default')));
+							array('StockLevel.location_name' => 'Default'))); */
 		
 					
-					$grouplast = array(('StockLevel.item_number'));
+					$grouplast = array(('StockLevel.item_number'),
+					'AND'=> 'StockLevel.barcode_number','StockLevel.category_name');
+
 					
-					$Last_6_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $six_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					$Last_6_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days'), 'conditions' => $six_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
 					/* End Calculation last 6 month */
 					
@@ -256,13 +260,16 @@ class StockItemsController extends AppController {
                     
 					$three_month_Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$three_condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
+					$three_stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+							'StockLevel.change_date >= ' => $three_firstdate,'StockLevel.stock_lev !='=>'0','StockLevel.location_name' => 'Default');
+
 					
-					 $three_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $three_firstdate),
+					/* $three_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $three_firstdate),
 							'OR' => array(
-							array('StockLevel.location_name' => 'Default')));
+							array('StockLevel.location_name' => 'Default'))); */
 		
 										
-					$Last_3_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days'), 'conditions' => $three_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					$Last_3_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days'), 'conditions' => $three_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
 					
 					//print_r($Last_6_month_stocks);die();
@@ -271,7 +278,7 @@ class StockItemsController extends AppController {
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-05-04';
+					$currentdate = '2018-06-10';
 					
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.due_level) as due_level','sum(StockLevel.stock_lev) as stock_lev'),'group' => $grouplast, 'conditions' => array('StockLevel.change_date' => $currentdate,'StockLevel.location_name !='=>'Serene Furnishings Ltd.'), 'order' => array('StockLevel.item_number ASC')));
 					
@@ -285,12 +292,15 @@ class StockItemsController extends AppController {
 					
 					//No of days out of stock in last 12 months
 					
-					 $stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $firstdate),
+					 $stock_condition = array('StockLevel.change_date <= ' => $lastdate,
+							'StockLevel.change_date >= ' => $firstdate,'StockLevel.stock_lev !='=>'0','StockLevel.location_name' => 'Default');
+
+					 /*$stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $firstdate),
 							'OR' => array(
-							array('StockLevel.location_name' => 'Default')));
+							array('StockLevel.location_name' => 'Default',)));*/
 		
 		
-					$Last_12_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.stock_lev) as No_of_days','StockLevel.location_name'), 'conditions' => $stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+					$Last_12_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days','StockLevel.location_name'), 'conditions' => $stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
 					//print_r($Last_12_month_stocks);die();
 					
@@ -321,7 +331,7 @@ class StockItemsController extends AppController {
 			$this->set(compact('three_month_Reports', 'Last_3_month_stocks', 'Last_6_month_stocks', 'sixmonth_Reports', 'Last_12_month_stocks','MaxReports','Cuurentstocks','Minimum_stocks','salesLastMonthReports','salesReports'));
 		   $$this->layout = null;
             $this->autoLayout = false;
-            Configure::write('debug', '2');
+            Configure::write('debug', '0');
 				}
 			  
 			  else
@@ -437,7 +447,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-05-04';
+					$currentdate = '2018-06-10';
 					
 					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 				
@@ -562,7 +572,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-05-04';
+					$currentdate = '2018-06-10';
 					
 					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 				
@@ -570,11 +580,7 @@ class StockItemsController extends AppController {
 					$this->set('stock_names', $this->paginate()); 
 					$this->set(compact('sixmonth_Reports','currweek_Reports','lastweek_Reports','lastmonth_Reports','lastyear_Reports','stock_names','Cuurent_stocks'));
 				
-				
-				
-				
-				
-			}
+				}
 					
 
 
@@ -662,7 +668,7 @@ class StockItemsController extends AppController {
 					
 					$this->set(compact('Reports','yes_Reports','lastseven_Reports','lasttherty_Reports','lastninty_Reports', 'last365_Reports'));
 				
-			}					
+			}
 		
 		
 			

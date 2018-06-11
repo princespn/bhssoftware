@@ -118,15 +118,15 @@ class StockLevelsController extends AppController {
 					//print_r($order->StockLevels[$i]->MinimumLevel); 
 					//die();
 				
-				$this_week_sd = date("Y-m-d");
-				//$this_week_sd = '2018-04-14';
+				//$this_week_sd = date("Y-m-d");
+				$this_week_sd = '2018-06-09';
 				$this->StockLevel->create(); 	
 				$this->StockLevel->saveAll(array('change_date' => $this_week_sd,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'location_name' => $order->StockLevels[$i]->Location->LocationName, 'stock_lev' => $order->StockLevels[$i]->StockLevel, 'stock_val' => $order->StockLevels[$i]->StockValue, 'minimum_level' => $order->StockLevels[$i]->MinimumLevel,  'due_level' => $order->StockLevels[$i]->Due, 'unit_costs' => $order->StockLevels[$i]->UnitCost, 'stock_itemid' => $order->StockLevels[$i]->StockItemId, 'stock_location_id' => $order->StockLevels[$i]->Location->StockLocationId));
    				}
 				
 				$this->loadModel('StockItem');	
-				$today_date = date("Y-m-d");
-				//$today_date = '2018-04-1';
+				//$today_date = date("Y-m-d");
+				$today_date = '2018-06-09';
 				$suppname = $order->Suppliers[0]->Supplier;	
 				$suppcurr = $order->Suppliers[0]->SupplierCurrency;
 				$suppid = $order->Suppliers[0]->SupplierID;	
@@ -137,17 +137,17 @@ class StockLevelsController extends AppController {
 				$stockitemcode = $this->StockItem->find('all', array('conditions' => array('StockItem.item_number' => $order->ItemNumber)));
 				
 			//print_r($stockitemcode[0]['StockItem']['item_number']);
-				if (($order->ItemNumber !== $stockitemcode[0]['StockItem']['item_number']) && (!empty($suppname))){
+				if (($order->ItemNumber !== $stockitemcode[0]['StockItem']['item_number']) && (!empty($order->CategoryName))){
 
 				$this->StockItem->create(); 	
 				$this->StockItem->saveAll(array('change_date' => $today_date,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName,  'supp_name' =>$suppname, 'supp_id' =>$suppid, 'heights' =>$order->Height, 'widths' =>$order->Width, 'depths' =>$order->Depth, 'weights' =>$order->Weight));
 				}else{
 					
 					$db = $this->StockItem->getDataSource();
-                    $value = $db->value($suppname, 'string');
+                    $value = $db->value($order->CategoryName, 'string');
 					
 					 $this->StockItem->updateAll(
-                        array('StockItem.supp_name' => $value),
+                        array('StockItem.category_name' => $value),
                         array('StockItem.item_number' => $stockitemcode[0]['StockItem']['item_number'],'StockItem.id' => $stockitemcode[0]['StockItem']['id']));
 						
 					//$this->StockItem->updateAll(array('StockItem.supp_name' => $suppname,'StockItem.category_name' => $order->CategoryName,'StockItem.item_title' =>$order->ItemTitle), array('StockItem.linnworks_code' => $stockitemcode[0]['StockItem']['item_number'], 'StockItem.id' => $stockitemcode[0]['StockItem']['id']));
@@ -157,7 +157,7 @@ class StockLevelsController extends AppController {
 				$this->loadModel('CostCalculator');				
 				$pcodes = $this->CostCalculator->find('all', array('conditions' => array('CostCalculator.linnworks_code' => $order->ItemNumber)));
 				
-				if (($order->ItemNumber !== $pcodes[0]['CostCalculator']['linnworks_code']) && (!empty($suppname))){
+				if (($order->ItemNumber !== $pcodes[0]['CostCalculator']['linnworks_code']) && (!empty($order->CategoryName))){
 						
 					
 				$this->CostCalculator->create(); 	
@@ -168,12 +168,12 @@ class StockLevelsController extends AppController {
 						
 						
 					$db = $this->CostCalculator->getDataSource();
-                    $value = $db->value($order->ItemTitle, 'string');
+                    $value = $db->value($order->CategoryName, 'string');
 					
 					
 					
                     $this->CostCalculator->updateAll(
-                        array('CostCalculator.product_name' => $value),
+                        array('CostCalculator.category' => $value),
                         array('CostCalculator.linnworks_code' => $pcodes[0]['CostCalculator']['linnworks_code'],'CostCalculator.id' => $pcodes[0]['CostCalculator']['id']));
 						
 					//$this->CostCalculator->updateAll(array('CostCalculator.supplier' => $suppname,'CostCalculator.category' => $order->CategoryName,'CostCalculator.product_name' =>$order->ItemTitle,'invoice_currency' =>$suppcurr), array('CostCalculator.linnworks_code' => $pcodes[0]['CostCalculator']['linnworks_code'], 'CostCalculator.id' => $pcodes[0]['CostCalculator']['id']));
@@ -185,7 +185,7 @@ class StockLevelsController extends AppController {
 				$this->loadModel('InventoryCode');
 				$Maincodes = $this->InventoryCode->find('all', array('conditions' => array('InventoryCode.linnworks_code' => $order->ItemNumber)));
 				
-				if (($order->ItemNumber !== $Maincodes[0]['InventoryCode']['linnworks_code']) && (!empty($order->ItemTitle))){
+				if (($order->ItemNumber !== $Maincodes[0]['InventoryCode']['linnworks_code']) && (!empty($order->CategoryName))){
 						
 					
 				$this->InventoryCode->create(); 	
@@ -210,22 +210,19 @@ class StockLevelsController extends AppController {
        	$this->set(compact('orders','pagination','this_week_sd'));
     }
 			
-			
 			public function stock_category(){
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-05-04';
-					
+					$date = '2018-06-10';
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
-					//print_r($lastday);die();2017-12-31
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
-					//print_r($lastmonthday);die();2017-11-30
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));
-					//print_r($lastlastmonthday);die();2017-10-31
+
+				
 					$this->StockLevel->recursive = 1;
 					
-					$ukstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.change_date' => $date),'order' =>array('StockLevel.category_name  ASC')));
+					$ukstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.change_date' => $date,'StockLevel.category_name !='=> 'Swatches'),'order' =>array('StockLevel.category_name  ASC')));
 					
 					/*$waterstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.location_name' =>'WATERFALL LANE','StockLevel.change_date' => $date),'order' =>array('StockLevel.category_name  ASC')));
 					
@@ -238,15 +235,15 @@ class StockLevelsController extends AppController {
 	   				$esfbstocks =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp', 'CostCalculator.invoice_currency', 'PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => array('StockLevel.location_name' =>'Spain FBA','StockLevel.change_date' => $date),'order' =>array('StockLevel.category_name  ASC')));
 					*/
 					
-					$conditions = array('StockLevel.change_date' => $lastday,'StockLevel.location_name  !='=>'');
+					$conditions = array('StockLevel.change_date' => $lastday,'StockLevel.category_name !='=> 'Swatches');
 	
 					$previousmonth =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $conditions, 'order' =>array('StockLevel.category_name  ASC')));
 					
-					$lastconditions = array('StockLevel.change_date' => $lastmonthday,'StockLevel.location_name  !='=>'');
+					$lastconditions = array('StockLevel.change_date' => $lastmonthday,'StockLevel.category_name !='=> 'Swatches');
 	
 					$lastmonths =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastconditions, 'order' =>array('StockLevel.category_name  ASC')));
 					//print_r($lastmonth);die();
-					$lastlastconditions = array('StockLevel.change_date' => $lastlastmonthday,'StockLevel.location_name  !='=>'');
+					$lastlastconditions = array('StockLevel.change_date' => $lastlastmonthday,'StockLevel.category_name !='=> 'Swatches');
 	
 					$lastlastmonths =  $this->StockLevel->find('all', array('fields' => array('StockLevel.category_name', 'StockLevel.item_number' ,'CostCalculator.invoice_currency', 'StockLevel.stock_lev','StockLevel.location_name','CostCalculator.landed_price_gbp','PurchasePrice.purchase_price','PurchasePrice.item_sku'), 'conditions' => $lastlastconditions, 'order' =>array('StockLevel.category_name  ASC')));
 					
@@ -260,7 +257,5 @@ class StockLevelsController extends AppController {
 					$this->set(compact('previousmonth','lastlastmonths','catnames','ukstocks','lastmonths'));
 
 			}
-			
-		
 			
 }

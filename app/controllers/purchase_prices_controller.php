@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","EntriesPerPage":80,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","Status":"DELIVERED","EntriesPerPage":10,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -148,7 +148,7 @@ class PurchasePricesController extends AppController {
 							
 							$purprices = round((($order->Cost-$order->Tax)/$order->Quantity),2);
 											
-							$this->loadModel('PurchasePrice');
+							//$this->loadModel('PurchasePrice');
 							
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
 							
@@ -156,8 +156,21 @@ class PurchasePricesController extends AppController {
 														
 							$diff = floor(($days-$oldd)/$lang);
 							
+							//if ((($data[0]['PurchasePrice']['purchase_price']) === '0') && ($purprices != '0')){ //echo "hello".$data[0]['PurchasePrice']['purchase_price']; die();
 							
-							if ((!empty($oldd)) && ($diff>1)){ //echo "hello"; die();
+							if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['invoice_currency'] !== $curr))){ //echo "hello"; die();
+								
+											
+								$db = $this->PurchasePrice->getDataSource();
+								$value = $db->value($curr, 'string');
+								
+								
+								
+								$this->PurchasePrice->updateAll(
+									array('PurchasePrice.invoice_currency' => $value),
+									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
+						
+							} else if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['purchase_price'] !== $purprices))){ //echo "hello"; die();
 								
 											
 								$db = $this->PurchasePrice->getDataSource();
@@ -168,7 +181,6 @@ class PurchasePricesController extends AppController {
 								$this->PurchasePrice->updateAll(
 									array('PurchasePrice.purchase_price' => $value),
 									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
-						
 						
 								/*
 								$this->PurchasePrice->updateAll(
@@ -211,9 +223,9 @@ class PurchasePricesController extends AppController {
 				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				        $result = curl_exec($ch);
 				        $supliers = json_decode($result);
-						print_r($supliers); die();
+						//print_r($supliers); die();
 						curl_close($ch);
 						if(!empty($supliers)){return $supliers;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
 					}
 				
-	}
+	}       		

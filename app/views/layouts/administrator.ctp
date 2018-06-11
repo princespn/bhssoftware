@@ -16,7 +16,7 @@
 <div class="container-fluid">
 <?php echo $content_for_layout; ?>
 <hr>
-<p class="text-muted">Copyright &copy; 2016 Homescapes. All rights reserved.</p>
+<p class="text-muted">Copyright &copy; 2018 Homescapes. All rights reserved.</p>
 </div> 
 </body>
 </html>

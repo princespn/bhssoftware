@@ -8,7 +8,7 @@ class ProcessedListingsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();   
       
-        $this->Auth->allow(array('productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
+        $this->Auth->allow(array('catname_skuname','productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
          $this->Session->activate();
 
     }
@@ -1775,6 +1775,36 @@ public function importcategory(){
 
 				
 		}
+		
+		
+		
+		public function catname_skuname() {
+
+        $this->set('title', 'Daily Sales Report per category.'); 
+       
+        $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
+		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
+        $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
+        //$Countcurskuweeks =  $this->ProcessedListing->countsku_currentweeks();
+		//$Countprevskuweeks = $this->ProcessedListing->countsku_prevweeks();
+		
+	   // $Countskulastweeks = $this->ProcessedListing->countsku_lastweeks();*/
+		   
+
+        $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+ 
+		$groupby = array(('ProcessedListing.cat_name'),
+         'AND'=> 'ProcessedListing.product_sku');
+		
+    
+		
+		$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','count(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','count(ProcessedListing.quantity) desc'));
+		$this->set('CatSaveallweeks', $this->paginate()); 
+		$this->set(compact('Skucurrentsweeks','Skupreviousweeks','Skulastweeks'));
+       				  
+	
+	
+	}
     
 }
 

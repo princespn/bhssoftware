@@ -2,12 +2,11 @@
 
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
 
-//$headmapp = array('','','','','','MAXIMUM..','...SALE','MINIMUM...','...SALE','','AVERAGE...','...SALES','....(WITH IN STOCK ASSUMPTION)','','','','','','','');
+//$headmapp = array('','','','','','MAXIMUM..','...SALE','MINIMUM...','...SALE','','AVERAGE...','...SALES','....(WITH IN STOCK ASSUMPTION)','','','','','','','','','','','');
 $headmapp = array('','','','','','MAXIMUM..','...SALE','MINIMUM...','...SALE','','','','','','','','','');
 echo $csv->addRow($headmapp);
-$mapping = array('Item SKU','Item Description','Category','Supplier','Sales Qty last 12 months','Month','Quantity','Month','Quantity','No of days The Item was in stock in last 12 months','Last Month Sales Quanity','Current Stock','Quantity on Order','Minimum Stock Level');
+$mapping = array('Item SKU','Item Description','Category','Supplier','Sales Qty last 12 months','Month','Quantity','Month','Quantity','No of days The Item was in stock in last 12 months', '12 Month Average Sales/Month', 'Sales Qty last 6 months', 'No of days The Item was in stock in last 6 months','6 Month Average Sales/Month', 'Sales Qty last 3 months', 'No of days The Item was in stock in last 3 months', '3 Month Average Sales/Month', 'Last Month Sales Quanity', 'Average of Average Sales/Month', 'Current Stock','Quantity on Order', 'No of Months Stock availability', 'Minimum Stock Level');
 echo $csv->addRow($mapping);
-
 foreach ($stockall_reports as $stockall_report):
 
 
@@ -16,14 +15,14 @@ $desc = array($stockall_report['StockItem']['item_title']);
 $catname = array($stockall_report['StockItem']['category_name']);
 $suppname = array($stockall_report['StockItem']['supp_name']);
 
-$totalqty = array();  foreach ($salesReports as $salesReport):
+			$totalqty = array('0.00'); foreach ($salesReports as $salesReport):
 				if($stockall_report['StockItem']['item_number'] === $salesReport['ProcessedListing']['product_sku']){
-				$totalqty[0] = $salesReport[0]['sales_qty']; 
+				if(!empty($salesReport[0]['sales_qty'])){$totalqty[0] = $salesReport[0]['sales_qty']; }else{ $totalqty = array('0.00');}
 				break;
 					} 
 				endforeach;
 				
-$Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxvalue = array(); $Amaxname = array(); $Acurmin = ''; $Aminvalue = array(); $Aminname = array(); $Amin = 10000; $AcurrMinname = '';   foreach($MaxReports as $MaxReport):
+			$Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxvalue = array('0.00'); $Amaxname = array('0.00'); $Acurmin = ''; $Aminvalue = array('0.00'); $Aminname = array('0.00'); $Amin = 10000; $AcurrMinname = '';   foreach($MaxReports as $MaxReport):
 			 if($stockall_report['StockItem']['item_number'] === $MaxReport['ProcessedListing']['product_sku']){
 			 $Acurr = $MaxReport[0]['total_qty']; $Acurrname = $MaxReport[0]['month_name']; $Acurmin = $MaxReport[0]['total_qty']; $AcurrMinname = $MaxReport[0]['month_name']; 		
 			
@@ -45,23 +44,62 @@ $Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxvalue = array(); $Amaxname = arra
 				endforeach; 
 			
 		
-			$nomberdays = array(); foreach ($Last_12_month_stocks as $Last_12_month_stock):
+			$nomberdays = array('0.00');$Average_12month = array('0.00'); foreach ($Last_12_month_stocks as $Last_12_month_stock):
 			if($stockall_report['StockItem']['item_number'] === $Last_12_month_stock['StockLevel']['item_number']){
 			$nomberdays[0] = $Last_12_month_stock[0]['No_of_days'];
-			break;
+				break;
 					} 
 			endforeach;
 			
-		//$Average_month[0] = round(($totalqty[0]/$nomberdays[0])*30,2);			
+			$Average_12month[0] = (($totalqty[0]/$nomberdays[0])*30); 
 
-		 $lastmonthtotalqty = array(); foreach ($salesLastMonthReports as $salesLastMonthReport):
+
+		
+			 $totalsell = array('0.00');foreach ($sixmonth_Reports as $sixmonth_Report):
+			 if($stockall_report['StockItem']['item_number'] === $sixmonth_Report['ProcessedListing']['product_sku']){
+			 $totalsell[0] = $sixmonth_Report[0]['sales_qty']; 
+			 break;
+				} 
+			endforeach; 
+			
+			 $days_six = array('0.00'); foreach ($Last_6_month_stocks as $Last_6_month_stock):
+			if($stockall_report['StockItem']['item_number'] === $Last_6_month_stock['StockLevel']['item_number']){
+			$days_six[0] = $Last_6_month_stock[0]['No_of_days']; 
+			 break;
+				} 
+			endforeach;
+			
+			$Average_six_month[0] =($totalsell[0]/$days_six[0])*30; 
+			
+			$totalsell_3month = array('0.00');  foreach ($three_month_Reports as $three_month_Report):
+			if($stockall_report['StockItem']['item_number'] === $three_month_Report['ProcessedListing']['product_sku']){
+			$totalsell_3month[0] = $three_month_Report[0]['sales_qty'];
+			break;
+			} 
+			endforeach;
+			
+			 $days_3month = array('0.00'); foreach ($Last_3_month_stocks as $Last_3_month_stock):
+			 if($stockall_report['StockItem']['item_number'] === $Last_3_month_stock['StockLevel']['item_number']){
+			 $days_3month[0] = $Last_3_month_stock[0]['No_of_days'];
+			 break;
+				}
+			 endforeach;
+			 
+			 $Average_3month[0] =($totalsell_3month[0]/$days_3month[0])*30;
+			
+			$aveg_of_aveg = array('0.00'); $lastmonthtotalqty = array('0.00'); 
+			foreach ($salesLastMonthReports as $salesLastMonthReport):
 			if($stockall_report['StockItem']['item_number'] === $salesLastMonthReport['ProcessedListing']['product_sku']){
 			$lastmonthtotalqty[0] = $salesLastMonthReport[0]['sales_qty'];
-			break;}
+			break;
+			}
 			endforeach;
 			
 			
-			$currentstock = array(); $duestock = array(); foreach($Cuurentstocks as $Cuurentstock):
+			$aveg_of_aveg[0] = ($Average_12month[0]+$Average_six_month[0]+$Average_3month[0])/3; 
+			
+		  $stock_availability = array('0.00'); $duestock = array('0.00'); $currentstock = array('0.00');
+		  foreach($Cuurentstocks as $Cuurentstock):
 			if($stockall_report['StockItem']['item_number'] === $Cuurentstock['StockLevel']['item_number']){
 			$currentstock[0] = $Cuurentstock[0]['stock_lev'];
 			$duestock[0] = $Cuurentstock[0]['due_level'];
@@ -69,13 +107,15 @@ $Acurr = '';  $Amax = 0; $Acurrname = ''; $Amaxvalue = array(); $Amaxname = arra
 			endforeach;
 			
 			
-			$minimumlevel = array(); foreach($Minimum_stocks as $Minimum_stock):
+			$stock_availability[0] = ($currentstock[0]/$aveg_of_aveg[0]);
+			
+			$minimumlevel = array('0.00'); foreach($Minimum_stocks as $Minimum_stock):
 			if($stockall_report['StockItem']['item_number'] === $Minimum_stock['StockLevel']['item_number']){
 			$minimumlevel[0] = $Minimum_stock[0]['minimum_level'];
 			break;}
 			endforeach;
 		
-$line = array_merge($sku, $desc,$catname,$suppname,$totalqty,$Amaxname,$Amaxvalue,$Aminname,$Aminvalue,$nomberdays,$lastmonthtotalqty,$currentstock,$duestock,$minimumlevel);
+$line = array_merge($sku, $desc,$catname,$suppname,$totalqty,$Amaxname,$Amaxvalue,$Aminname,$Aminvalue,$nomberdays,$Average_12month,$totalsell,$days_six,$Average_six_month,$totalsell_3month,$days_3month,$Average_3month,$lastmonthtotalqty,$aveg_of_aveg,$currentstock,$duestock,$stock_availability,$minimumlevel);
 echo $csv->addRow($line);
 endforeach;
 $filename = 'minimum_level';

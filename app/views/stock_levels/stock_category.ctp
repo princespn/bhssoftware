@@ -29,7 +29,7 @@ $lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));
      <tr>
 			<td><?php echo $catname['StockItem']['category_name']; ?></td>
 			<?php $ukppprice = '0'; $ukprice = '0'; $waterppprice = '0'; $waterprice = '0'; $ukppfbprice = '0'; $ukfbprice = '0'; ?>
-			<?php $frppfbprice = '0'; $frfbprice = '0';  $deppfbprice = ''; $defbprice = '0'; $esppfbprice = '0'; $esfbprice = '0'; ?>
+			<?php $frppfbprice = '0';$ukpricemain = '0'; $frfbprice = '0';  $deppfbprice = ''; $defbprice = '0'; $esppfbprice = '0'; $esfbprice = '0'; ?>
 			<?php foreach ($ukstocks as $stock): ?>  
 			<?php if($catname['StockItem']['category_name']=== $stock['StockLevel']['category_name']){ ?>
 			<?php if(($stock['StockLevel']['location_name']==='Default')){ ?>

@@ -32,7 +32,7 @@
 <?php echo $content_for_layout; ?>
 <p id="back-top"><a href="#top"><span></span>Back to Top</a></p>
 <hr>
-<p class="text-muted">Copyright &copy; 2016 Homescapes. All rights reserved.</p>
+<p class="text-muted">Copyright &copy; 2018 Homescapes. All rights reserved.</p>
 </div>
 <?php //echo $this->element('admin/adduser'); ?>
 <script>
