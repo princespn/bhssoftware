@@ -1,4 +1,44 @@
-<?php //print_r($Skucurrentsweeks);  ?>
+<?php //print_r($Skucurrentsweeks); 
+	
+	$previous_week = strtotime("-1 week +1 day");
+
+	$start_week = strtotime("last monday midnight",$previous_week);
+	$end_week = strtotime("next sunday",$start_week);
+
+	$this_week_sd = date("Y-m-d",$start_week);
+	$this_week_ed = date("Y-m-d",$end_week);
+ 
+		$present_week = strtotime("-2 week +1 day");
+
+        $second_week = strtotime("last monday midnight",$present_week);
+        $send_week = strtotime("next sunday",$second_week);
+
+        $start2_week = date("Y-m-d",$second_week);
+        $end2_week = date("Y-m-d",$send_week);
+		
+			$present_year_week = strtotime("-53 week +1 day");
+
+			$last_year_week = strtotime("last sunday midnight",$present_year_week);
+			$end_year_week = strtotime("next saturday",$last_year_week);
+
+			$main_last_week = date("Y-m-d",$last_year_week);
+			$main_end_week = date("Y-m-d",$end_year_week);
+			
+			
+			$this_month_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+			$this_month_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+
+				$start_month = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
+				$end_month =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+
+					
+				$main_last_month = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
+				$main_end_month = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+
+
+
+
+?>
 <h1 class="sub-header"><?php __('Daily Sales Report per category');?></h1>
  <div class="panel panel-default">
     <div class="panel-body">
@@ -27,18 +67,16 @@
 	<th><?php __('Item'); ?><?php __(' SKU'); ?></th>   
 	<th><?php __('Item'); ?><?php __(' Title'); ?></th>
 	<th><?php __('Category'); ?></th>
-	<th><?php __('Current Week'); ?></th>	
-	<th><?php __('Last Week'); ?></th>
-	<th><?php __('Same Week last Year'); ?></th>
-	<th><?php __('Current Month'); ?></th>
-	<th><?php __('Last Month'); ?></th>
-	<th><?php __('Current YTD'); ?></th>
-	<th><?php __('Previous YTD'); ?></th>	
+	<th><?php __('Current Week'); ?></br><?php echo "( ".$this_week_sd." - ".$this_week_ed." )"?></th>	
+	<th><?php __('Last Week'); ?></br><?php echo "( ".$start2_week." - ".$end2_week." )"?></th>
+	<th><?php __('Same Week last Year'); ?></br><?php echo "( ".$main_last_week." - ".$main_end_week." )"?></th>
+	<th><?php __('Current Month'); ?></br><?php echo "( ".$this_month_sd." - ".$this_month_ed." )"?></th>
+	<th><?php __('Previous Month'); ?></br><?php echo "( ".$start_month." - ".$end_month." )"?></th>
+	<th><?php __('Same Month last Year'); ?></br><?php echo "( ".$main_last_month." - ".$main_end_month." )"?></th>
 	</tr>
     </thead>
 		
 		<?php  foreach ($CatSaveallweeks as $value): ?>  
-        
 		<tr>
 		<td><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></td>
         <td><?php echo $value['ProcessedListing']['product_name']; ?></td>
@@ -61,13 +99,26 @@
 		<?php break;} ?>
 		<?php endforeach; ?>  
 		<td><?php echo $lastday_Rep; ?></td>
-		
-		
-		
+		<?php $currmonth_Rep = 0; foreach($Skucurskumonths as $Skucurskumonth): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skucurskumonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skucurskumonth['ProcessedListing']['cat_name'])){?>
+		<?php $currmonth_Rep = $Skucurskumonth[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?>  
+		<td><?php echo $currmonth_Rep; ?></td>		
+		<?php $prevmonth_Rep = 0; foreach($Skuprevskumonths as $Skuprevskumonth): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skuprevskumonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skuprevskumonth['ProcessedListing']['cat_name'])){?>
+		<?php $prevmonth_Rep = $Skuprevskumonth[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?>  
+		<td><?php echo $prevmonth_Rep; ?></td>
+		<?php $lastmonth_Rep = 0; foreach($Skulastmonths as $Skulastmonth): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skulastmonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skulastmonth['ProcessedListing']['cat_name'])){?>
+		<?php $lastmonth_Rep = $Skulastmonth[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?>  
+		<td><?php echo $lastmonth_Rep; ?></td>
 		<tr>
-		
 		<?php endforeach; ?> 
-    
     </table>
  </div>
  <hr>

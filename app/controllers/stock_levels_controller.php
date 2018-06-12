@@ -118,15 +118,15 @@ class StockLevelsController extends AppController {
 					//print_r($order->StockLevels[$i]->MinimumLevel); 
 					//die();
 				
-				//$this_week_sd = date("Y-m-d");
-				$this_week_sd = '2018-06-09';
+				$this_week_sd = date("Y-m-d");
+				//$this_week_sd = '2018-06-09';
 				$this->StockLevel->create(); 	
 				$this->StockLevel->saveAll(array('change_date' => $this_week_sd,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'location_name' => $order->StockLevels[$i]->Location->LocationName, 'stock_lev' => $order->StockLevels[$i]->StockLevel, 'stock_val' => $order->StockLevels[$i]->StockValue, 'minimum_level' => $order->StockLevels[$i]->MinimumLevel,  'due_level' => $order->StockLevels[$i]->Due, 'unit_costs' => $order->StockLevels[$i]->UnitCost, 'stock_itemid' => $order->StockLevels[$i]->StockItemId, 'stock_location_id' => $order->StockLevels[$i]->Location->StockLocationId));
    				}
 				
 				$this->loadModel('StockItem');	
-				//$today_date = date("Y-m-d");
-				$today_date = '2018-06-09';
+				$today_date = date("Y-m-d");
+				//$today_date = '2018-06-09';
 				$suppname = $order->Suppliers[0]->Supplier;	
 				$suppcurr = $order->Suppliers[0]->SupplierCurrency;
 				$suppid = $order->Suppliers[0]->SupplierID;	
@@ -214,7 +214,7 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-06-10';
+					$date = '2018-06-11';
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));

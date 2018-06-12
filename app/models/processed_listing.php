@@ -118,20 +118,14 @@ class ProcessedListing extends AppModel {
 	$this_week_ed = date("Y-m-d",$end_week);
 	 
 
+	$conditions = array('ProcessedListing.order_date <= ' => $this_week_ed,
+                    'ProcessedListing.order_date >= ' => $this_week_sd,'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+      
+	$groupby = array(('ProcessedListing.product_sku'),
+    'AND'=> 'ProcessedListing.cat_name');
 
-      $conditions = array('ProcessedListing.order_date <= ' => $this_week_ed,
-      'ProcessedListing.order_date >= ' => $this_week_sd,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
-
-     //$conditions = array('ProcessedListing.price_per_product !='=>'0','ProcessedListing.cat_name !='=>'');
-     
-		$groupby = array(('ProcessedListing.product_sku'),
-         'AND'=> 'ProcessedListing.cat_name');
-
-        
-        $catcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','count(ProcessedListing.quantity) desc')));
-       //print_r($catcurrentweek); die();
-        return $catcurrentweek;
-       
+        $catcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catcurrentweek;       
         
     }
     
@@ -149,19 +143,17 @@ class ProcessedListing extends AppModel {
         $end_week = date("Y-m-d",$send_week);
 
        
-
 		$conditions = array('ProcessedListing.order_date <= ' => $end_week,
 		'ProcessedListing.order_date >= ' => $start_week,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
 
 		$groupby = array(('ProcessedListing.product_sku'),
          'AND'=> 'ProcessedListing.cat_name');
         
-        $categoryprevweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','count(ProcessedListing.quantity) desc')));
+        $categoryprevweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
         return $categoryprevweeks;       
         
     }
     
-
     
     
 		public function sku_lastweekly() {
@@ -180,97 +172,59 @@ class ProcessedListing extends AppModel {
 			
 			$groupby = array(('ProcessedListing.product_sku'),
 			'AND'=> 'ProcessedListing.cat_name');
-
-       
-        
-			$Catdatalastweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','count(ProcessedListing.quantity) desc')));
-			// print_r($Catdatalastweeks);die();
+               
+			$Catdatalastweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
 			return $Catdatalastweeks;
 		
     }
 	
 	
-	/*public function countsku_currentweeks(){
+	public function sku_currentmonths(){
         
-	$previous_week = strtotime("-1 week +1 day");
-
-	$start_week = strtotime("last monday midnight",$previous_week);
-	$end_week = strtotime("next sunday",$start_week);
-
-	$this_week_sd = date("Y-m-d",$start_week);
-	$this_week_ed = date("Y-m-d",$end_week);
-	 
+	$this_month_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+	$this_month_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 
 
-      $conditions = array('ProcessedListing.order_date <= ' => $this_week_ed,
-      'ProcessedListing.order_date >= ' => $this_week_sd,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
+      $conditions = array('ProcessedListing.order_date <= ' => $this_month_ed,
+      'ProcessedListing.order_date >= ' => $this_month_sd,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
 
-     //$conditions = array('ProcessedListing.price_per_product !='=>'0','ProcessedListing.cat_name !='=>'');
-     
-		$groupby = array(('ProcessedListing.cat_name'),
-         'AND'=> 'ProcessedListing.currency');
-
+	  $groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
         
-        $countcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','ProcessedListing.currency  DESC','count(ProcessedListing.order_id) desc')));
-       //print_r($countcurrentweek); die();
-        return $countcurrentweek;
-       
+        $catcurrentmonth =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catcurrentmonth;
+   }
+	
+	public function sku_prevmonths(){
+		     
+		$start_month = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
+		$end_month =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+
+
+      $conditions = array('ProcessedListing.order_date <= ' => $end_month,
+      'ProcessedListing.order_date >= ' => $start_month,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
+
+	  $groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
         
+        $catprevmonth =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catprevmonth;
     }
 	
-	public function countsku_prevweeks(){
+	public function sku_lastmonths(){
         
+	$main_last_month = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
+	$main_end_month = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+
+      $conditions = array('ProcessedListing.order_date <= ' => $main_end_month,
+      'ProcessedListing.order_date >= ' => $main_last_month,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
+
+		$groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
         
-      $present_week = strtotime("-2 week +1 day");
-
-        $second_week = strtotime("last monday midnight",$present_week);
-        $send_week = strtotime("next sunday",$second_week);
-
-        $start_week = date("Y-m-d",$second_week);
-        $end_week = date("Y-m-d",$send_week);
-
-       
-
-		$conditions = array('ProcessedListing.order_date <= ' => $end_week,
-		'ProcessedListing.order_date >= ' => $start_week,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'');
-
-			$groupby = array(('ProcessedListing.cat_name'),
-			'AND'=> 'ProcessedListing.currency');
-        
-        $countprevweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
-        //print_r($countprevweeks);die();
-        return $countprevweeks;       
-        
+        $catlastmonth =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catlastmonth;
+  
     }
-   
-	
-	
-		public function countsku_lastweeks() {  
-        
-			$present_year_week = strtotime("-53 week +1 day");
-
-			$last_year_week = strtotime("last sunday midnight",$present_year_week);
-			$end_year_week = strtotime("next saturday",$last_year_week);
-
-			$main_last_week = date("Y-m-d",$last_year_week);
-			$main_end_week = date("Y-m-d",$end_year_week);
-
-
-
-
-			$conditions = array('ProcessedListing.order_date <= ' => $main_end_week,
-			'ProcessedListing.order_date >= ' => $main_last_week,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
- 
-			$groupby = array(('ProcessedListing.cat_name'),
-			'AND'=> 'ProcessedListing.currency');
-
-       
-        
-        $Countlastweeks =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','ProcessedListing.currency  DESC','ProcessedListing.product_sku ASC')));
-        //print_r($Countlastweeks);die();
-        return $Countlastweeks;
-        
-    }*/
-   
 
 }

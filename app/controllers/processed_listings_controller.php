@@ -1778,17 +1778,17 @@ public function importcategory(){
 		
 		
 		
-		public function catname_skuname() {
+	public function catname_skuname() {
 
         $this->set('title', 'Daily Sales Report per category.'); 
        
         $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
 		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
         $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
-        //$Countcurskuweeks =  $this->ProcessedListing->countsku_currentweeks();
-		//$Countprevskuweeks = $this->ProcessedListing->countsku_prevweeks();
+        $Skucurskumonths =  $this->ProcessedListing->sku_currentmonths();
+		$Skuprevskumonths = $this->ProcessedListing->sku_prevmonths();
 		
-	   // $Countskulastweeks = $this->ProcessedListing->countsku_lastweeks();*/
+	   $Skulastmonths = $this->ProcessedListing->sku_lastmonths();
 		   
 
         $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
@@ -1796,14 +1796,10 @@ public function importcategory(){
 		$groupby = array(('ProcessedListing.cat_name'),
          'AND'=> 'ProcessedListing.product_sku');
 		
-    
-		
-		$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','count(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','count(ProcessedListing.quantity) desc'));
+    	$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','sum(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc'));
 		$this->set('CatSaveallweeks', $this->paginate()); 
-		$this->set(compact('Skucurrentsweeks','Skupreviousweeks','Skulastweeks'));
-       				  
-	
-	
+		$this->set(compact('Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths'));
+    
 	}
     
 }
