@@ -7,6 +7,13 @@
 
 	$this_week_sd = date("Y-m-d",$start_week);
 	$this_week_ed = date("Y-m-d",$end_week);
+	
+	$datew1 = date_create($this_week_sd);
+	$curr_week = date_format($datew1,"d F");
+	
+	$datew2 = date_create($this_week_ed);
+	$curr_week2 = date_format($datew2,"d F Y");
+
  
 		$present_week = strtotime("-2 week +1 day");
 
@@ -16,6 +23,12 @@
         $start2_week = date("Y-m-d",$second_week);
         $end2_week = date("Y-m-d",$send_week);
 		
+		$datel1 = date_create($start2_week);
+		$last_week1 = date_format($datel1,"d F");
+		
+		$datel2 = date_create($end2_week);
+		$last_week2 = date_format($datel2,"d F Y");
+		
 			$present_year_week = strtotime("-53 week +1 day");
 
 			$last_year_week = strtotime("last sunday midnight",$present_year_week);
@@ -24,34 +37,53 @@
 			$main_last_week = date("Y-m-d",$last_year_week);
 			$main_end_week = date("Y-m-d",$end_year_week);
 			
+			$datepw = date_create($main_last_week);
+			$lastp_week1 = date_format($datepw,"d F");
+		
+			$datepw1 = date_create($main_end_week);
+			$lastp_week2 = date_format($datepw1,"d F Y");
+		
 			
 			$this_month_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
-			$this_month_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+			//$this_month_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+			
+			$date = date_create($this_month_sd);
+			$this_month_ed = date_format($date,"F Y");
 
-				$start_month = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
-				$end_month =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+			$start_month = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
+				//$end_month =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+				
+			$datep = date_create($start_month);
+			$end_month = date_format($datep,"F Y");
 
 					
 				$main_last_month = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
-				$main_end_month = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+				//$main_end_month = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+			$datelast = date_create($main_last_month);
+			$main_end_month = date_format($datelast,"F Y");
+
+			$this_year = date_format($datep,"Y");
+			
+			$end_year = date_format($datelast,"Y");
 
 
 
 
 ?>
-<h1 class="sub-header"><?php __('Daily Sales Report per category');?></h1>
+<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST'];?>
+<h1 class="sub-header"><?php __('Daily Sales Report per category or per sku.');?></h1>
  <div class="panel panel-default">
     <div class="panel-body">
       <div class="row">
 	    <div class="col-md-12">
 	    <div class="col-md-5">
 		</div>
-      <?php  echo $form->create('',array('action'=>'','id'=>'saveForm')); ?>
+      <?php  echo $form->create('ProcessedListing',array('action'=>'catname_skuname','id'=>'saveForm')); ?>
         <div class="col-md-5">
          <div class="form-group margin-bottom-0">
 			<div class="input-group">
 				<span class="search-icon"><i aria-hidden="true" class="fa fa-search"></i></span>
-				<?php echo $this->Form->input('all_item',array('label'=>'','placeholder'=>'Search Product SKU...', 'class'=>'form-control pa-left')); ?>
+				<?php echo $this->Form->input('cat_sku_name',array('label'=>'','placeholder'=>'Search Item SKU, Category..', 'class'=>'form-control pa-left')); ?>
 				<div class="input-group-btn"><?php echo $this->Form->button('Search', array('value'=>'submit','name'=>'submit','id'=>'submit','class'=>'btn btn-primary','type'=>'submit')); ?></div>
 			</div>
           </div>
@@ -66,16 +98,28 @@
 	<tr>
 	<th><?php __('Item'); ?><?php __(' SKU'); ?></th>   
 	<th><?php __('Item'); ?><?php __(' Title'); ?></th>
-	<th><?php __('Category'); ?></th>
-	<th><?php __('Current Week'); ?></br><?php echo "( ".$this_week_sd." - ".$this_week_ed." )"?></th>	
-	<th><?php __('Last Week'); ?></br><?php echo "( ".$start2_week." - ".$end2_week." )"?></th>
-	<th><?php __('Same Week last Year'); ?></br><?php echo "( ".$main_last_week." - ".$main_end_week." )"?></th>
-	<th><?php __('Current Month'); ?></br><?php echo "( ".$this_month_sd." - ".$this_month_ed." )"?></th>
-	<th><?php __('Previous Month'); ?></br><?php echo "( ".$start_month." - ".$end_month." )"?></th>
-	<th><?php __('Same Month last Year'); ?></br><?php echo "( ".$main_last_month." - ".$main_end_month." )"?></th>
+	<th><ul class="select-drop">
+              <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Category <span class="caret"></span></a>
+                 <ul class="dropdown-menu">
+                   <?php foreach ($categories as $category): ?>
+                     
+                    <li><a href="<?php echo  $actual_link ; ?>/processed_listings/catname_skuname?catgory=<?php echo rawurlencode($category->CategoryName); ?>" target="_self"><?php echo $category->CategoryName; ?></a></li>
+                  <?php endforeach; ?>
+                </ul>
+              </li>
+            </ul>
+          </th>      
+	<th><?php __('Current Week'); ?><?php //echo $curr_week." To ".$curr_week2; ?></th>	
+	<th><?php __('Last Week'); ?><?php //echo $last_week1." To ".$last_week2; ?></th>
+	<th><?php __('Same Week'); ?></br><?php __('Last Year'); ?><?php //echo $lastp_week1." To ".$lastp_week2; ?></th>
+	<th><?php __('Current Month'); ?></br><?php echo $this_month_ed; ?></th>
+	<th><?php __('Previous Month'); ?></br><?php echo $end_month; ?></th>
+	<th><?php __('Same Month'); ?></br><?php __('Last Year'); ?></br><?php echo $main_end_month; ?></th>
+	<th><?php __('Current YTD'); ?></br><?php //echo $this_year; ?></th>
+	<th><?php __('Last YTD'); ?></br><?php //echo $this_year; ?></th>
+	<th><?php __('Last Year'); ?></br><?php //echo $end_year; ?></th>
 	</tr>
-    </thead>
-		
+    </thead>		
 		<?php  foreach ($CatSaveallweeks as $value): ?>  
 		<tr>
 		<td><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></td>
@@ -91,14 +135,14 @@
 		<?php  if(($value['ProcessedListing']['product_sku'] === $prevday_Report['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $prevday_Report['ProcessedListing']['cat_name'])){?>
 		<?php $prevday_Rep = $prevday_Report[0]['orderid']; ?>
 		<?php break;} ?>
-		<?php endforeach; ?>  
-		<td><?php echo $prevday_Rep; ?></td>
+		<?php endforeach; ?> 
+		<td><?php echo $prevday_Rep; $lastpercentage =  ((($currday_Rep-$prevday_Rep)/$prevday_Rep)*100); ?><?php  if($lastpercentage < 0) {echo "<div class='rTableCell color-red-col'>".round($lastpercentage,2)."%"."</div>";}else { echo "<div class='rTableCell green-col'>".round($lastpercentage,2)."%"."</div>";} ?></td>
 		<?php $lastday_Rep = 0; foreach($Skulastweeks as $lastday_Report): ?>
 		<?php  if(($value['ProcessedListing']['product_sku'] === $lastday_Report['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $lastday_Report['ProcessedListing']['cat_name'])){?>
 		<?php $lastday_Rep = $lastday_Report[0]['orderid']; ?>
 		<?php break;} ?>
-		<?php endforeach; ?>  
-		<td><?php echo $lastday_Rep; ?></td>
+		<?php endforeach; ?> 
+		<td><?php echo $lastday_Rep; $lastweekpercentage =  ((($currday_Rep-$lastday_Rep)/$lastday_Rep)*100); ?><?php  if($lastweekpercentage < 0) {echo "<div class='rTableCell color-red-col'>".round($lastweekpercentage,2)."%"."</div>";}else { echo "<div class='rTableCell green-col'>".round($lastweekpercentage,2)."%"."</div>";} ?></td>
 		<?php $currmonth_Rep = 0; foreach($Skucurskumonths as $Skucurskumonth): ?>
 		<?php  if(($value['ProcessedListing']['product_sku'] === $Skucurskumonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skucurskumonth['ProcessedListing']['cat_name'])){?>
 		<?php $currmonth_Rep = $Skucurskumonth[0]['orderid']; ?>
@@ -109,16 +153,36 @@
 		<?php  if(($value['ProcessedListing']['product_sku'] === $Skuprevskumonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skuprevskumonth['ProcessedListing']['cat_name'])){?>
 		<?php $prevmonth_Rep = $Skuprevskumonth[0]['orderid']; ?>
 		<?php break;} ?>
-		<?php endforeach; ?>  
-		<td><?php echo $prevmonth_Rep; ?></td>
+		<?php endforeach; ?>
+		<td><?php echo $prevmonth_Rep; $currmonthpercentage =  ((($currmonth_Rep-$prevmonth_Rep)/$prevmonth_Rep)*100); ?><?php  if($currmonthpercentage < 0) {echo "<div class='rTableCell color-red-col'>".round($currmonthpercentage,2)."%"."</div>";}else { echo "<div class='rTableCell green-col'>".round($currmonthpercentage,2)."%"."</div>";} ?></td>
 		<?php $lastmonth_Rep = 0; foreach($Skulastmonths as $Skulastmonth): ?>
 		<?php  if(($value['ProcessedListing']['product_sku'] === $Skulastmonth['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skulastmonth['ProcessedListing']['cat_name'])){?>
 		<?php $lastmonth_Rep = $Skulastmonth[0]['orderid']; ?>
 		<?php break;} ?>
-		<?php endforeach; ?>  
-		<td><?php echo $lastmonth_Rep; ?></td>
-		<tr>
 		<?php endforeach; ?> 
+		<td><?php echo $lastmonth_Rep; $lastmonthpercentage =  ((($currmonth_Rep-$lastmonth_Rep)/$lastmonth_Rep)*100); ?><?php  if($lastmonthpercentage < 0) {echo "<div class='rTableCell color-red-col'>".round($lastmonthpercentage,2)."%"."</div>";}else { echo "<div class='rTableCell green-col'>".round($lastmonthpercentage,2)."%"."</div>";} ?></td>
+		<?php $curryear_Rep = 0; foreach($Skucurryears as $Skucurryear): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skucurryear['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skucurryear['ProcessedListing']['cat_name'])){?>
+		<?php $curryear_Rep = $Skucurryear[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?> 
+		<td><?php echo $curryear_Rep; ?></td>
+		
+		<?php $lastytd_Rep = 0; foreach($Skulastydts as $Skulastydt): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skulastydt['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skulastydt['ProcessedListing']['cat_name'])){?>
+		<?php $lastytd_Rep = $Skulastydt[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?> 
+		<td><?php echo $lastytd_Rep; $lastyearpercentage =  ((($curryear_Rep-$lastytd_Rep)/$lastytd_Rep)*100); ?><?php  if($lastyearpercentage < 0) {echo "<div class='rTableCell color-red-col'>".round($lastyearpercentage,2)."%"."</div>";}else { echo "<div class='rTableCell green-col'>".round($lastyearpercentage,2)."%"."</div>";} ?></td>
+		
+		<?php $lastyear_Rep = 0; foreach($Skulastyears as $Skulastyear): ?>
+		<?php  if(($value['ProcessedListing']['product_sku'] === $Skulastyear['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $Skulastyear['ProcessedListing']['cat_name'])){?>
+		<?php $lastyear_Rep = $Skulastyear[0]['orderid']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?> 
+		<td><?php echo $lastyear_Rep; ?></td>
+		<tr>
+		<?php endforeach; ?>		
     </table>
  </div>
  <hr>

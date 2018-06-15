@@ -116,6 +116,8 @@ class ProcessedListing extends AppModel {
 
 	$this_week_sd = date("Y-m-d",$start_week);
 	$this_week_ed = date("Y-m-d",$end_week);
+	
+
 	 
 
 	$conditions = array('ProcessedListing.order_date <= ' => $this_week_ed,
@@ -163,8 +165,10 @@ class ProcessedListing extends AppModel {
 			$last_year_week = strtotime("last sunday midnight",$present_year_week);
 			$end_year_week = strtotime("next saturday",$last_year_week);
 
-			$main_last_week = date("Y-m-d",$last_year_week);
-			$main_end_week = date("Y-m-d",$end_year_week);
+			$main_last_week = date("Y-m-d",$last_year_week);//2017-06-04
+			$main_end_week = date("Y-m-d",$end_year_week);//2017-06-10
+			
+			
 
 
 			$conditions = array('ProcessedListing.order_date <= ' => $main_end_week,
@@ -226,5 +230,67 @@ class ProcessedListing extends AppModel {
         return $catlastmonth;
   
     }
+	
+		
+	
+	
+	public function sku_curryears(){
+		
+    $year   = date("Y"); 
+	$cur_firstdate = date("Y-m-d", strtotime($year."-01-01"));
+	$cur_lastday  = date("Y-m-d");
+	
+	
+      $conditions = array('ProcessedListing.order_date <= ' => $cur_lastday,
+      'ProcessedListing.order_date >= ' => $cur_firstdate,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
 
+		$groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
+        
+        $currentyears =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $currentyears;
+  
+    }
+	
+	public function sku_lastytdyears(){
+		
+	
+	$year   = date("Y"); 
+	$ytd_first = date("Y-m-d", strtotime($year."-01-01"));
+	$start_ytd = date("Y-m-d",strtotime( "-12 months",strtotime($ytd_first)));
+	$cur_last  = date("Y-m-d");
+	$endytd_end = date("Y-m-d",strtotime( "-12 months",strtotime($cur_last)));
+	//print_r($endytd_end);
+	
+
+      $conditions = array('ProcessedListing.order_date <= ' => $endytd_end,
+      'ProcessedListing.order_date >= ' => $start_ytd,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
+
+		$groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
+        
+        $catlastyear =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catlastyear;
+  
+    }
+
+	public function sku_lastyears(){
+		
+	$year   = date("Y"); 
+	$cur_year = date("Y-m-d", strtotime($year."-01-01"));
+	$end_year = date("Y-m-d",strtotime( "-12 months",strtotime($cur_year)));
+	$last_year = date("Y-m-d",strtotime( "+12 months",strtotime($end_year)));
+	$last_day = date("Y-m-d",strtotime( "-1 day",strtotime($last_year)));
+	      
+
+
+      $conditions = array('ProcessedListing.order_date <= ' => $last_day,
+      'ProcessedListing.order_date >= ' => $end_year,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.cat_name !='=>'');
+
+		$groupby = array(('ProcessedListing.product_sku'),
+         'AND'=> 'ProcessedListing.cat_name');
+        
+        $catlastyear =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
+        return $catlastyear;  
+    }
 }

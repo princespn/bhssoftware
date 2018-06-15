@@ -38,12 +38,11 @@ class ProcessedListingsController extends AppController {
     }
 
     public function categname() {
-
         $userkey = $this->tokenkey();
         $some_data = array('token' => $userkey);
-        $header = array("POST:https://eu1.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu1.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
-        $url = 'https://eu1.linnworks.net//api/Inventory/GetCategories';
-
+        $header = array("POST:https://eu-ext.linnworks.net//api/Inventory/GetCategories HTTP/1.1<", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
+		$url = 'https://eu-ext.linnworks.net//api/Inventory/GetCategories';
+	
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -59,6 +58,7 @@ class ProcessedListingsController extends AppController {
         //print_r($catgory);die();
         return $catgory;
     }
+
 
 	/*
      * Start category by Reports
@@ -1782,25 +1782,50 @@ public function importcategory(){
 
         $this->set('title', 'Daily Sales Report per category.'); 
        
+		
+	     if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['ProcessedListing']['cat_sku_name'])))
+		 {
+				
+			$catgoryname = $this->data['ProcessedListing']['cat_sku_name'];
+			
+			$conditions =  array (
+				'OR' => array(
+					array('ProcessedListing.product_sku LIKE' => '%' . $catgoryname . '%'),
+					array('ProcessedListing.cat_name LIKE' => '%' . $catgoryname . '%'),
+						));
+		 }
+		 else if (!empty($this->params['url']['catgory']))
+		 {
+				
+			$catgory = urldecode($this->params['url']['catgory']);
+		
+			$conditions = array('ProcessedListing.cat_name' =>$catgory, 'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+  
+		 }else{			
+			
+        $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+ 
+		 }
+		 
+		$categories = $this->categname();
+		
         $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
 		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
         $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
         $Skucurskumonths =  $this->ProcessedListing->sku_currentmonths();
 		$Skuprevskumonths = $this->ProcessedListing->sku_prevmonths();
+		$Skulastmonths = $this->ProcessedListing->sku_lastmonths();
+		$Skucurryears = $this->ProcessedListing->sku_curryears();
+		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
+		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
-	   $Skulastmonths = $this->ProcessedListing->sku_lastmonths();
-		   
-
-        $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
- 
 		$groupby = array(('ProcessedListing.cat_name'),
          'AND'=> 'ProcessedListing.product_sku');
 		
     	$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','sum(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc'));
 		$this->set('CatSaveallweeks', $this->paginate()); 
-		$this->set(compact('Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths'));
-    
-	}
+		$this->set(compact('categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
+    }
     
 }
 
