@@ -293,4 +293,76 @@ class ProcessedListing extends AppModel {
         $catlastyear =  $this->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.cat_name','sum(ProcessedListing.quantity) as orderid'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc')));
         return $catlastyear;  
     }
+	
+		public function yes_plateform($last_sku){
+			
+					$lastdate = date("Y-m-d");					
+					$yes_date = date('Y-m-d', strtotime("-1 days", strtotime($lastdate)));//2018-04-02
+					
+					$last_sku = urldecode($last_sku);
+					
+					$yes_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $yes_date,'ProcessedListing.product_sku' => $last_sku,'ProcessedListing.product_sku !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                  	$yes_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$yes_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+						
+					return $yes_Reports;
+		}
+		
+		public function yessevendays_plateform($last_sku){
+			
+					$lastdate = date("Y-m-d");					
+					$lastseven_date = date('Y-m-d', strtotime("-7 days", strtotime($lastdate)));//2018-03-27
+					$last_sku = urldecode($last_sku);
+					
+					$lastseven_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $lastseven_date,'ProcessedListing.product_sku' => $last_sku,'ProcessedListing.product_sku !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                   					
+					$lastseven_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$lastseven_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+					return $lastseven_Reports;
+		}
+		
+		public function yesthertydays_plateform($last_sku){		
+		
+					$lastdate = date("Y-m-d");
+					$lasttherty_date = date('Y-m-d', strtotime("-30 days", strtotime($lastdate)));//2018-03-04
+					$last_sku = urldecode($last_sku);
+					
+					$lasttherty_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $lasttherty_date,'ProcessedListing.product_sku' => $last_sku, 'ProcessedListing.product_sku !='=>'','ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                   				
+					$lasttherty_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$lasttherty_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+					return $lasttherty_Reports;
+		}
+		
+			public function yesnintydays_plateform($last_sku){		
+		
+					$lastdate = date("Y-m-d");
+					$lastninty_date = date('Y-m-d', strtotime("-90 days", strtotime($lastdate)));//2018-01-03
+					$last_sku = urldecode($last_sku);
+					
+					$lastninty_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $lastninty_date,'ProcessedListing.product_sku' => $last_sku,'ProcessedListing.product_sku !='=>'','ProcessedListing.product_sku !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                  
+				  
+					$lastninty_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$lastninty_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+					return $lastninty_Reports;
+		}
+		
+		
+			public function yes365days_plateform($last_sku){		
+		
+					$lastdate = date("Y-m-d");					
+					$last365_date = date('Y-m-d', strtotime("-365 days", strtotime($lastdate)));//2017-08-06
+					
+					//$last_sku = urldecode($last_sku);
+					
+					$last365_condition = array('ProcessedListing.order_date <= ' => $lastdate,
+                    'ProcessedListing.order_date >= ' => $last365_date,'ProcessedListing.product_sku' => $last_sku, 'ProcessedListing.product_sku !='=>'','ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                  			
+					$last365_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$last365_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+					return $last365_Reports;
+				}
+	
+	
+	
 }

@@ -122,7 +122,7 @@
     </thead>		
 		<?php  foreach ($CatSaveallweeks as $value): ?>  
 		<tr>
-		<td><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></td>
+		<td><a href="<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST']."/processed_listings/plateform_skuname/".$value['ProcessedListing']['product_sku'];  echo $actual_link ; ?>"><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></a></td>
         <td><?php echo $value['ProcessedListing']['product_name']; ?></td>
         <td><?php echo $value['ProcessedListing']['cat_name']; ?></td>
 		<?php $currday_Rep = 0; foreach($Skucurrentsweeks as $currday_Report): ?>

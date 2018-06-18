@@ -8,7 +8,7 @@ class ProcessedListingsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();   
       
-        $this->Auth->allow(array('catname_skuname','productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
+        $this->Auth->allow(array('plateform_skuname','catname_skuname','productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
          $this->Session->activate();
 
     }
@@ -1826,6 +1826,30 @@ public function importcategory(){
 		$this->set('CatSaveallweeks', $this->paginate()); 
 		$this->set(compact('categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
     }
+	
+	public function plateform_skuname($last_sku){
+				
+					$this->set('title', 'Sales Reports Plateform Quantity Ordered.');
+					$last_sku = urldecode($last_sku);		
+					
+					$yes_Reports = $this->ProcessedListing->yes_plateform($last_sku);					
+					$lastseven_Reports = $this->ProcessedListing->yessevendays_plateform($last_sku);
+					$lasttherty_Reports = $this->ProcessedListing->yesthertydays_plateform($last_sku);					
+					$lastninty_Reports = $this->ProcessedListing->yesnintydays_plateform($last_sku);					
+					$last365_Reports = $this->ProcessedListing->yes365days_plateform($last_sku);					
+					
+					
+					$groupby = array(('ProcessedListing.plateform'),
+					'AND'=> 'ProcessedListing.subsource');
+					
+					$condition = array('ProcessedListing.product_sku' => $last_sku,'ProcessedListing.product_sku !='=>'','ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+                 
+					$Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
+					$this->set(compact('Reports','yes_Reports','lastseven_Reports','lasttherty_Reports','lastninty_Reports', 'last365_Reports'));
+				
+			}
+		
+		
     
 }
 
