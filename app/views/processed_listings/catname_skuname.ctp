@@ -1,4 +1,4 @@
-<?php //print_r($Skucurrentsweeks); 
+<?php //print_r($Currentstocks->StockLevel); 
 	
 	$previous_week = strtotime("-1 week +1 day");
 
@@ -108,16 +108,18 @@
                 </ul>
               </li>
             </ul>
-          </th>      
-	<th><?php __('Current Week'); ?><?php //echo $curr_week." To ".$curr_week2; ?></th>	
-	<th><?php __('Last Week'); ?><?php //echo $last_week1." To ".$last_week2; ?></th>
+          </th> 
+	<th><?php __('Stock Level'); ?></th>
+	<th><?php __('On Order (Due)'); ?></th>	
+	<th><?php __('Current Week'); ?></th>	
+	<th><?php __('Last Week'); ?></th>
 	<th><?php __('Same Week'); ?></br><?php __('Last Year'); ?><?php //echo $lastp_week1." To ".$lastp_week2; ?></th>
-	<th><?php __('Current Month'); ?></br><?php echo $this_month_ed; ?></th>
-	<th><?php __('Previous Month'); ?></br><?php echo $end_month; ?></th>
+	<th><?php __('Current Month'); ?></th>
+	<th><?php __('Previous Month'); ?></th>
 	<th><?php __('Same Month'); ?></br><?php __('Last Year'); ?></br><?php echo $main_end_month; ?></th>
-	<th><?php __('Current YTD'); ?></br><?php //echo $this_year; ?></th>
-	<th><?php __('Last YTD'); ?></br><?php //echo $this_year; ?></th>
-	<th><?php __('Last Year'); ?></br><?php //echo $end_year; ?></th>
+	<th><?php __('Current YTD'); ?></th>
+	<th><?php __('Last YTD'); ?></th>
+	<th><?php __('Last Year'); ?></th>
 	</tr>
     </thead>		
 		<?php  foreach ($CatSaveallweeks as $value): ?>  
@@ -125,6 +127,14 @@
 		<td><a href="<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST']."/processed_listings/plateform_skuname/".$value['ProcessedListing']['product_sku'];  echo $actual_link ; ?>"><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></a></td>
         <td><?php echo $value['ProcessedListing']['product_name']; ?></td>
         <td><?php echo $value['ProcessedListing']['cat_name']; ?></td>
+		<?php  $due_level = 0; $stockvalue = 0; foreach($Currentstocks as $Currentstock): ?>
+		<?php if(($value['ProcessedListing']['product_sku'] === $Currentstock['StockLevel']['item_number']) && ($value['ProcessedListing']['cat_name'] === $Currentstock['StockLevel']['category_name'])){?>
+		<?php $due_level = $Currentstock[0]['due_level']; 
+			$stockvalue = $Currentstock[0]['stock_lev']; ?>
+		<?php break;} ?>
+		<?php endforeach; ?>  
+		<td><?php echo $stockvalue; ?></td>	
+		<td><?php echo $due_level; ?></td>	
 		<?php $currday_Rep = 0; foreach($Skucurrentsweeks as $currday_Report): ?>
 		<?php  if(($value['ProcessedListing']['product_sku'] === $currday_Report['ProcessedListing']['product_sku']) && ($value['ProcessedListing']['cat_name'] === $currday_Report['ProcessedListing']['cat_name'])){?>
 		<?php $currday_Rep = $currday_Report[0]['orderid']; ?>

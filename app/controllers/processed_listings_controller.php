@@ -1807,6 +1807,8 @@ public function importcategory(){
  
 		 }
 		 
+		
+		 
 		$categories = $this->categname();
 		
         $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
@@ -1819,12 +1821,15 @@ public function importcategory(){
 		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
 		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
+		$Currentstocks = $this->ProcessedListing->stockvalues();
+		//print_r($Skulastyears);die();
+		
 		$groupby = array(('ProcessedListing.cat_name'),
          'AND'=> 'ProcessedListing.product_sku');
 		
     	$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','sum(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc'));
 		$this->set('CatSaveallweeks', $this->paginate()); 
-		$this->set(compact('categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
+		$this->set(compact('Currentstocks','categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
     }
 	
 	public function plateform_skuname($last_sku){

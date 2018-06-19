@@ -71,9 +71,9 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2018-05-10T00:00:00'; //min
+		$from = '2018-05-13T00:00:00'; //min
 		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-06-12T60:60:60'; //max
+		$to =  '2018-06-19T60:60:60'; //max
 		//$to = '';
         
         //$to = '';

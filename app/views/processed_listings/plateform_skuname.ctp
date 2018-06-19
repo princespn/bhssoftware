@@ -1,4 +1,3 @@
-<?php //echo "Amit"; ?>
 <hr>
 <h1 class="sub-header"><?php __('Sales Reports Ordered by Channels');?></h1>
 <div class="table-responsive">
