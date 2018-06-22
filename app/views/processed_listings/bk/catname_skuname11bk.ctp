@@ -1,7 +1,7 @@
 <?php
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
 
-$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week','Last Week','Same Week Last Year','Current Month','Previous Month');
+$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week');
 echo $csv->addRow($mapping);
 foreach ($current_stock as $CatSaveallweek):
 
@@ -23,30 +23,10 @@ $currday_Rep = array('0.00'); foreach($Skucurrentsweeks as $currday_Report):
 if(($CatSaveallweek['ProcessedListing']['product_sku'] === $currday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $currday_Report['ProcessedListing']['cat_name'])){
 $currday_Rep[0] = $currday_Report[0]['orderid'];
 break;} 
-endforeach;
-
-$prevday_Rep = array('0.00'); foreach($Skupreviousweeks as $prevday_Report): 
- if(($CatSaveallweek['ProcessedListing']['product_sku'] === $prevday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $prevday_Report['ProcessedListing']['cat_name'])){
- $prevday_Rep[0] = $prevday_Report[0]['orderid']; 
- break;}
- endforeach;
- 
-$lastday_Rep = array('0.00'); foreach($Skulastweeks as $lastday_Report):
-if(($CatSaveallweek['ProcessedListing']['product_sku'] === $lastday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $lastday_Report['ProcessedListing']['cat_name'])){
-$lastday_Rep[0] = $lastday_Report[0]['orderid'];
-break;} 
-endforeach;
-
-$currmonth_Rep = array('0.00'); foreach($Skucurskumonths as $Skucurskumonth):
-if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skucurskumonth['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skucurskumonth['ProcessedListing']['cat_name'])){
-$currmonth_Rep[0] = $Skucurskumonth[0]['orderid'];
-break;} 
-endforeach;
-
-   
+endforeach;  
 
 			
-$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep,$prevday_Rep,$lastday_Rep,$currmonth_Rep);
+$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep);
 echo $csv->addRow($line);
 endforeach;
 $filename = 'current_stock';
@@ -128,9 +108,9 @@ $end_year = date_format($datelast,"Y");
 	 <?php  echo $form->create('ProcessedListing',array('action'=>'catname_skuname','id'=>'saveForm')); ?>
 		<div class="row">
 	    <div class="col-md-12">
-	    <div class="col-md-5">
-		<button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>        		
-		</div>		
+	    <div class="col-md-5">		
+		<button type="submit" disabled="disabled" value="exports" name="exports" id="exportfile" class="btn btn-primary btn-sm">Export Data</button>
+        </div>		
         <div class="col-md-5">
          <div class="form-group margin-bottom-0">
 			<div class="input-group">
@@ -141,15 +121,15 @@ $end_year = date_format($datelast,"Y");
           </div>
         </div>
       </div>
-	 </div>	
+	 </div>
+	<?php echo $this->Form->end();?>
     </div>
   </div>
 <div class="table-responsive">
 <table class="table table-bordered table-striped table-hover">
     <thead>
 	<tr>
-	<th class="wid-20"><input type="checkbox" id="selecctall"/></th>
-    <th><?php __('Item'); ?><?php __(' SKU'); ?></th>   
+	<th><?php __('Item'); ?><?php __(' SKU'); ?></th>   
 	<th><?php __('Item'); ?><?php __(' Title'); ?></th>
 	<th><ul class="select-drop">
               <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Category <span class="caret"></span></a>
@@ -177,7 +157,6 @@ $end_year = date_format($datelast,"Y");
     </thead>		
 		<?php  foreach ($CatSaveallweeks as $value): ?>  
 		<tr>
-		<td><?php $productid = $value['ProcessedListing']['id']; echo $this->Form->input('ProcessedListing.id',array('type'=>'checkbox','class'=>'checkbox1', 'selected'=>'selected','label'=>'','multiple' => 'checkbox', 'value' =>$productid,'name'=>'checkid[]')); ?></td>
 		<td><a href="<?php $actual_link = 'http://'.$_SERVER['HTTP_HOST']."/processed_listings/plateform_skuname/".$value['ProcessedListing']['product_sku'];  echo $actual_link ; ?>"><?php echo $value['ProcessedListing']['product_sku']; ?><?php echo "( ".$value[0]['orderid']." )" ?></a></td>
         <td><?php echo $value['ProcessedListing']['product_name']; ?></td>
         <td><?php echo $value['ProcessedListing']['cat_name']; ?></td>
@@ -245,8 +224,7 @@ $end_year = date_format($datelast,"Y");
 		<?php endforeach; ?> 
 		<td><?php echo $lastyear_Rep; ?></td>
 		<tr>
-		<?php endforeach; ?>
-<?php echo $this->Form->end();?>		
+		<?php endforeach; ?>		
     </table>
  </div>
  <hr>
@@ -264,24 +242,10 @@ $end_year = date_format($datelast,"Y");
 </nav> 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#selecctall').click(function(event) {  //on click
-        if(this.checked) { // check select status
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = true;  //select all checkboxes with class "checkbox1"                 
-                 $('#exportfile').removeAttr('disabled');
-			
-            });
-			
-        }else{
-            $('.checkbox1').each(function() { //loop through each checkbox
-                this.checked = false; //deselect all checkboxes with class "checkbox1"                      
-		$('#exportfile').attr("disabled", "disabled");
-				
-            }); 
-			
-        }
-    });
-   
+	$('#picker').change(function(){
+	$('#exportfile').removeAttr('disabled');
+	
+	});    
 });
 </script>
 <?php } ?>

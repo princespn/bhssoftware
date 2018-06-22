@@ -381,19 +381,22 @@ class ProcessedListing extends AppModel {
 		public function stockvalues(){		
 
 					
-		$currentdate = '2018-06-18';		
+		$currentdate = '2018-06-22';		
 		
 		$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.barcode_number','StockLevel.category_name');
 				
-		$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level','sum(StockLevel.stock_lev) as stock_lev'),'group' => $grouplast, 'conditions' => array('StockLevel.change_date' => $currentdate,'StockLevel.location_name !='=>'Serene Furnishings Ltd.'), 'order' => array('StockLevel.item_number ASC')));
+		//$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'),'group' => $grouplast, 'conditions' => array('StockLevel.change_date' => $currentdate,'StockLevel.location_name !='=>'Serene Furnishings Ltd.'), 'order' => array('StockLevel.item_number ASC')));
+		$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 		
 		return $Cuurentstocks;
+		
+		//print_r($Cuurentstocks); die();
 				
 		}
 	
 	
-	 var $hasOne = array(
+	 var $hasMany = array(
         'StockLevel' => array(
             'className' => 'StockLevel',
             'foreignKey' => false,

@@ -1,4 +1,4 @@
-<?php
+<?
 class ProcessedListingsController extends AppController {
 
 	var $name = 'ProcessedListings';
@@ -1781,8 +1781,22 @@ public function importcategory(){
 	public function catname_skuname() {
 
         $this->set('title', 'Daily Sales Report per category.'); 
-       
+        //print_r($_REQUEST);die();
+		$categories = $this->categname();
 		
+        $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
+		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
+        $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
+        $Skucurskumonths =  $this->ProcessedListing->sku_currentmonths();
+		$Skuprevskumonths = $this->ProcessedListing->sku_prevmonths();
+		$Skulastmonths = $this->ProcessedListing->sku_lastmonths();
+		$Skucurryears = $this->ProcessedListing->sku_curryears();
+		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
+		$Skulastyears = $this->ProcessedListing->sku_lastyears();
+		
+		$Currentstocks = $this->ProcessedListing->stockvalues();
+		
+				
 	     if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['ProcessedListing']['cat_sku_name'])))
 		 {
 				
@@ -1801,33 +1815,33 @@ public function importcategory(){
 		
 			$conditions = array('ProcessedListing.cat_name' =>$catgory, 'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
   
+		 }
+		 else  if ((!empty($_POST['checkid'])) && (!empty($_POST['exports']))) 
+		 {
+			//print_r($_POST['checkid']); die();
+        
+			$checkboxid = $_POST['checkid'];
+            App::import("Vendor", "parsecsv");
+            $csv = new parseCSV();
+            $filepath = "C:\Users\Administrator\Downloads" . "minimum_level.csv";
+            $csv->auto($filepath);           
+            $this->set('current_stock',$this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.product_sku','ProcessedListing.product_name','ProcessedListing.cat_name'),'conditions' => array('ProcessedListing.id' => $checkboxid))));
+			$this->set(compact('Currentstocks','categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
+			$this->layout = null;
+            $this->autoLayout = false;
+            Configure::write('debug', '0');
+				
 		 }else{			
 			
         $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.product_sku !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
  
-		 }
-		 
-		
-		 
-		$categories = $this->categname();
-		
-        $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
-		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
-        $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
-        $Skucurskumonths =  $this->ProcessedListing->sku_currentmonths();
-		$Skuprevskumonths = $this->ProcessedListing->sku_prevmonths();
-		$Skulastmonths = $this->ProcessedListing->sku_lastmonths();
-		$Skucurryears = $this->ProcessedListing->sku_curryears();
-		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
-		$Skulastyears = $this->ProcessedListing->sku_lastyears();
-		
-		$Currentstocks = $this->ProcessedListing->stockvalues();
-		//print_r($Skulastyears);die();
+		 }		
+					
 		
 		$groupby = array(('ProcessedListing.cat_name'),
          'AND'=> 'ProcessedListing.product_sku');
 		
-    	$this->paginate = array('fields' => array('ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','sum(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc'));
+    	$this->paginate = array('fields' => array('ProcessedListing.id','ProcessedListing.cat_name','ProcessedListing.product_sku','ProcessedListing.product_name','sum(ProcessedListing.quantity) as orderid'),'limit' => 200, 'group' => $groupby, 'conditions' => $conditions, 'order' => array('ProcessedListing.cat_name ASC','sum(ProcessedListing.quantity) desc'));
 		$this->set('CatSaveallweeks', $this->paginate()); 
 		$this->set(compact('Currentstocks','categories','Skucurrentsweeks','Skupreviousweeks','Skulastweeks','Skucurskumonths','Skuprevskumonths','Skulastmonths','Skucurryears','Skulastydts','Skulastyears'));
     }

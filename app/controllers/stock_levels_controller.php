@@ -144,10 +144,10 @@ class StockLevelsController extends AppController {
 				}else{
 					
 					$db = $this->StockItem->getDataSource();
-                    $value = $db->value($order->CategoryName, 'string');
+                    $value = $db->value($suppname, 'string');
 					
 					 $this->StockItem->updateAll(
-                        array('StockItem.category_name' => $value),
+                        array('StockItem.supp_name' => $value),
                         array('StockItem.item_number' => $stockitemcode[0]['StockItem']['item_number'],'StockItem.id' => $stockitemcode[0]['StockItem']['id']));
 						
 					//$this->StockItem->updateAll(array('StockItem.supp_name' => $suppname,'StockItem.category_name' => $order->CategoryName,'StockItem.item_title' =>$order->ItemTitle), array('StockItem.linnworks_code' => $stockitemcode[0]['StockItem']['item_number'], 'StockItem.id' => $stockitemcode[0]['StockItem']['id']));
@@ -161,19 +161,19 @@ class StockLevelsController extends AppController {
 						
 					
 				$this->CostCalculator->create(); 	
-				$this->CostCalculator->saveAll(array('linnworks_code' => $order->ItemNumber,'product_name' => $order->ItemTitle, 'category' => $order->CategoryName, 'supplier' => $suppname, 'invoice_currency' =>$suppcurr));
+				$this->CostCalculator->saveAll(array('linnworks_code' => $order->ItemNumber,'product_name' => $order->ItemTitle, 'category' => $order->CategoryName, 'supplier' => $suppname, 'invoice_currency' =>$suppcurr,'import_dates' => $today_date));
 				
 								
 					}else {
 						
 						
 					$db = $this->CostCalculator->getDataSource();
-                    $value = $db->value($order->CategoryName, 'string');
+                    $value = $db->value($suppname, 'string');
 					
 					
 					
                     $this->CostCalculator->updateAll(
-                        array('CostCalculator.category' => $value),
+                        array('CostCalculator.supplier' => $value),
                         array('CostCalculator.linnworks_code' => $pcodes[0]['CostCalculator']['linnworks_code'],'CostCalculator.id' => $pcodes[0]['CostCalculator']['id']));
 						
 					//$this->CostCalculator->updateAll(array('CostCalculator.supplier' => $suppname,'CostCalculator.category' => $order->CategoryName,'CostCalculator.product_name' =>$order->ItemTitle,'invoice_currency' =>$suppcurr), array('CostCalculator.linnworks_code' => $pcodes[0]['CostCalculator']['linnworks_code'], 'CostCalculator.id' => $pcodes[0]['CostCalculator']['id']));
@@ -196,12 +196,12 @@ class StockLevelsController extends AppController {
 						
 						
 					$db = $this->InventoryCode->getDataSource();
-                    $value = $db->value($order->ItemTitle, 'string');
+                    $value = $db->value($order->CategoryName, 'string');
 					
 					
 					
                     $this->InventoryCode->updateAll(
-                        array('InventoryCode.product_name' => $value),
+                        array('InventoryCode.category' => $value),
                         array('InventoryCode.linnworks_code' => $Maincodes[0]['InventoryCode']['linnworks_code'],'InventoryCode.id' => $Maincodes[0]['InventoryCode']['id']));
 						
 					    }	
@@ -214,7 +214,7 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-06-18';
+					$date = '2018-06-22';
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));

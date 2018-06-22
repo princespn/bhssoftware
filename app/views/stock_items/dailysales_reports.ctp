@@ -1,4 +1,4 @@
-<?php ?><hr>
+<hr>
 <h1 class="sub-header"><?php __('Daily Sales Reports - Top 100 SKU Order by Quantity');?><?php $str1 = explode("-",$_SERVER['REQUEST_URI']); if(!empty($str1[1])){echo " In ".urldecode($str1[1]);}else{echo " In 6 months";}?></h1>
 <div class="table-responsive">
    <table id="table-1"  class="table table-bordered table-striped table-hover">

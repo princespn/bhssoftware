@@ -1,7 +1,7 @@
 <?php
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
 
-$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week','Last Week','Same Week Last Year','Current Month','Previous Month');
+$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week');
 echo $csv->addRow($mapping);
 foreach ($current_stock as $CatSaveallweek):
 
@@ -23,30 +23,10 @@ $currday_Rep = array('0.00'); foreach($Skucurrentsweeks as $currday_Report):
 if(($CatSaveallweek['ProcessedListing']['product_sku'] === $currday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $currday_Report['ProcessedListing']['cat_name'])){
 $currday_Rep[0] = $currday_Report[0]['orderid'];
 break;} 
-endforeach;
-
-$prevday_Rep = array('0.00'); foreach($Skupreviousweeks as $prevday_Report): 
- if(($CatSaveallweek['ProcessedListing']['product_sku'] === $prevday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $prevday_Report['ProcessedListing']['cat_name'])){
- $prevday_Rep[0] = $prevday_Report[0]['orderid']; 
- break;}
- endforeach;
- 
-$lastday_Rep = array('0.00'); foreach($Skulastweeks as $lastday_Report):
-if(($CatSaveallweek['ProcessedListing']['product_sku'] === $lastday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $lastday_Report['ProcessedListing']['cat_name'])){
-$lastday_Rep[0] = $lastday_Report[0]['orderid'];
-break;} 
-endforeach;
-
-$currmonth_Rep = array('0.00'); foreach($Skucurskumonths as $Skucurskumonth):
-if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skucurskumonth['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skucurskumonth['ProcessedListing']['cat_name'])){
-$currmonth_Rep[0] = $Skucurskumonth[0]['orderid'];
-break;} 
-endforeach;
-
-   
+endforeach;  
 
 			
-$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep,$prevday_Rep,$lastday_Rep,$currmonth_Rep);
+$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep);
 echo $csv->addRow($line);
 endforeach;
 $filename = 'current_stock';
@@ -141,7 +121,8 @@ $end_year = date_format($datelast,"Y");
           </div>
         </div>
       </div>
-	 </div>	
+	 </div>
+	<?php echo $this->Form->end();?>
     </div>
   </div>
 <div class="table-responsive">
@@ -245,8 +226,7 @@ $end_year = date_format($datelast,"Y");
 		<?php endforeach; ?> 
 		<td><?php echo $lastyear_Rep; ?></td>
 		<tr>
-		<?php endforeach; ?>
-<?php echo $this->Form->end();?>		
+		<?php endforeach; ?>		
     </table>
  </div>
  <hr>

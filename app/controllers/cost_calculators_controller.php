@@ -131,14 +131,14 @@ class CostCalculatorsController extends AppController {
 
                 $conditions = array('CostCalculator.linnworks_code LIKE' => '%' . $prname . '%', 'CostCalculator.category LIKE' => '%' . $prsku . '%');
                 $this->CostCalculator->recursive = 1;
-                $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC', 'conditions' => $conditions);
+                $this->paginate = array('limit' => 100, 'order' => array('CostCalculator.error DESC','CostCalculator.import_dates DESC'), 'conditions' => $conditions);
             }
 
             if ((!empty($prsku))) {
                 $conditions = array(
                     'OR' => array('CostCalculator.category LIKE' => "%$prsku%", 'CostCalculator.linnworks_code LIKE' => "%$prsku%", 'CostCalculator.supplier LIKE' => "%$prsku%"));
                $this->CostCalculator->recursive = 1;
-               $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC', 'conditions' => $conditions);
+               $this->paginate = array('limit' => 100, 'order' => array('CostCalculator.error DESC','CostCalculator.import_dates DESC'), 'conditions' => $conditions);
             }
            $this->CostCalculator->recursive = 1;
             $this->set('purchase_orders', $this->paginate());
@@ -218,7 +218,7 @@ class CostCalculatorsController extends AppController {
        
                      }
             $this->CostCalculator->recursive = 1;
-            $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC');
+            $this->paginate = array('limit' => 100, 'order' => array('CostCalculator.error DESC','CostCalculator.import_dates DESC'));
            $this->set('purchase_orders', $this->paginate());
            $this->set(compact('categories','getCost','getsupp'));
            // print_r($purchase_orders); die();
@@ -304,7 +304,7 @@ class CostCalculatorsController extends AppController {
 
             $this->CostCalculator->recursive = 1;
             $conditions = array('CostCalculator.category LIKE' => '%' . $options . '%');
-            $this->paginate = array('limit' => 100, 'order' => 'CostCalculator.error DESC', 'conditions' => $conditions);
+            $this->paginate = array('limit' => 100, 'order' => array('CostCalculator.error DESC','CostCalculator.import_dates DESC'), 'conditions' => $conditions);
 
         }
         $this->CostCalculator->recursive = 1;

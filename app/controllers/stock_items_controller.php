@@ -97,7 +97,7 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();
 										
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-06-18';
+					$date = '2018-06-22';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -141,7 +141,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-06-18';
+					$date = '2018-06-22';
 
 					$this->loadModel('StockLevel');
 					
@@ -278,7 +278,7 @@ class StockItemsController extends AppController {
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-06-18';
+					$currentdate = '2018-06-22';
 					
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.due_level) as due_level','sum(StockLevel.stock_lev) as stock_lev'),'group' => $grouplast, 'conditions' => array('StockLevel.change_date' => $currentdate,'StockLevel.location_name !='=>'Serene Furnishings Ltd.'), 'order' => array('StockLevel.item_number ASC')));
 					
@@ -451,7 +451,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-06-18';
+					$currentdate = '2018-06-22';
 					
 					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 				
@@ -576,7 +576,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-06-18';
+					$currentdate = '2018-06-22';
 					
 					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
 				
