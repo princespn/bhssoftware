@@ -1,7 +1,7 @@
 <?php
-if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){
+if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){//die();
 
-$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week','Last Week','Same Week Last Year','Current Month','Previous Month');
+$mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week','Last Week','Same Week Last Year','Current Month','Previous Month','Same Month Last Year May 2017','Current YTD','Last YTD','Last Year');
 echo $csv->addRow($mapping);
 foreach ($current_stock as $CatSaveallweek):
 
@@ -14,8 +14,8 @@ $duestock = array('0.00');
 $currentstock = array('0.00');
 foreach($Currentstocks as $Cuurentstock):
 if($CatSaveallweek['ProcessedListing']['product_sku'] === $Cuurentstock['StockLevel']['item_number']){
-$currentstock[0] = $Cuurentstock['StockLevel']['stock_lev'];
-$duestock[0] = $Cuurentstock['StockLevel']['due_level'];
+$currentstock[0] = $Cuurentstock[0]['stock_lev'];
+$duestock[0] = $Cuurentstock[0]['due_level'];
 break;}
 endforeach;	
 
@@ -23,7 +23,7 @@ $currday_Rep = array('0.00'); foreach($Skucurrentsweeks as $currday_Report):
 if(($CatSaveallweek['ProcessedListing']['product_sku'] === $currday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $currday_Report['ProcessedListing']['cat_name'])){
 $currday_Rep[0] = $currday_Report[0]['orderid'];
 break;} 
-endforeach;
+endforeach;  
 
 $prevday_Rep = array('0.00'); foreach($Skupreviousweeks as $prevday_Report): 
  if(($CatSaveallweek['ProcessedListing']['product_sku'] === $prevday_Report['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $prevday_Report['ProcessedListing']['cat_name'])){
@@ -43,10 +43,38 @@ $currmonth_Rep[0] = $Skucurskumonth[0]['orderid'];
 break;} 
 endforeach;
 
-   
+$prevmonth_Rep = array('0.00'); foreach($Skuprevskumonths as $Skuprevskumonth):
+if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skuprevskumonth['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skuprevskumonth['ProcessedListing']['cat_name'])){
+$prevmonth_Rep[0] = $Skuprevskumonth[0]['orderid']; 
+break;} 
+endforeach;
+
+$lastmonth_Rep = array('0.00'); foreach($Skulastmonths as $Skulastmonth):
+if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skulastmonth['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skulastmonth['ProcessedListing']['cat_name'])){
+$lastmonth_Rep[0] = $Skulastmonth[0]['orderid'];
+break;}
+endforeach;
+
+	$curryear_Rep = array('0.00'); foreach($Skucurryears as $Skucurryear):
+		if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skucurryear['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skucurryear['ProcessedListing']['cat_name'])){
+		$curryear_Rep[0] = $Skucurryear[0]['orderid'];
+		break;}
+		endforeach;
+	
+	$lastytd_Rep = array('0.00'); foreach($Skulastydts as $Skulastydt):
+	if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skulastydt['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skulastydt['ProcessedListing']['cat_name'])){
+	 $lastytd_Rep[0] = $Skulastydt[0]['orderid'];
+		break;}
+		endforeach;
+
+		$lastyear_Rep = array('0.00'); foreach($Skulastyears as $Skulastyear):
+		if(($CatSaveallweek['ProcessedListing']['product_sku'] === $Skulastyear['ProcessedListing']['product_sku']) && ($CatSaveallweek['ProcessedListing']['cat_name'] === $Skulastyear['ProcessedListing']['cat_name'])){
+		$lastyear_Rep[0] = $Skulastyear[0]['orderid'];
+		break;}
+		endforeach;
 
 			
-$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep,$prevday_Rep,$lastday_Rep,$currmonth_Rep);
+$line = array_merge($sku, $desc,$catname,$currentstock,$duestock,$currday_Rep,$prevday_Rep,$lastday_Rep,$currmonth_Rep,$prevmonth_Rep,$lastmonth_Rep,$curryear_Rep,$lastytd_Rep,$lastyear_Rep);
 echo $csv->addRow($line);
 endforeach;
 $filename = 'current_stock';
@@ -183,7 +211,7 @@ $end_year = date_format($datelast,"Y");
         <td><?php echo $value['ProcessedListing']['cat_name']; ?></td>
 		<?php $due_level = 0; $currentstock = 0; foreach($Currentstocks as $Cuurent_stock): ?>
 		<?php if($value['ProcessedListing']['product_sku'] === $Cuurent_stock['StockLevel']['item_number']){?>
-		<?php $due_level = $Cuurent_stock['StockLevel']['due_level']; $currentstock = $Cuurent_stock['StockLevel']['stock_lev']; ?>
+		<?php $due_level = $Cuurent_stock[0]['due_level']; $currentstock = $Cuurent_stock[0]['stock_lev']; ?>
 		<?php break;} ?>
 		<?php endforeach; ?>  
 		<td><?php echo $currentstock; ?></td>	

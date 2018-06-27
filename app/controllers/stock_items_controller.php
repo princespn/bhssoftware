@@ -97,7 +97,7 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();
 										
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-06-22';
+					$date = '2018-06-27';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -141,7 +141,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-06-22';
+					$date = '2018-06-27';
 
 					$this->loadModel('StockLevel');
 					
@@ -271,18 +271,16 @@ class StockItemsController extends AppController {
 										
 					$Last_3_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days'), 'conditions' => $three_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
-					
-					//print_r($Last_6_month_stocks);die();
 					/* End Calculation last 3 month */
 					
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-06-22';
+					$currentdate = '2018-06-27';
 					
-					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.due_level) as due_level','sum(StockLevel.stock_lev) as stock_lev'),'group' => $grouplast, 'conditions' => array('StockLevel.change_date' => $currentdate,'StockLevel.location_name !='=>'Serene Furnishings Ltd.'), 'order' => array('StockLevel.item_number ASC')));
-					
-					 $minimum_cond =  array ( array('StockLevel.change_date' => $currentdate),
+					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+			
+					$minimum_cond =  array ( array('StockLevel.change_date' => $currentdate),
 							'OR' => array(
 							array('StockLevel.location_name' => 'WATERFALL LANE'),
 							array('StockLevel.location_name' => 'Default')));
@@ -378,9 +376,7 @@ class StockItemsController extends AppController {
 
 						$this_week_sd = date("Y-m-d",$start_week); ////2018-03-19
 						$this_week_ed = date("Y-m-d",$end_week); //2018-03-25
-					//print_r($this_week_ed);die();
-					
-					
+					//print_r($this_week_ed);die();			
 										
 
 					
@@ -451,10 +447,15 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-06-22';
+					$currentdate = '2018-06-27';
 					
-					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
-				
+					$grouplast = array(('StockLevel.item_number'),
+					'AND'=> 'StockLevel.category_name');
+		
+					
+					//$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
+					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+			
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
 					$this->set(compact('sixmonth_Reports','currweek_Reports','lastweek_Reports','lastmonth_Reports','lastyear_Reports','stock_names','Cuurent_stocks'));
@@ -576,10 +577,15 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-06-22';
+					$currentdate = '2018-06-27';
+						
+					$grouplast = array(('StockLevel.item_number'),
+					'AND'=> 'StockLevel.category_name');
+		
 					
-					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
-				
+					//$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.stock_lev', 'StockLevel.due_level'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.change_date' => $currentdate), 'order' => array('StockLevel.item_number ASC')));
+					$Cuurent_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
+			
 					$this->paginate = array('limit' => 100, 'order' => array('StockItem.item_number ASC'));
 					$this->set('stock_names', $this->paginate()); 
 					$this->set(compact('sixmonth_Reports','currweek_Reports','lastweek_Reports','lastmonth_Reports','lastyear_Reports','stock_names','Cuurent_stocks'));

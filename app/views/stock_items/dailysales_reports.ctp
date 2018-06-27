@@ -41,7 +41,7 @@
 		<td><?php echo $stock_name['ProcessedListing']['cat_name']; ?></td>
 		<?php  $due_level = 0; $currentstock = 0; foreach($Cuurent_stocks as $Cuurent_stock): ?>
 			<?php if($stock_name['ProcessedListing']['product_sku'] === $Cuurent_stock['StockLevel']['item_number']){?>
-			<?php $due_level = $Cuurent_stock['StockLevel']['due_level']; $currentstock = $Cuurent_stock['StockLevel']['stock_lev']; ?>
+			<?php $due_level = $Cuurent_stock[0]['due_level']; $currentstock = $Cuurent_stock[0]['stock_lev']; ?>
 			<?php break;} ?>
 			<?php endforeach; ?>  
 			<td><?php echo $currentstock; ?></td>	
