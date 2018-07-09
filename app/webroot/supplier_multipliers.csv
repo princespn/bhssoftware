@@ -1,0 +1,191 @@
+id,category,invoice_currency,supplier,sp1_multiplier,sp2_multiplier,sp3_multiplier
+1,Bar Stools,GBP,CUTSNCUR,2.25,2.5,3.5
+2,Bar Stools,EUR,CUTSNCUR,2.5,2.75,3.75
+3,Bath - Mats,GBP,THREEANG,2.25,2.5,3.5
+4,Bath - Mats,EUR,THREEANG,2.5,2.75,3.75
+5,Bath - Towels,GBP,HARWOODS,2,2.5,3
+6,Bath - Towels,EUR,HARWOODS,2.25,2.75,3.25
+7,Bath - Towels,GBP,TERRYTEX,2.5,3,4
+8,Bath - Towels,EUR,TERRYTEX,2.75,3.25,4.25
+9,Bed Linen - 1000TC - Plain,GBP,SOUTHIND,2.5,3,4
+10,Bed Linen - 1000TC - Plain,EUR,SOUTHIND,2.75,3.25,4.25
+11,Bed Linen - 200TC - Plain,GBP,SOUTHIND,2,2.5,3
+12,Bed Linen - 200TC - Plain,EUR,SOUTHIND,2.25,2.75,3.25
+13,Bed Linen - 330TC - Satin Stripe,GBP,SOUTHIND,2.5,3,4
+14,Bed Linen - 330TC - Satin Stripe,EUR,SOUTHIND,2.75,3.25,4.25
+15,Bed Linen - 400 TC - Organic,GBP,SOUTHIND,2.5,3,4
+16,Bed Linen - 400 TC - Organic,EUR,SOUTHIND,2.75,3.25,4.25
+17,Bedspreads,GBP,THREEANG,2.5,3,3.5
+18,Bedspreads,EUR,THREEANG,2.75,3.25,3.75
+19,Curtains,GBP,ASHLEYW,1.8,2,2.5
+20,Curtains,EUR,ASHLEYW,2.05,2.25,2.75
+22,Curtains,GBP,SOUTHIND,2.5,3,4
+23,Curtains,EUR,SOUTHIND,2.75,3.25,4.25
+24,Curtains,GBP,BELFIELD,1.8,2,2.5
+25,Curtains,EUR,BELFIELD,2.05,2.25,2.75
+26,Curtains,GBP,HOMEX,2.5,3,4
+27,Curtains,EUR,HOMEX,2.75,3.25,4.25
+28,Curtains,GBP,THREEANG,2.5,3,4
+29,Curtains,EUR,THREEANG,2.75,3.25,4.25
+30,Cushion - Booster,GBP,THREEANG,2.25,2.5,3.5
+31,Cushion - Booster,EUR,THREEANG,2.5,2.75,3.75
+32,Cushion - Decorative,GBP,ASHLEYW,2.05,2.25,2.75
+33,Cushion - Decorative,GBP,SOUTHIND,2.5,3,4
+34,Cushion - Decorative,EUR,SOUTHIND,2.75,3.25,4.25
+35,Cushion - Decorative,GBP,HOMEX,2.5,3,4
+36,Cushion - Decorative,EUR,HOMEX,2.75,3.25,4.25
+37,Cushion - Decorative,GBP,BELFIELD,1.8,2,2.5
+38,Cushion - Decorative,EUR,BELFIELD,2.05,2.25,2.75
+39,Cushion - Decorative,GBP,THREEANG,2.5,3,4
+40,Cushion - Decorative,EUR,THREEANG,2.75,3.25,4.25
+41,Delivery Boxes,GBP,TB-JDY,2.5,3,4
+42,Delivery Boxes,EUR,TB-JDY,2.75,3.25,4.25
+43,Designer Bed Linen,GBP,ASHLEYW,1.8,2,2.5
+44,Designer Bed Linen,EUR,ASHLEYW,2.05,2.25,2.75
+45,Doormats,GBP,CLASSCOIR,2.25,3,4
+46,Doormats,EUR,CLASSCOIR,2.75,3.25,4.25
+47,Duvets,GBP,KINGSUN,2.25,2.5,3.5
+48,Duvets,EUR,KINGSUN,2.5,2.75,3.75
+49,Duvets,GBP,DUVETPIL,1.8,2,2.5
+50,Duvets,EUR,DUVETPIL,2.05,2.25,2.75
+51,Duvets,GBP,NANTONG,2.5,3,4
+52,Duvets,EUR,NANTONG,2.75,3.25,4.25
+53,Fabric,GBP,SOUTHIND,2.5,3,4
+54,Fabric,EUR,SOUTHIND,2.75,3.25,4.25
+59,Garden,GBP,ADOBE,2,2.5,3
+60,Garden,EUR,ADOBE,2.25,2.75,3.25
+61,Home Accessories,GBP,FALLENFR,2,2.5,3
+62,Home Accessories,EUR,FALLENFR,2.25,2.75,3.25
+63,Home Accessories,GBP,ADOBE,2,2.5,3
+64,Home Accessories,EUR,ADOBE,2.25,2.75,3.25
+65,Home Accessories,GBP,POWELL,2,2.5,3
+66,Home Accessories,EUR,POWELL,2.25,2.75,3.25
+67,Home Accessories,GBP,CUTSNCUR,2.25,2.5,3.5
+68,Home Accessories,EUR,CUTSNCUR,2.5,2.75,3.75
+69,Kitchen - Linen,GBP,SOUTHIND,2.5,3,4
+70,Kitchen - Linen,EUR,SOUTHIND,2.75,3.25,4.25
+71,Kitchen - Linen,GBP,HARWOODS,2.25,2.5,3.5
+72,Kitchen - Linen,EUR,HARWOODS,2.5,2.75,3.75
+73,Kitchen - Seat Pads,GBP,SOUTHIND,2.5,3,4
+74,Kitchen - Seat Pads,EUR,SOUTHIND,2.75,3.25,4.25
+75,Kitchen - Table Linen,GBP,SOUTHIND,2.5,3,4
+76,Kitchen - Table Linen,EUR,SOUTHIND,2.75,3.25,4.25
+77,Mattress Protection,GBP,FEICHENG,2.25,2.5,3.5
+78,Mattress Protection,EUR,FEICHENG,2.5,2.75,3.75
+79,Mattresses,GBP,COMFORTX,1.8,2,2.5
+80,Mattresses,EUR,COMFORTX,2.05,2.25,2.75
+81,Nightwear,GBP,POWELL,2.25,2.5,3.5
+82,Nightwear,EUR,POWELL,2.5,2.75,3.75
+83,Pillows,GBP,DUVETPIL,2,2.5,3
+84,Pillows,EUR,DUVETPIL,2.25,2.75,3.25
+85,Pillows,GBP,HARWOODS,2,2.5,3
+86,Pillows,EUR,HARWOODS,2.25,2.75,3.25
+87,Pillows,GBP,QINGDAO,2.5,3,4
+88,Pillows,EUR,QINGDAO,2.75,3.25,4.25
+89,Pillows,GBP,KINGSUN,2.5,3,4
+90,Pillows,EUR,KINGSUN,2.75,3.25,4.25
+91,Pillows,GBP,NANTONG,2.5,3,4
+92,Pillows,EUR,NANTONG,2.75,3.25,4.25
+93,Plants,GBP,TOPBRIGHT,2.5,3,4
+94,Plants,EUR,TOPBRIGHT,2.75,3.25,4.25
+95,Plants,GBP,FLORELLE,2,2.5,3
+96,Plants,EUR,FLORELLE,2.25,2.75,3.25
+97,Pouffes & Bean Bags,GBP,THREEANG,2.5,3,4
+98,Pouffes & Bean Bags,EUR,THREEANG,2.75,3.25,4.25
+99,PRODUCTION,GBP,KINGSUN,2.5,3,4
+100,PRODUCTION,EUR,KINGSUN,2.75,3.25,4.25
+101,PRODUCTION,GBP,SOUTHIND,2.5,3,4
+102,PRODUCTION,EUR,SOUTHIND,2.75,3.25,4.25
+103,PRODUCTION,GBP,THREEANG,2.5,3,4
+104,PRODUCTION,EUR,THREEANG,2.75,3.25,4.25
+105,PRODUCTION,GBP,TOPBRIGHT,2.5,3,4
+106,PRODUCTION,EUR,TOPBRIGHT,2.75,3.25,4.25
+107,Rugs,GBP,THREEANG,2.25,2.5,4
+108,Rugs,EUR,THREEANG,2.5,2.75,4.25
+109,Shopping Bags,GBP,SOUTHIND,2.25,2.5,4
+110,Shopping Bags,EUR,SOUTHIND,2.5,2.75,4.25
+111,Throws,GBP,THREEANG,2.25,2.5,4
+112,Throws,EUR,THREEANG,2.5,2.75,4.25
+113,Throws,GBP,SOUTHIND,2.25,2.5,4
+114,Throws,EUR,SOUTHIND,2.5,2.75,4.25
+115,Wicker,GBP,PMPPNATU,2,2.5,3
+116,Wicker,EUR,PMPPNATU,2.25,2.75,3.25
+117,Bath - Mats,GBP,HARWOODS,2,2.5,3
+118,Bath - Mats,EUR,HARWOODS,2.25,2.75,3.25
+119,Cushion - Floor,GBP,SOUTHIND,2.25,2.5,2.35
+120,Cushion - Floor,EUR,SOUTHIND,2.25,2.75,3.75
+121,Cushion - Floor,GBP,THREEANG,2.25,2.5,3.5
+122,Cushion - Floor,EUR,THREEANG,2.25,2.75,3.75
+123,Furniture - Small,GBP,CUTSNCUR,2.25,2.5,3.5
+124,Furniture - Small,EUR,CUTSNCUR,2.5,2.75,3.75
+125,Furniture - Small,GBP,SHRAWAN,2.25,2.5,3.5
+126,Furniture - Small,EUR,SHRAWAN,2.5,2.75,3.75
+127,Furniture - Medium,GBP,CUTSNCUR,2.25,2.5,3.5
+128,Furniture - Medium,EUR,CUTSNCUR,2.5,2.75,3.75
+129,Furniture - Medium,GBP,SHRAWAN,2.25,2.5,3.5
+130,Furniture - Medium,EUR,SHRAWAN,2.5,2.75,3.75
+131,Furniture - Large,GBP,CUTSNCUR,2.25,2.5,3.5
+132,Furniture - Large,EUR,CUTSNCUR,2.5,2.75,3.75
+133,Furniture - Large,GBP,SHRAWAN,2.25,2.5,3.5
+134,Furniture - Large,EUR,SHRAWAN,2.5,2.75,3.75
+135,Furniture - Extra Large,GBP,CUTSNCUR,2.25,2.5,3.5
+136,Furniture - Extra Large,EUR,CUTSNCUR,2.5,2.75,3.75
+137,Furniture - Extra Large,GBP,SHRAWAN,2.25,2.5,3.5
+138,Furniture - Extra Large,EUR,SHRAWAN,2.5,2.75,3.75
+139,Bath - Robes,EUR,THREEANG,2.75,3.25,4.25
+140,Bed Linen - Local,GBP,HARWOODS,2,2.5,3
+141,Bed Linen - Local,EUR,HARWOODS,2.5,3,4
+142,Bath - Robes,GBP,THREEANG,2.5,3,4
+143,Bedspreads,GBP,HARWOODS,2,2.5,3
+144,Bedspreads,EUR,HARWOODS,2.25,2.75,3.25
+145,Bath - Mats/Discontinued,GBP,THREEANG,2.25,2.5,3.5
+146,Bath - Mats/Discontinued,EUR,THREEANG,2.5,2.75,3.75
+147,Bath - Robes/Discontinued,GBP,HARWOODS,2.5,3,4
+148,Bath - Robes/Discontinued,EUR,HARWOODS,2.75,3.25,4.25
+149,Bath - Towels/Discontinued,GBP,HARWOODS,2,2.5,3
+150,Bath - Towels/Discontinued,EUR,HARWOODS,2.25,2.75,3.25
+151,Bed Linen - Local/Discontinued,GBP,HARWOODS,2,2.5,3
+152,Bed Linen - Local/Discontinued,EUR,HARWOODS,2.5,3,4
+153,Curtains/Discontinued,GBP,ASHLEYW,1.8,2,2.5
+154,Curtains/Discontinued,EUR,ASHLEYW,2.05,2.25,2.75
+155,Curtains/Discontinued,GBP,BELFIELD,1.8,2,2.5
+156,Curtains/Discontinued,EUR,BELFIELD,2.05,2.25,2.75
+157,Curtains/Discontinued,GBP,HOMEX,2.5,3,4
+158,Curtains/Discontinued,EUR,HOMEX,2.75,3.25,4.25
+159,Curtains/Discontinued,GBP,THREEANG,2.5,3,4
+160,Curtains/Discontinued,EUR,THREEANG,2.75,3.25,4.25
+161,Cushion - Decorative/Discontinued,GBP,BELFIELD,1.8,2,2.5
+162,Cushion - Decorative/Discontinued,EUR,BELFIELD,2.05,2.25,2.75
+163,Cushion - Decorative/Discontinued,GBP,THREEANG,2.5,3,4
+164,Cushion - Decorative/Discontinued,EUR,THREEANG,2.75,3.25,4.25
+165,Cushion - Decorative/Discontinued,EUR,SOUTHIND,2.75,3.25,4.25
+166,Cushion - Decorative/Discontinued,GBP,SOUTHIND,2.5,3,4
+167,Cushion - Decorative/Discontinued,GBP,ASHLEYW,2.05,2.25,2.75
+168,Cushion - Decorative/Discontinued,GBP,HOMEX,2.5,3,4
+169,Cushion - Decorative/Discontinued,EUR,HOMEX,2.75,3.25,4.25
+170,Fabric/Discontinued,GBP,SOUTHIND,2.5,3,4
+171,Fabric/Discontinued,EUR,SOUTHIND,2.75,3.25,4.25
+172,Furniture/Discontinued,GBP,CUTSNCUR,2.25,2.5,3.5
+173,Furniture/Discontinued,EUR,CUTSNCUR,2.5,2.75,3.75
+174,Ktichen - Table Linen/Discontinued,GBP,SOUTHIND,2.5,3,4
+175,Ktichen - Table Linen/Discontinued,EUR,SOUTHIND,2.75,3.25,4.25
+176,Kitchen - Linen/Discontinued,GBP,SOUTHIND,2.5,3,4
+177,Kitchen - Linen/Discontinued,EUR,SOUTHIND,2.75,3.25,4.25
+178,Home Accessories/Discontinued,GBP,ADOBE,2,2.5,3
+179,Home Accessories/Discontinued,EUR,ADOBE,2.25,2.75,3.25
+180,Home Accessories/Discontinued,GBP,POWELL,2,2.5,3
+181,Home Accessories/Discontinued,EUR,POWELL,2.25,2.75,3.25
+182,Nightdresses/Discontinued,GBP,POWELL,2.25,2.5,3.5
+183,Nightdresses/Discontinued,EUR,POWELL,2.5,2.75,3.75
+184,Plants/Discontinued,GBP,FLORELLE,2,2.5,3
+185,Plants/Discontinued,EUR,FLORELLE,2.25,2.75,3.25
+186,Pouffes & Bean Bags / Discontinued,GBP,THREEANG,2.5,3,4
+187,Pouffes & Bean Bags / Discontinued,EUR,THREEANG,2.75,3.25,4.25
+188,Rugs/Discontinued,GBP,THREEANG,2.25,2.5,4
+189,Rugs/Discontinued,EUR,THREEANG,2.5,2.75,4.25
+190,Shopping Bags/Discontinued,GBP,SOUTHIND,2.25,2.5,4
+191,Shopping Bags/Discontinued,EUR,SOUTHIND,2.5,2.75,4.25
+192,Throws/Discontinued,GBP,THREEANG,2.25,2.5,4
+193,Throws/Discontinued,EUR,THREEANG,2.5,2.75,4.25
+194,Wicker/Discontinued,GBP,PMPPNATU,2,2.5,3
+195,Wicker/Discontinued,EUR,PMPPNATU,2.25,2.75,3.25

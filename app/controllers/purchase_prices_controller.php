@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-04-20T00:00:00","DateTo":"2018-07-05T00:00:00","Status":"DELIVERED","EntriesPerPage":1000,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-01-10T00:00:00","DateTo":"2018-07-09T00:00:00","Status":"DELIVERED","EntriesPerPage":02,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -91,7 +91,7 @@ class PurchasePricesController extends AppController {
 				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				        $result = curl_exec($ch);
 				        $porders = json_decode($result);
-						print_r($porders->Result); die();
+						//print_r($porders->Result); die();
 						curl_close($ch);
 						if(!empty($porders)){return $porders;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
 					}
@@ -114,7 +114,7 @@ class PurchasePricesController extends AppController {
 							$pkid[] = $pkpurchaseid->pkPurchaseID;
 						}
 	   
-						for ($i = 1;$i<=count($pkid); $i++){
+						for ($i = 1;$i<=sizeof($pkpurchaseids->Result); $i++){
 	   
 						//$pkpurchaseid = '4f3edaeb-f224-4fd7-ba74-408ff05a9c44';
 				
@@ -172,19 +172,29 @@ class PurchasePricesController extends AppController {
 								
 											
 								$db = $this->PurchasePrice->getDataSource();
-								$value = $db->value($purprices, 'string');
+								$value1 = $db->value($purprices, 'string');
+								
+								$value2 = $db->value($date, 'string');
 								
 								
 								
 								$this->PurchasePrice->updateAll(
-									array('PurchasePrice.purchase_price' => $value),
+									array('PurchasePrice.purchase_price' => $value1,'PurchasePrice.purchase_date' => $value2),
+									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
+							
+							/*} else if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['purchase_date'] !== $date))){ //echo "hello"; die();
+								
+											
+								$db = $this->PurchasePrice->getDataSource();
+								$value = $db->value($date, 'string');								
+								
+								
+								$this->PurchasePrice->updateAll(
+									array('PurchasePrice.purchase_date' => $value),
 									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
 						
-								/*
-								$this->PurchasePrice->updateAll(
-								array('PurchasePrice.purchase_date' => $updeta,'PurchasePrice.purchase_price' => $purprices),
-								array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' =>$data[0]['PurchasePrice']['id']));
 								*/
+								
 								
 							}else { 
 							

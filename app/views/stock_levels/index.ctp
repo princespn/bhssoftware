@@ -31,7 +31,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=1; $i<=144; $i++) { ?>
+<?php for ($i=1; $i<=400; $i++) { ?>
  window.open("http://ukwalahome.com/stock_levels/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

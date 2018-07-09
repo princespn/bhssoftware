@@ -221,7 +221,7 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-07-06';
+					$date = '2018-07-08';
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));

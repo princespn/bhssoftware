@@ -1793,7 +1793,7 @@ public function importcategory(){
 		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
 		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
-		$currentdate = '2018-07-06';
+		$currentdate = '2018-07-08';
 
 
 		$this->loadModel('StockLevel');					

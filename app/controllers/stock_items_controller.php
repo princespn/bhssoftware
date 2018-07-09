@@ -97,7 +97,7 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();
 										
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-07-06';
+					$date = '2018-07-08';
 					//print_r($date);die();
 					
 					$this->loadModel('StockLevel');
@@ -141,7 +141,7 @@ class StockItemsController extends AppController {
 					//print_r($cat);die();
 						  
 					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-07-06';
+					$date = '2018-07-08';
 
 					$this->loadModel('StockLevel');
 					
@@ -276,7 +276,7 @@ class StockItemsController extends AppController {
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-07-06';
+					$currentdate = '2018-07-07';
 					
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 			
@@ -449,7 +449,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-07-06';
+					$currentdate = '2018-07-07';
 					
 					$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.category_name');
@@ -579,7 +579,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-07-06';
+					$currentdate = '2018-07-07';
 						
 					$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.category_name');

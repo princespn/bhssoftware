@@ -40,7 +40,7 @@ class StockLevel extends AppModel {
   
     );
   
-   /*var $hasOne = array(
+   var $hasOne = array(
         'CostCalculator' => array(
             'className' => 'CostCalculator',
             'foreignKey' => false,
@@ -53,7 +53,7 @@ class StockLevel extends AppModel {
             'conditions' => 'StockLevel.item_number = PurchasePrice.item_sku'
         ) 
        
-    );	*/
+    );	
   
 
 }
