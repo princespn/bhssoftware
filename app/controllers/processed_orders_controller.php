@@ -71,13 +71,12 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2018-05-20T00:00:00'; //min
-		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-06-27T60:60:60'; //max
-		//$to = '';
+		//$from = '2017-01-01T00:00:00'; //min
+		$from = '';   // 2017-04-03 - TO - 2017-04-09
+		//$to =  '2017-12-01T60:60:60'; //max
+		$to = '';
         
-        //$to = '';
-        $datetype = '1';
+		$datetype = '1';
         $sfield  = '';
         $sterm  = '';
         $limit = '50';
@@ -100,7 +99,7 @@ class ProcessedOrdersController extends AppController {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         $porders = json_decode($result);
-       // print_r($porders); die();
+       //print_r($porders); die();
           curl_close($ch);
        if(!empty($porders)){return $porders ;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
 
@@ -263,10 +262,12 @@ if((count($order->Items)) >= '1'){
 	$ordertitle = $order->Items[$i]->Title."Name-".$i;}else {$ordertitle = $order->Items[$i]->Title;}
      
      $this->loadModel('ProcessedListing');
+	 if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	
       
     $this->ProcessedListing->create();
    
-    $this->ProcessedListing->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $ordertitle, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
+    $this->ProcessedListing->saveAll(array('order_id' => $smart_orderid,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $ordertitle, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
          
         
 } 
@@ -274,13 +275,12 @@ if((count($order->Items)) >= '1'){
     $days = strtotime($order->GeneralInfo->ReceivedDate);
 
     $this_week_sd = date("Y-m-d",$days);
+	if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	
 	
 	   //$ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
    $ordervalue = $order->TotalsInfo->TotalCharge;
-   $this->ProcessedOrder->create();
-	
-	if(($order->GeneralInfo->Source === 'MAGENTO') && ($order->GeneralInfo->SubSource === 'https://www.smartparcelbox.com')){$smart_orderid = "SPB100000999".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
-	
+   $this->ProcessedOrder->create();	
     $this->ProcessedOrder->saveAll(array('order_id' => $smart_orderid, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
 	  
      

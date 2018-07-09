@@ -1,4 +1,4 @@
-<?php
+<?php  //echo"<div class='bgimg'><div class='middle'><h1>COMING SOON</h1></div><div class='bottomleft'><p>Site under maintenance</p></div></div>"; die();
 if((!empty($_POST['checkid'])) &&(!empty($_POST['exports']))){//die();
 
 $mapping = array('Item SKU','Item Title','Category','Stock Level','On Order','Current Week','Last Week','Same Week Last Year','Current Month','Previous Month','Same Month Last Year May 2017','Current YTD','Last YTD','Last Year');

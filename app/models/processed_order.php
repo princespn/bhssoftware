@@ -31,15 +31,44 @@
 class ProcessedOrder extends AppModel {
 
     var $name = 'ProcessedOrder';
-    var $validate = array(
-    'order_id' => array(
+       var $validate = array(
+		'order_id' => array(
             'Unique-1' => array(
                 'rule' => 'notempty',
                 'message' => 'Order id is required'
             ),
-        ),       
+        ), 
+		
+		'order_date' => array(
+            'Unique-2' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),		
+		
+		'currency' => array(
+            'Unique-4' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		
+		'plateform' => array(
+            'Unique-5' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		
+		'subsource' => array(
+            'Unique-6' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        )
   
     );
+      
     
     
     public function importprocessed($filename){

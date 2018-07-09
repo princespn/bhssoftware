@@ -413,15 +413,15 @@ class CostCalculatorsController extends AppController {
                  if (!empty($download)) {
 
                                 $conditions = array('SupplierMultiplier.category LIKE' => '%' . $download . '%');
-                                $this->paginate = array('limit' => 500, 'order' => 'SupplierMultiplier.category', 'conditions' => $conditions);
+                                $this->paginate = array('limit' => 2000, 'order' => 'SupplierMultiplier.category', 'conditions' => $conditions);
                                  $getSupplier = $this->paginate('SupplierMultiplier');
                                  
                                  $cond = array('Multiplier.category LIKE' => '%' . $download . '%');
-                                 $this->paginate = array('limit' => 500, 'order' => 'Multiplier.category', 'conditions' => $cond);
+                                 $this->paginate = array('limit' => 1000, 'order' => 'Multiplier.category', 'conditions' => $cond);
                                  $getMultiplier = $this->paginate('Multiplier');  
                                  
                                  $condition = array('Shipping.category LIKE' => '%' . $download . '%');
-                                 $this->paginate = array('limit' => 500, 'order' => 'Shipping.category', 'conditions' => $condition);
+                                 $this->paginate = array('limit' => 100, 'order' => 'Shipping.category', 'conditions' => $condition);
                                  $getShipping = $this->paginate('Shipping'); 
                                  
                                 $this->set(compact('categories','suppname','getCost','getSupplier','getMultiplier','countryname'));

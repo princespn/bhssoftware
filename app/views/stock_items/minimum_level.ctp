@@ -96,7 +96,7 @@ $suppname = array($stockall_report['StockItem']['supp_name']);
 			endforeach;
 			
 			
-			$aveg_of_aveg[0] = ($Average_12month[0]+$Average_six_month[0]+$Average_3month[0])/3; 
+		$aveg_of_aveg[0] = ($Average_12month[0]+$Average_six_month[0]+$Average_3month[0])/3; 
 			
 		  $stock_availability = array('0.00'); $duestock = array('0.00'); $currentstock = array('0.00');
 		  foreach($Cuurentstocks as $Cuurentstock):

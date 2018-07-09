@@ -18,13 +18,6 @@ class AppController extends Controller
        // $auth = $this->Auth->user();                                 
                     
         
-    }
-
-	function stockdate(){
-		
-		//$date = date('Y-m-d',strtotime("-1 days"));					
-		$date = '2018-07-04';
-		return $date;
-}
+    }							
 
 }

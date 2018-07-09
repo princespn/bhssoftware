@@ -1,4 +1,4 @@
-<?php
+<?php  //echo"<div class='bgimg'><div class='middle'><h1>COMING SOON</h1></div><div class='bottomleft'><p>Site under maintenance</p></div></div>"; die();
 if(($session->read('Auth.User.group_id')!='4') && ($session->read('Auth.User.group_id')!='5'))
 {
 $this->requestAction('/users/logout/', array('return'));

@@ -32,7 +32,54 @@ class ProcessedListing extends AppModel {
 
     var $name = 'ProcessedListing';
       public $useTable = "processed_listings";
-      //public $recursive = 1;
+       var $validate = array(
+		'order_id' => array(
+            'Unique-1' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ), 
+		
+		'product_sku' => array(
+            'Unique-2' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		
+		'product_name' => array(
+            'Unique-3' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		
+		'cat_name' => array(
+            'Unique-6' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		'currency' => array(
+            'Unique-4' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		'plateform' => array(
+            'Unique-4' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        ),
+		'subsource' => array(
+            'Unique-5' => array(
+                'rule' => 'notempty',
+                'message' => 'Order id is required'
+            ),
+        )
+  
+    );
       
       
       public function importcategory($filename){
@@ -376,31 +423,17 @@ class ProcessedListing extends AppModel {
                   			
 					$last365_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$last365_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
 					return $last365_Reports;
-		}
+		}		
 		
-		public function stockvalues(){		
-
-					
-		$currentdate = '2018-06-27';		
-		
-		$grouplast = array(('StockLevel.item_number'),
-					'AND'=> 'StockLevel.category_name');
-		
-		$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
-			
-		return $Cuurentstocks;				
-		}
 	
-	
-	 var $hasMany = array(
+	 /*var $hasMany = array(
         'StockLevel' => array(
             'className' => 'StockLevel',
             'foreignKey' => false,
             'conditions' => 'ProcessedListing.product_sku = StockLevel.item_number'
         )   
-       
 
-    );
+    );*/
 	
 	
 }

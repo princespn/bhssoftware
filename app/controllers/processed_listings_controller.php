@@ -1782,8 +1782,7 @@ public function importcategory(){
 
         $this->set('title', 'Daily Sales Report per category.'); 
         //print_r($_REQUEST);die();
-		$categories = $this->categname();
-		
+		$categories = $this->categname();	
         $Skucurrentsweeks = $this->ProcessedListing->sku_currentweeks();
 		$Skupreviousweeks = $this->ProcessedListing->sku_prevweeks();
         $Skulastweeks = $this->ProcessedListing->sku_lastweekly();
@@ -1794,7 +1793,15 @@ public function importcategory(){
 		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
 		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
-		$Currentstocks = $this->ProcessedListing->stockvalues();
+		$currentdate = '2018-07-06';
+
+
+		$this->loadModel('StockLevel');					
+			
+		$grouplast = array(('StockLevel.item_number'),
+					'AND'=> 'StockLevel.category_name');
+		
+		$Currentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 		
 				
 	     if ((!empty($this->data)) && (!empty($_POST['submit'])) && (!empty($this->data['ProcessedListing']['cat_sku_name'])))

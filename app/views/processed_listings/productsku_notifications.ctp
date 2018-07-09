@@ -1,4 +1,4 @@
-<?php
+<?php  //echo"<div class='bgimg'><div class='middle'><h1>COMING SOON</h1></div><div class='bottomleft'><p>Site under maintenance</p></div></div>"; die();
 if (!empty($_POST['exports'])) {
 	
 $mapping = array('Category','Product SKU','Platform','Channel','Currency','Current(C)','Old (L)','Min (C-L/L)','Max (C-L/L)');
@@ -91,7 +91,7 @@ echo $csv->render($filename);
 				<?php endforeach; ?> 		
 					
      	
-				<?php if(!empty($value['ProcessedListing']['product_name'])){$catname = $value['ProcessedListing']['product_name'];}
+				<?php if(!empty($value['ProcessedListing']['product_name'])){$catname = $value['ProcessedListing']['cat_name'];}
 				
 				 
 					if((!empty($value[0]['orderid'])) && (($value[0]['orderid'])> 2)){

@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"","DateTo":"","Status":"DELIVERED","EntriesPerPage":10,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-04-20T00:00:00","DateTo":"2018-07-05T00:00:00","Status":"DELIVERED","EntriesPerPage":1000,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -91,7 +91,7 @@ class PurchasePricesController extends AppController {
 				        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				        $result = curl_exec($ch);
 				        $porders = json_decode($result);
-						//print_r($porders->Result); die();
+						print_r($porders->Result); die();
 						curl_close($ch);
 						if(!empty($porders)){return $porders;}else{throw new MissingWidgetHelperException('Processed orders not authorized to view this page.', 401);}
 					}
@@ -114,7 +114,7 @@ class PurchasePricesController extends AppController {
 							$pkid[] = $pkpurchaseid->pkPurchaseID;
 						}
 	   
-						for ($i = 0;$i<=count($pkid); $i++){
+						for ($i = 1;$i<=count($pkid); $i++){
 	   
 						//$pkpurchaseid = '4f3edaeb-f224-4fd7-ba74-408ff05a9c44';
 				
@@ -148,8 +148,7 @@ class PurchasePricesController extends AppController {
 							
 							$purprices = round((($order->Cost-$order->Tax)/$order->Quantity),2);
 											
-							//$this->loadModel('PurchasePrice');
-							
+														
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
 							
 							$oldd = strtotime($data[0]['PurchasePrice']['purchase_date']);
@@ -158,12 +157,11 @@ class PurchasePricesController extends AppController {
 							
 							//if ((($data[0]['PurchasePrice']['purchase_price']) === '0') && ($purprices != '0')){ //echo "hello".$data[0]['PurchasePrice']['purchase_price']; die();
 							
-							if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['invoice_currency'] !== $curr))){ //echo "hello"; die();
+							if (((!empty($oldd)) && ($diff>1)) && ($data[0]['PurchasePrice']['invoice_currency'] !== $curr)){ //echo "hello"; die();
 								
 											
 								$db = $this->PurchasePrice->getDataSource();
 								$value = $db->value($curr, 'string');
-								
 								
 								
 								$this->PurchasePrice->updateAll(
