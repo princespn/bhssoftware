@@ -423,17 +423,116 @@ class ProcessedListing extends AppModel {
                   			
 					$last365_Reports = $this->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.plateform', 'ProcessedListing.product_name', 'ProcessedListing.subsource','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$last365_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
 					return $last365_Reports;
-		}		
-		
-	
-	 /*var $hasMany = array(
-        'StockLevel' => array(
-            'className' => 'StockLevel',
-            'foreignKey' => false,
-            'conditions' => 'ProcessedListing.product_sku = StockLevel.item_number'
-        )   
+		}
 
-    );*/
-	
+	public function platformname()
+		{
+		
+			$cond = array(array('ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array('ProcessedListing.plateform !='=>'PLAYTRADE','ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'));
+			
+			$grouby = array(('ProcessedListing.plateform'),
+			 'AND'=> 'ProcessedListing.subsource');
+
+			$platname =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.plateform ASC')));
+			return $platname;		
+	}
+
+		
+	public function platcurrrecords(){			
+			
+			$previous_week = strtotime("-1 week +1 day");
+			$start_week = strtotime("last monday midnight",$previous_week);
+			$end_week = strtotime("next sunday",$start_week);
+
+			$this_week_sd = date("Y-m-d",$start_week);
+			$this_week_ed = date("Y-m-d",$end_week);
+			
+		$cond = array('ProcessedListing.order_date <= ' => $this_week_ed,
+			'ProcessedListing.order_date >= ' => $this_week_sd,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.plateform !='=>'');
+        
+		$grouby = array(('ProcessedListing.plateform'),
+         'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+			
+			$platcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platcurrentweek;		
+			
+		}		
+
+public function platprevrecords(){			
+			
+		$present_week = strtotime("-2 week +1 day");
+        $second_week = strtotime("last monday midnight",$present_week);
+        $send_week = strtotime("next sunday",$second_week);
+
+        $start_week = date("Y-m-d",$second_week);
+        $end_week = date("Y-m-d",$send_week);
+		
+		$cond = array('ProcessedListing.order_date <= ' => $end_week,
+			'ProcessedListing.order_date >= ' => $start_week,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+		
+		$grouby = array(('ProcessedListing.plateform'),
+         'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+			
+			$platprevweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platprevweek;		
+			
+		}
+
+	public function platlastrecords(){			
+			
+			$present_year_week = strtotime("-53 week +1 day");
+			$last_year_week = strtotime("last sunday midnight",$present_year_week);
+			$end_year_week = strtotime("next saturday",$last_year_week);
+
+			$main_last_week = date("Y-m-d",$last_year_week);//2017-06-04
+			$main_end_week = date("Y-m-d",$end_year_week);//2017-06-10
+						
+			$cond = array('ProcessedListing.order_date <= ' => $main_end_week,
+			'ProcessedListing.order_date >= ' => $main_last_week,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+			
+			$platlastweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platlastweek;		
+			
+		}	
+
+		public function platcurrmonth(){			
+			
+			$this_month_sd = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1));
+			$this_month_ed = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
+    
+			$cond = array('ProcessedListing.order_date <= ' => $this_month_ed,
+			'ProcessedListing.order_date >= ' => $this_month_sd,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platcurmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platcurmonth;		
+			
+		}	
+
+
+		public function platprevmonth(){			
+			
+			$start_month = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1));
+			$end_month =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0));
+    
+			$cond = array('ProcessedListing.order_date <= ' => $end_month,
+			'ProcessedListing.order_date >= ' => $start_month,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platpreviousmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platpreviousmonth;		
+			
+		}
+					
+					
+       	 	
 	
 }

@@ -32,7 +32,7 @@
          <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
          <?php echo  $order->Items[$i]->CategoryName; echo "</BR>"; ?>    
          <?php } ?></td> 
-          <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
+         <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
          <?php echo $order->Items[$i]->Title; echo "</BR>";   ?>  
           <?php } ?></td> 
            <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
@@ -59,7 +59,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=16200; $i<=16400; $i++){ ?>
+<?php for ($i=9400; $i<=9700; $i++){ ?>
  window.open("http://ukwalahome.com/processed_orders/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

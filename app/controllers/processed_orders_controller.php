@@ -6,7 +6,7 @@ class ProcessedOrdersController extends AppController {
 
     function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow(array('index', 'dailysales_category', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
+        $this->Auth->allow(array('sales_platform','index', 'dailysales_category', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
         $this->Session->activate();
 
     }
@@ -71,9 +71,9 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		//$from = '2017-01-01T00:00:00'; //min
+		//$from = '2017-06-21T00:00:00'; //min
 		$from = '';   // 2017-04-03 - TO - 2017-04-09
-		//$to =  '2017-12-01T60:60:60'; //max
+		//$to =  '2017-07-23T60:60:60'; //max
 		$to = '';
         
 		$datetype = '1';
@@ -257,20 +257,30 @@ for ($i = 0;$i<=count($order->Items); $i++) {
 
     $this_week_sd = date("Y-m-d",$days);
     
-if((count($order->Items)) >= '1'){
+
+    $this->loadModel('ProcessedListing');	 
 	
-	$ordertitle = $order->Items[$i]->Title."Name-".$i;}else {$ordertitle = $order->Items[$i]->Title;}
-     
-     $this->loadModel('ProcessedListing');
-	 if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+		/* Add sku conditions 
 	
-      
-    $this->ProcessedListing->create();
-   
-    $this->ProcessedListing->saveAll(array('order_id' => $smart_orderid,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $ordertitle, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
-         
-        
-} 
+		if($order->Items[$i]->SKU === 'D0-XCPS-BUS3-MADE'){
+		$productsku = 'D0-XCPS-BUS3';
+		} else if($order->Items[$i]->SKU === 'DFDPILLOWPAIR-MADE'){
+		$productsku = 'DFDPILLOWPAIR';
+		} else if($order->Items[$i]->SKU === 'UPILLOWPAIR-MADE'){
+		$productsku = 'DUPILLOWPAIR';		
+		} else if($order->Items[$i]->SKU === 'MFPILLOWP-MADE'){
+		$productsku = 'MFPILLOWP';		
+		}else {
+		$productsku = $order->Items[$i]->SKU;
+		}
+	
+	 End sku conditions */ 
+		
+	
+    $this->ProcessedListing->create();   
+    $this->ProcessedListing->saveAll(array('order_id' => $smart_orderid,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $order->Items[$i]->Title, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
+    } 
 
     $days = strtotime($order->GeneralInfo->ReceivedDate);
 
@@ -808,13 +818,28 @@ $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('Pr
 			// Daily Sales Report per category:
 
 				
-			public function dailysales_category(){
+			public function sales_platform(){
 				
-					$this->set('title', 'Daily Sales Report per category.');
+					$this->set('title', 'Sale Platform- Detailed Analysis as per product category - Number of Orders');
 					
+					$Platformnames = $this->ProcessedOrder->platformname();
+					$Platcurweeks = $this->ProcessedOrder->platcurrrecords();					
+					$Platprevweeks = $this->ProcessedOrder->platprevrecords();	
+					$Platlastweeks = $this->ProcessedOrder->platlastrecords();
+					$Platcurrmonths = $this->ProcessedOrder->platcurrmonth();
+												
+					$unity = array(('ProcessedOrder.plateform'),
+					'AND'=> 'ProcessedOrder.subsource','ProcessedOrder.cat_name');
 					
-				
-			}
+					$cond = array(array('ProcessedOrder.plateform !='=>'DIRECT','ProcessedOrder.subsource !='=>'DATAIMPORTEXPORT'),
+						'AND'=> array('ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com'));
+                 
+					$Results = $this->ProcessedOrder->find('all',array('fields' => array('ProcessedOrder.plateform', 'ProcessedOrder.subsource', 'ProcessedOrder.cat_name'), 'conditions' =>$cond , 'group' => $unity, 'order' => array('ProcessedOrder.plateform ASC')));
+					print_r($Results);die();
+					
+					$this->set(compact('Platformnames','Results','Platcurweeks','Platprevweeks','Platlastweeks','Platcurrmonths'));
+					}
+		
 			
              
 /* SELECT * FROM `processed_listings` WHERE `order_date` >= '2017-07-10' AND `order_date` <= '2017-07-16' AND `subsource`='http://www.smartparcelbox.com'

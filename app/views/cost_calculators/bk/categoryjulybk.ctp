@@ -165,31 +165,29 @@ echo $this->Session->flash(); ?>
           	<?php } else if(!empty($purchase_order['CostCalculator']['invoice_currency'])){ ?>
 		  <td><?php echo $purchase_order['CostCalculator']['invoice_currency']; ?></td>
 			<?php } ?>
-			<td><?php // Currency Master Information in GBP---   
+		  <td><?php // Currency Master Information in GBP---   
 				if(!empty($purchase_order['PurchasePrice']['invoice_currency'])){$purr = $purchase_order['PurchasePrice']['invoice_currency'];}else {$purr = $purchase_order['CostCalculator']['invoice_currency'];}
-                $GbpLP = '0'; foreach ($getCost as $exchange_rate):
+                foreach ($getCost as $exchange_rate):
                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purr) && (($exchange_rate['CostSetting']['sale_base_currency'])==='GBP')):
                       $GbpLP = ($exchange_rate['CostSetting']['exchange_rate'])*($purchase_order['PurchasePrice']['purchase_price'])*($purchase_order['Multiplier']['multiplier']);
                     echo "<div><span class=blue>". round($GbpLP, 2) ."</span></div>";  ?></td> 
             <?php   break;endif; endforeach; ?>
-           <?php $sp1 = '0'; $sp2 = '0'; $sp3 = '0';  foreach ($getsupp as $getsupps):
+           <?php foreach ($getsupp as $getsupps):
            if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['CostCalculator']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['CostCalculator']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='GBP')): ?>
-              <?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier']; $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier']; $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  ?>
-                 
-			<?php   break;endif; endforeach; ?>                  
-            <td><?php    echo "<div><span class=blue>".round($GbpLP*$sp1, 2)."</span></div>";    ?></td>
-             <td><?php  echo "<div><span class=blue>".round($GbpLP*$sp2, 2)."</span></div>";   ?></td>
-             <td><?php  echo "<div><span class=blue>".round($GbpLP*$sp3, 2) ."</span></div>";    ?></td>
+              
+             <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($GbpLP*$sp1, 2)."</span></div>";    ?></td>
+             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp2, 2)."</span></div>";   ?></td>
+             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>".round($GbpLP*$sp3, 2) ."</span></div>";    ?></td>
              <?php $salegbp = $purchase_order['AdminListing']['web_sale_price_uk'];
              if(($salegbp > $GbpLP*$sp1) && ($salegbp < $GbpLP*$sp3)){ ?>
              <td><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td>
              <?php } else { ?>
              <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$GbpLP*$sp1. " Sp2->".$GbpLP*$sp2. " Sp3->".$GbpLP*$sp3;?>"><?php echo $purchase_order['AdminListing']['web_sale_price_uk']; ?></td>
-            <?php } ?>
-
-			
+            <?php } ?>       
+			<?php   break;endif; endforeach; ?>                  
+                       
              <td><?php // Currency Master Information in EUR---                   
-                $EurLP  = '0'; foreach ($getCost as $exchange_rate):
+                foreach ($getCost as $exchange_rate):
                       if(($exchange_rate['CostSetting']['invoice_currency'])===($purr) && (($exchange_rate['CostSetting']['sale_base_currency'])==='EUR')):
                       $ExEurRate = $exchange_rate['CostSetting']['exchange_rate'];
                       $Eurinvoice = $purchase_order['PurchasePrice']['purchase_price'];
@@ -198,21 +196,19 @@ echo $this->Session->flash(); ?>
                        echo "<div><span class=blue>". round($EurLP, 2) ."</span></div>";                      
                     ?></td> 
             <?php  break; endif; endforeach; ?>
-            <?php $sp1 = '0'; $sp2 = '0'; $sp3 = '0'; foreach ($getsupp as $getsupps):
+            <?php foreach ($getsupp as $getsupps):
            if(((($getsupps['SupplierMultiplier']['category'])===($purchase_order['CostCalculator']['category'])) && (($getsupps['SupplierMultiplier']['supplier'])===($purchase_order['CostCalculator']['supplier']))) && (($getsupps['SupplierMultiplier']['invoice_currency'])==='EUR')): ?>
-               <?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier']; $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier']; $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  ?>
-			  <?php   break;endif; endforeach; ?>
-			  
-			 <td><?php   echo "<div><span class=blue>".round($EurLP*$sp1, 2) ."</span></div>";    ?></td>
-             <td><?php  echo "<div><span class=blue>". round($EurLP*$sp2, 2) ."</span></div>";   ?></td>
-             <td><?php echo "<div><span class=blue>". round($EurLP*$sp3, 2) ."</span></div>";    ?></td>
+                <td><?php $sp1 = $getsupps['SupplierMultiplier']['sp1_multiplier'];   echo "<div><span class=blue>".round($EurLP*$sp1, 2) ."</span></div>";    ?></td>
+             <td><?php $sp2 = $getsupps['SupplierMultiplier']['sp2_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp2, 2) ."</span></div>";   ?></td>
+             <td><?php $sp3 = $getsupps['SupplierMultiplier']['sp3_multiplier'];  echo "<div><span class=blue>". round($EurLP*$sp3, 2) ."</span></div>";    ?></td>
             <?php $saleeur = $purchase_order['AdminListing']['web_sale_price_de'];
              if(($saleeur > $EurLP*$sp1) && ($saleeur < $EurLP*$sp3)){ ?>
              <td><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td>
              <?php } else { ?>
              <td class="red-info" title="<?php echo "Selling Price not in Between Sp1->".$EurLP*$sp1. " Sp2->".$EurLP*$sp2. " Sp3->".$EurLP*$sp3;?>"><?php echo $purchase_order['AdminListing']['web_sale_price_de']; ?></td>
               <?php } ?>
-		  <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'cost_calculators','action'=>'edit',$purchase_order['CostCalculator']['id']),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'cost_calculators','action' => 'delete',$purchase_order['CostCalculator']['id']), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $purchase_order['CostCalculator']['id']));  ?></td><?php } ?>
+			  <?php   break;endif; endforeach; ?>                                  
+            <?php if($session->read('Auth.User.group_id')!='3') { ?><td><?php echo $this->Html->link('<i aria-hidden="true" class="fa fa-edit"></i>',array('controller'=>'cost_calculators','action'=>'edit',$purchase_order['CostCalculator']['id']),array('class'=> 'edit-btn','escape'=>false)); echo $this->Html->link('<i aria-hidden="true" class="fa fa-close"></i>', array('controller'=>'cost_calculators','action' => 'delete',$purchase_order['CostCalculator']['id']), array('class'=> 'delete-btn','escape' => false), sprintf(__('Are you sure you want to delete # %s?', true), $purchase_order['CostCalculator']['id']));  ?></td><?php } ?>
             </tr>         
          <?php endforeach; ?>            
       </tbody>

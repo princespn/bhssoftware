@@ -8,7 +8,7 @@ class ProcessedListingsController extends AppController {
     function beforeFilter() {
         parent::beforeFilter();   
       
-        $this->Auth->allow(array('plateform_skuname','catname_skuname','productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
+        $this->Auth->allow(array('sales_platform','plateform_skuname','catname_skuname','productsku_notifications','notifications','selection_productsku','selection_categories','index', 'tokenkey','category_weekly','productsku_monthly','category_monthly','productsku_weekly','categname','importcategory','category_prevmonths','category_currentmonths','category_currentweeks','category_prevweeks'));
          $this->Session->activate();
 
     }
@@ -1793,7 +1793,7 @@ public function importcategory(){
 		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
 		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
-		$currentdate = '2018-07-08';
+		$currentdate = '2018-07-23';
 
 
 		$this->loadModel('StockLevel');					
@@ -1863,8 +1863,7 @@ public function importcategory(){
 					$lasttherty_Reports = $this->ProcessedListing->yesthertydays_plateform($last_sku);					
 					$lastninty_Reports = $this->ProcessedListing->yesnintydays_plateform($last_sku);					
 					$last365_Reports = $this->ProcessedListing->yes365days_plateform($last_sku);					
-					
-					
+										
 					$groupby = array(('ProcessedListing.plateform'),
 					'AND'=> 'ProcessedListing.subsource');
 					
@@ -1874,8 +1873,39 @@ public function importcategory(){
 					$this->set(compact('Reports','yes_Reports','lastseven_Reports','lasttherty_Reports','lastninty_Reports', 'last365_Reports'));
 				
 			}
+			
+			
+			// Daily Sales Report per category:
+
+				
+			public function sales_platform(){
+				//print_r($_REQUEST); Array ( [sourceid] => Spain [plateformid] => AMAZON [CAKEPHP] => 3a3054a09a19a52bb3df8cd762bd707d )
+				
+					$this->set('title', 'Sale Platform- Detailed Analysis as per product category - Number of Orders');
+					if((!empty($_REQUEST['sourceid'])) && (!empty($_REQUEST['sourceid']))){
+					$sourcename = $_REQUEST['sourceid'];
+					$platformname = $_REQUEST['plateformid'];
+					}else{$sourcename = 'France'; $platformname = 'AMAZON';}
+					$Platnames = $this->ProcessedListing->platformname();
+					$Platcurweeks = $this->ProcessedListing->platcurrrecords();					
+					$Platprevweeks = $this->ProcessedListing->platprevrecords();	
+					$Platlastweeks = $this->ProcessedListing->platlastrecords();
+					$Platcurrmonths = $this->ProcessedListing->platcurrmonth();
+					$Platprevmonths = $this->ProcessedListing->platprevmonth();
+												
+					$unity = array(('ProcessedListing.plateform'),
+					'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+					
+					$cond = array(array('ProcessedListing.plateform'=>$platformname,'ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'),
+						'AND'=> array('ProcessedListing.subsource'=>$sourcename,'ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'));
+                 
+					$Results = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource', 'ProcessedListing.cat_name'), 'conditions' =>$cond , 'group' => $unity, 'order' => array('ProcessedListing.cat_name ASC')));
+					//print_r($Results);die();
+					
+					$this->set(compact('sourcename','platformname','Platnames','Results','Platcurweeks','Platprevweeks','Platlastweeks','Platcurrmonths','Platprevmonths'));
+					}
 		
-		
+			
     
 }
 

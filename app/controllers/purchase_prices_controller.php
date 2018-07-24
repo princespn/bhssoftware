@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-01-10T00:00:00","DateTo":"2018-07-09T00:00:00","Status":"DELIVERED","EntriesPerPage":02,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-04-11T00:00:00","DateTo":"2018-07-12T00:00:00","Status":"DELIVERED","EntriesPerPage":02,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
@@ -107,14 +107,14 @@ class PurchasePricesController extends AppController {
 						$pkpurchaseids = $this->searchpurorder($page);						
 							//print_r($pkpurchaseids); die();
 						
-						$pkid = array();
+						$pkid = array();$min = 350;
 						
 						foreach ($pkpurchaseids->Result as $pkpurchaseid) { 
 							
 							$pkid[] = $pkpurchaseid->pkPurchaseID;
 						}
 	   
-						for ($i = 1;$i<=sizeof($pkpurchaseids->Result); $i++){
+						for ($i = 1;$i<=$min; $i++){
 	   
 						//$pkpurchaseid = '4f3edaeb-f224-4fd7-ba74-408ff05a9c44';
 				
@@ -147,39 +147,22 @@ class PurchasePricesController extends AppController {
 							 foreach ($porders->PurchaseOrderItem as $order){
 							
 							$purprices = round((($order->Cost-$order->Tax)/$order->Quantity),2);
-											
-														
+																					
 							$data = $this->PurchasePrice->find('all', array('conditions' => array('PurchasePrice.item_sku' => $order->SKU)));	
-							
 							$oldd = strtotime($data[0]['PurchasePrice']['purchase_date']);
-														
 							$diff = floor(($days-$oldd)/$lang);
+						
+							
 							
 							//if ((($data[0]['PurchasePrice']['purchase_price']) === '0') && ($purprices != '0')){ //echo "hello".$data[0]['PurchasePrice']['purchase_price']; die();
-							
-							if (((!empty($oldd)) && ($diff>1)) && ($data[0]['PurchasePrice']['invoice_currency'] !== $curr)){ //echo "hello"; die();
-								
-											
+							if (((!empty($oldd)) && ($diff>=2)) && (($purprices != '0') && ($days >= $oldd))){ 
+																									
 								$db = $this->PurchasePrice->getDataSource();
-								$value = $db->value($curr, 'string');
-								
+								$valuep = $db->value($purprices, 'string');
+								$valued = $db->value($date, 'string');																
 								
 								$this->PurchasePrice->updateAll(
-									array('PurchasePrice.invoice_currency' => $value),
-									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
-						
-							} else if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['purchase_price'] !== $purprices))){ //echo "hello"; die();
-								
-											
-								$db = $this->PurchasePrice->getDataSource();
-								$value1 = $db->value($purprices, 'string');
-								
-								$value2 = $db->value($date, 'string');
-								
-								
-								
-								$this->PurchasePrice->updateAll(
-									array('PurchasePrice.purchase_price' => $value1,'PurchasePrice.purchase_date' => $value2),
+									array('PurchasePrice.purchase_price' => $valuep,'PurchasePrice.purchase_date' => $valued),
 									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
 							
 							/*} else if (((!empty($oldd)) && ($diff>1)) && (($purprices != '0') && ($data[0]['PurchasePrice']['purchase_date'] !== $date))){ //echo "hello"; die();
@@ -194,9 +177,32 @@ class PurchasePricesController extends AppController {
 									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
 						
 								*/
+							} else if (((!empty($oldd)) && ($diff>=2)) && ($data[0]['PurchasePrice']['invoice_currency'] !== $curr)){ //echo "hello"; die();
+																			
+								$db = $this->PurchasePrice->getDataSource();
+								$value = $db->value($curr, 'string');
 								
 								
-							}else { 
+								$this->PurchasePrice->updateAll(
+									array('PurchasePrice.invoice_currency' => $value),
+									array('PurchasePrice.item_sku' => $data[0]['PurchasePrice']['item_sku'],'PurchasePrice.id' => $data[0]['PurchasePrice']['id']));
+							}else {
+							
+							/* Add sku conditions  
+	
+							if($order->SKU === 'D0-XCPS-BUS3-MADE'){
+							$productsku = 'D0-XCPS-BUS3';
+							} else if($order->SKU === 'DFDPILLOWPAIR-MADE'){
+							$productsku = 'DFDPILLOWPAIR';
+							} else if($order->SKU === 'UPILLOWPAIR-MADE'){
+							$productsku = 'DUPILLOWPAIR';		
+							} else if($order->SKU === 'MFPILLOWP-MADE'){
+							$productsku = 'MFPILLOWP';		
+							}else {
+							$productsku = $order->SKU;
+							}
+						
+						 End sku conditions */
 							
 							$this->PurchasePrice->create();							
 							$this->PurchasePrice->saveAll(array('purchase_id'=>$order->pkPurchaseItemId, 'supplier_id'=>$supp, 'stock_itemid'=>$order->fkStockItemId, 'item_sku'=>$order->SKU, 'item_title'=>$order->ItemTitle, 'invoice_currency'=>$curr, 'quantity'=>$order->Quantity, 'tax'=>$order->Tax, 'cost'=>$order->Cost, 'purchase_price'=>$purprices, 'purchase_date'=>$date));

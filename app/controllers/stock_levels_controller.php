@@ -112,10 +112,26 @@ class StockLevelsController extends AppController {
 					
 				for ($i = 0;$i<=count($order->StockLevels); $i++) {
 				
-					if(($order->CategoryName !=='Swatches') && ($order->CategoryName !=='SAMPLES')){
+				/* Add sku conditions 
+	
+				if($order->ItemNumber === 'D0-XCPS-BUS3-MADE'){
+				$productsku = 'D0-XCPS-BUS3';
+				} else if($order->ItemNumber === 'DFDPILLOWPAIR-MADE'){
+				$productsku = 'DFDPILLOWPAIR';
+				} else if($order->ItemNumber === 'UPILLOWPAIR-MADE'){
+				$productsku = 'DUPILLOWPAIR';		
+				} else if($order->ItemNumber === 'MFPILLOWP-MADE'){
+				$productsku = 'MFPILLOWP';		
+				}else {
+				$productsku = $order->ItemNumber;
+				}
+			
+				 End sku conditions */ 
+		
+				if(($order->CategoryName !=='Swatches') && ($order->CategoryName !=='SAMPLES')){
 												
 				$this_week_sd = date("Y-m-d");
-				//$this_week_sd = '2018-06-29';
+				//$this_week_sd = '2018-07-14';
 				$this->StockLevel->create(); 	
 				$this->StockLevel->saveAll(array('change_date' => $this_week_sd,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'location_name' => $order->StockLevels[$i]->Location->LocationName, 'stock_lev' => $order->StockLevels[$i]->StockLevel, 'stock_val' => $order->StockLevels[$i]->StockValue, 'minimum_level' => $order->StockLevels[$i]->MinimumLevel,  'due_level' => $order->StockLevels[$i]->Due, 'unit_costs' => $order->StockLevels[$i]->UnitCost, 'stock_itemid' => $order->StockLevels[$i]->StockItemId, 'stock_location_id' => $order->StockLevels[$i]->Location->StockLocationId));
 				
@@ -128,7 +144,7 @@ class StockLevelsController extends AppController {
 				
 				$this->loadModel('StockItem');	
 				$today_date = date("Y-m-d");
-				//$today_date = '2018-06-09';
+				//$today_date = '2018-07-14';
 				$suppname = $order->Suppliers[0]->Supplier;	
 				$suppcurr = $order->Suppliers[0]->SupplierCurrency;
 				$suppid = $order->Suppliers[0]->SupplierID;	
@@ -193,22 +209,19 @@ class StockLevelsController extends AppController {
 				$Maincodes = $this->InventoryCode->find('all', array('conditions' => array('InventoryCode.linnworks_code' => $order->ItemNumber)));
 				
 				if (($order->ItemNumber !== $Maincodes[0]['InventoryCode']['linnworks_code']) && (!empty($order->CategoryName))){
-						
-					
+										
 				$this->InventoryCode->create(); 	
 				$this->InventoryCode->saveAll(array('linnworks_code' => $order->ItemNumber,'product_name' => $order->ItemTitle, 'category' => $order->CategoryName));
 				
 								
-					}else {
-						
+					}else {						
 						
 					$db = $this->InventoryCode->getDataSource();
-                    $value = $db->value($order->CategoryName, 'string');
+                    $valuecat = $db->value($order->CategoryName, 'string');
+					$valuepro = $db->value($order->ItemTitle, 'string');
 					
-					
-					
-                    $this->InventoryCode->updateAll(
-                        array('InventoryCode.category' => $value),
+					$this->InventoryCode->updateAll(
+                        array('InventoryCode.category' => $valuecat,'InventoryCode.product_name' => $valuepro),
                         array('InventoryCode.linnworks_code' => $Maincodes[0]['InventoryCode']['linnworks_code'],'InventoryCode.id' => $Maincodes[0]['InventoryCode']['id']));
 						
 					    }	
@@ -221,7 +234,7 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-07-08';
+					$date = '2018-07-23';
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));
