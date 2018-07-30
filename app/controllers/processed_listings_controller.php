@@ -12,6 +12,14 @@ class ProcessedListingsController extends AppController {
          $this->Session->activate();
 
     }
+	
+	function presentdate(){	
+	
+	//$date = date('Y-m-d',strtotime("-1 days"));
+					
+		$newdate = '2018-07-29';		
+		return $newdate;		
+	}
 
     public function tokenkey() {
                     $auth_data = array(
@@ -1793,8 +1801,7 @@ public function importcategory(){
 		$Skulastydts = $this->ProcessedListing->sku_lastytdyears();
 		$Skulastyears = $this->ProcessedListing->sku_lastyears();
 		
-		$currentdate = '2018-07-23';
-
+		$currentdate = $this->presentdate();
 
 		$this->loadModel('StockLevel');					
 			
@@ -1892,6 +1899,10 @@ public function importcategory(){
 					$Platlastweeks = $this->ProcessedListing->platlastrecords();
 					$Platcurrmonths = $this->ProcessedListing->platcurrmonth();
 					$Platprevmonths = $this->ProcessedListing->platprevmonth();
+					$Platlastmonths = $this->ProcessedListing->platlastmonth();
+					$Platcurrytds = $this->ProcessedListing->platcurrytd();
+					$Platlastytds = $this->ProcessedListing->platlastytd();
+					$Platlastyears = $this->ProcessedListing->platlastyeardata();
 												
 					$unity = array(('ProcessedListing.plateform'),
 					'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
@@ -1902,7 +1913,7 @@ public function importcategory(){
 					$Results = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource', 'ProcessedListing.cat_name'), 'conditions' =>$cond , 'group' => $unity, 'order' => array('ProcessedListing.cat_name ASC')));
 					//print_r($Results);die();
 					
-					$this->set(compact('sourcename','platformname','Platnames','Results','Platcurweeks','Platprevweeks','Platlastweeks','Platcurrmonths','Platprevmonths'));
+					$this->set(compact('sourcename','platformname','Platnames','Results','Platcurweeks','Platprevweeks','Platlastweeks','Platcurrmonths','Platprevmonths','Platlastmonths','Platcurrytds','Platlastytds','Platlastyears'));
 					}
 		
 			

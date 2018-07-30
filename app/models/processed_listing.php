@@ -531,8 +531,80 @@ public function platprevrecords(){
 			return $platpreviousmonth;		
 			
 		}
+		
+		public function platlastmonth(){			
+			     
+			$main_last_month = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
+			$main_end_month = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
+
+			$cond = array('ProcessedListing.order_date <= ' => $main_end_month,
+			'ProcessedListing.order_date >= ' => $main_last_month,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
 					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platlast =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platlast;		
+			
+		}  
+
+		public function platcurrytd(){	     
+				
+			$year   = date("Y"); 
+			$cur_firstdate = date("Y-m-d", strtotime($year."-01-01"));
+			$cur_lastday  = date("Y-m-d");
+	
+			$cond = array('ProcessedListing.order_date <= ' => $cur_lastday,
+			'ProcessedListing.order_date >= ' => $cur_firstdate,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
 					
-       	 	
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platcurytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platcurytd;		
+			
+		}  
+		
+		public function platlastytd(){	     
+				
+			$year   = date("Y"); 
+			$ytd_first = date("Y-m-d", strtotime($year."-01-01"));
+			$start_ytd = date("Y-m-d",strtotime( "-12 months",strtotime($ytd_first)));
+			$cur_last  = date("Y-m-d");
+			$endytd_end = date("Y-m-d",strtotime( "-12 months",strtotime($cur_last)));
+	//print_r($start_ytd);
+			
+			$cond = array('ProcessedListing.order_date <= ' => $endytd_end,
+			'ProcessedListing.order_date >= ' => $start_ytd,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platlasytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platlasytd;		
+			
+		} 
+
+		public function platlastyeardata(){	     
+				
+			$year   = date("Y"); 
+			$cur_year = date("Y-m-d", strtotime($year."-01-01"));
+			$end_year = date("Y-m-d",strtotime( "-12 months",strtotime($cur_year)));
+			$last_year = date("Y-m-d",strtotime( "+12 months",strtotime($end_year)));
+			$last_day = date("Y-m-d",strtotime( "-1 day",strtotime($last_year)));
+	      
+			//print_r($end_year);
+			
+			$cond = array('ProcessedListing.order_date <= ' => $last_day,
+			'ProcessedListing.order_date >= ' => $end_year,'ProcessedListing.price_per_product !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'');
+					
+			$grouby = array(('ProcessedListing.plateform'),
+			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
+
+			$platlastyear =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platlastyear;		
+			
+		}     		
+	
 	
 }

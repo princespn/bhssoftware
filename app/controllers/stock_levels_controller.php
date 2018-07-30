@@ -10,9 +10,14 @@ class StockLevelsController extends AppController {
         $this->Auth->allow(array('index','stock_category'));
         $this->Session->activate();
     }
-
-
-
+	
+	function presentdate(){	
+	
+	//$date = date('Y-m-d',strtotime("-1 days"));
+					
+		$newdate = '2018-07-29';		
+		return $newdate;		
+	}
 
     public function tokenkey() {
                     $auth_data = array(
@@ -234,7 +239,8 @@ class StockLevelsController extends AppController {
 		
 					$this->set('title', 'Stock Value Per Category Report.');
 					
-					$date = '2018-07-23';
+					$date = $this->presentdate();
+					
 					$lastday = date("Y-m-d", mktime(0, 0, 0, date("m"), 0));
 					$lastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 0));
 					$lastlastmonthday = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 0));

@@ -11,9 +11,14 @@ class StockItemsController extends AppController {
 	        $this->Session->activate();
     		
 	}
-
-
-
+	
+	function presentdate(){	
+	
+	//$date = date('Y-m-d',strtotime("-1 days"));
+					
+		$newdate = '2018-07-29';		
+		return $newdate;		
+	}
 
 	    public function tokenkey() {
         	            $auth_data = array(
@@ -96,10 +101,8 @@ class StockItemsController extends AppController {
 					
 					$Catname = $this->categname();
 										
-					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-07-23';
-					//print_r($date);die();
-					
+					$date = $this->presentdate();
+										
 					$this->loadModel('StockLevel');
 					
 					$ukstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'StockLevel.barcode_number', 'StockLevel.change_date', 'StockLevel.location_name', 'StockLevel.stock_lev'), 'conditions' => array('StockLevel.location_name' =>'Default','StockLevel.category_name !='=> 'Swatches','StockLevel.change_date' => $date)));
@@ -138,10 +141,8 @@ class StockItemsController extends AppController {
 					$Catname = $this->categname();					
 					
 					$cat = urldecode($catn);
-					//print_r($cat);die();
-						  
-					//$date = date('Y-m-d',strtotime("-1 days"));
-					$date = '2018-07-23';
+					
+					$date = $this->presentdate();
 
 					$this->loadModel('StockLevel');
 					
@@ -182,15 +183,10 @@ class StockItemsController extends AppController {
 					
 					$Suppname = $this->getsupp();
 					
-					//print_r($Suppname);die();
-					
-					
-					
 					$lastdate = date("Y-m-d"); //2018-02-06
 					$ts = strtotime("last year", strtotime($lastdate));
 					$firstdate = date('Y-m-d', $ts); //2017-02-01
 					
-									
 					$lastmonthfirst = date("Y-m-d", mktime(0, 0, 0, date("m")-2, 1)); //2017-12-01
 					
 					$lastmonthend =  date("Y-m-d", mktime(0, 0, 0, date("m")-1,0)); //2017-12-31
@@ -211,15 +207,11 @@ class StockItemsController extends AppController {
 					$condlastmonth = array('ProcessedListing.order_date <= ' => $lastmonthend,
                     'ProcessedListing.order_date >= ' => $lastmonthfirst,'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
                     
-					//12 Month sales
-					
 					$salesReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condition, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
 					$MaxReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'MONTHNAME(ProcessedListing.order_date) as month_name','sum(ProcessedListing.quantity) as total_qty'), 'conditions' =>$condition, 'group' => $groupmax, 'order' => array('ProcessedListing.product_sku ASC')));
 					
-					//print_r($MaxReports);die();
-					//Last Month sales
-					
+							
 					$salesLastMonthReports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.cat_name','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$condlastmonth, 'group' => $groupby, 'order' => array('ProcessedListing.product_sku ASC')));
 					
 					
@@ -237,10 +229,6 @@ class StockItemsController extends AppController {
 					$six_stock_condition = array('StockLevel.change_date <= ' => $lastdate,
 							'StockLevel.change_date >= ' => $six_firstdate,'StockLevel.stock_lev !='=>'0','StockLevel.location_name' => 'Default');
 
-					 /*$six_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $six_firstdate),
-							'OR' => array(
-							array('StockLevel.location_name' => 'Default'))); */
-		
 					
 					$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.barcode_number','StockLevel.category_name');
@@ -248,9 +236,6 @@ class StockItemsController extends AppController {
 					
 					$Last_6_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days'), 'conditions' => $six_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
-					/* End Calculation last 6 month */
-					
-					/* Start Calculation last 3 month */
 					
 					$three_firstdate = date('Y-m-d', strtotime("-3 months", strtotime($lastdate)));//2017-08-06
 					
@@ -264,10 +249,7 @@ class StockItemsController extends AppController {
 							'StockLevel.change_date >= ' => $three_firstdate,'StockLevel.stock_lev !='=>'0','StockLevel.location_name' => 'Default');
 
 					
-					/* $three_stock_condition =  array ( array('StockLevel.change_date <= ' => $lastdate,'StockLevel.change_date >= ' => $three_firstdate),
-							'OR' => array(
-							array('StockLevel.location_name' => 'Default'))); */
-		
+					
 										
 					$Last_3_month_stocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'Count(StockLevel.id) as No_of_days'), 'conditions' => $three_stock_condition,'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 					
@@ -276,7 +258,7 @@ class StockItemsController extends AppController {
 					
 					/* Current Stock  */
 					
-					$currentdate = '2018-07-23';
+					$currentdate = '2018-07-25';
 					
 					$Cuurentstocks = $this->StockLevel->find('all',array('fields' => array('StockLevel.item_number', 'sum(StockLevel.stock_lev) as stock_lev', 'StockLevel.category_name', 'sum(StockLevel.due_level) as due_level'), 'conditions' => array('StockLevel.location_name !='=>'Due','StockLevel.change_date' => $currentdate), 'group' => $grouplast, 'order' => array('StockLevel.item_number ASC')));
 			
@@ -378,9 +360,6 @@ class StockItemsController extends AppController {
 
 						$this_week_sd = date("Y-m-d",$start_week); ////2018-03-19
 						$this_week_ed = date("Y-m-d",$end_week); //2018-03-25
-					//print_r($this_week_ed);die();			
-										
-
 					
 					
 					$six_condition = array('ProcessedListing.order_date <= ' => $lastdate,
@@ -443,13 +422,8 @@ class StockItemsController extends AppController {
 				
 					$lastyear_Reports = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.product_sku', 'ProcessedListing.product_name', 'ProcessedListing.cat_name', 'ProcessedListing.currency','sum(ProcessedListing.quantity) as sales_qty'), 'conditions' =>$lastyear_condition, 'group' => $groupby, 'order' => array('sum(ProcessedListing.quantity) desc')));
 					
-				
-					
-					
-				//print_r($sixmonth_Reports);die();
-								
-					
-					$currentdate = '2018-07-23';
+									
+					$currentdate = $this->presentdate();
 					
 					$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.category_name');
@@ -462,9 +436,7 @@ class StockItemsController extends AppController {
 					$this->set('stock_names', $this->paginate()); 
 					$this->set(compact('sixmonth_Reports','currweek_Reports','lastweek_Reports','lastmonth_Reports','lastyear_Reports','stock_names','Cuurent_stocks'));
 				
-				
-				
-				
+						
 				
 			}
 			
@@ -495,14 +467,9 @@ class StockItemsController extends AppController {
 					
 				    if(!empty($get_month)){$six_firstdate = date('Y-m-d', strtotime($get_month, strtotime($lastdate)));}else{$six_firstdate = date('Y-m-d', strtotime("-6 months", strtotime($lastdate)));}
 					
-					
-					
-					
 					$last_yeardate = date('Y-m-d', strtotime("-12 months", strtotime($lastdate)));//2017-08-06
 					
-					
-					
-					
+									
 						$previous_week = strtotime("-1 week +1 day");
 
 						$start_week = strtotime("last monday midnight",$previous_week);
@@ -510,11 +477,7 @@ class StockItemsController extends AppController {
 
 						$this_week_sd = date("Y-m-d",$start_week); ////2018-03-19
 						$this_week_ed = date("Y-m-d",$end_week); //2018-03-25
-					//print_r($this_week_ed);die();
 					
-					
-										
-
 					
 					
 					$six_condition = array('ProcessedListing.order_date <= ' => $lastdate,
@@ -579,7 +542,7 @@ class StockItemsController extends AppController {
 				//print_r($sixmonth_Reports);die();
 								
 					
-					$currentdate = '2018-07-23';
+					$currentdate = $this->presentdate();
 						
 					$grouplast = array(('StockLevel.item_number'),
 					'AND'=> 'StockLevel.category_name');

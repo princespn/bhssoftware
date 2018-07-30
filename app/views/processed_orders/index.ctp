@@ -34,8 +34,8 @@
          <?php } ?></td> 
          <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
          <?php echo $order->Items[$i]->Title; echo "</BR>";   ?>  
-          <?php } ?></td> 
-           <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
+         <?php } ?></td> 
+         <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
          <?php echo  $quantity = $order->Items[$i]->Quantity; echo "</BR>"; ?>    
          <?php } ?></td> 
          <td><?php for ($i = 0;$i<=count($order->Items); $i++){ ?>             
@@ -59,7 +59,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=9400; $i<=9700; $i++){ ?>
+<?php for ($i=1; $i<=400; $i++){ ?>
  window.open("http://ukwalahome.com/processed_orders/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

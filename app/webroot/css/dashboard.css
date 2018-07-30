@@ -375,3 +375,14 @@ body { height: 1000px; }
     margin-left: 3px;
 	width:100%;
 }
+.plate{
+    line-height: 20px;
+    background: #f2f2f2;
+    padding: .5rem 1rem;
+    border-radius: .4rem;
+	display:block;
+	width:100%;
+}
+.space-bar .col-md-2{
+	margin:2px;
+}
