@@ -59,7 +59,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=1; $i<=400; $i++){ ?>
+<?php for ($i=4200; $i<=4600; $i++){ ?>
  window.open("http://ukwalahome.com/processed_orders/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

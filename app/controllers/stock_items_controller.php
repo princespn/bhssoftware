@@ -16,7 +16,7 @@ class StockItemsController extends AppController {
 	
 	//$date = date('Y-m-d',strtotime("-1 days"));
 					
-		$newdate = '2018-07-29';		
+		$newdate = '2018-07-31';		
 		return $newdate;		
 	}
 

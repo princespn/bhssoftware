@@ -382,7 +382,8 @@ body { height: 1000px; }
     border-radius: .4rem;
 	display:block;
 	width:100%;
+	margin: 2px;
 }
-.space-bar .col-md-2{
-	margin:2px;
+svg:focus {
+    outline:0;
 }

@@ -17,7 +17,7 @@ class ProcessedListingsController extends AppController {
 	
 	//$date = date('Y-m-d',strtotime("-1 days"));
 					
-		$newdate = '2018-07-29';		
+		$newdate = '2018-07-31';		
 		return $newdate;		
 	}
 
@@ -1907,8 +1907,8 @@ public function importcategory(){
 					$unity = array(('ProcessedListing.plateform'),
 					'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 					
-					$cond = array(array('ProcessedListing.plateform'=>$platformname,'ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'),
-						'AND'=> array('ProcessedListing.subsource'=>$sourcename,'ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'));
+					$cond = array(array('ProcessedListing.plateform'=>$platformname,'ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+						'AND'=> array('ProcessedListing.subsource'=>$sourcename,'ProcessedListing.plateform !='=>''));
                  
 					$Results = $this->ProcessedListing->find('all',array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource', 'ProcessedListing.cat_name'), 'conditions' =>$cond , 'group' => $unity, 'order' => array('ProcessedListing.cat_name ASC')));
 					//print_r($Results);die();

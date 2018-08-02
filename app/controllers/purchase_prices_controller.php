@@ -79,7 +79,7 @@ class PurchasePricesController extends AppController {
 						
 						$header = array("POST:https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders HTTP/1.1", "Host: eu-ext.linnworks.net", "Connection: keep-alive", "Accept: application/json, text/javascript, */*; q=0.01", "Origin: https://www.linnworks.net", "Accept-Language: en", "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.90 Safari/537.36", "Content-Type: application/x-www-form-urlencoded; charset=UTF-8", "Referer: https://www.linnworks.net/", "Accept-Encoding: gzip, deflate", "Authorization:" . $some_data['token']);
 						
-						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-04-11T00:00:00","DateTo":"2018-07-27T00:00:00","Status":"DELIVERED","EntriesPerPage":02,"PageNumber":'. $pagenum .'}';
+						$url ='https://eu-ext.linnworks.net//api/PurchaseOrder/Search_PurchaseOrders?searchParameter={"DateFrom":"2018-04-11T00:00:00","DateTo":"2018-08-02T00:00:00","Status":"DELIVERED","EntriesPerPage":02,"PageNumber":'. $pagenum .'}';
 																				
 						$ch = curl_init();
 	      				curl_setopt($ch, CURLOPT_URL, $url);
