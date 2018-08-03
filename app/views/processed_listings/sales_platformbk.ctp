@@ -116,14 +116,8 @@
 <script type="text/javascript">
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart); 
-google.charts.setOnLoadCallback(drawChartlast); 
-var options = {      
-		legend: 'none',
-		is3D: true,
-		//colors: ['red','yellow', 'blue'],
-		chartArea: {width: 550, height: 400}
-    };
-function drawChart() { 
+function drawChart() {
+ 
     var data = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
@@ -136,15 +130,28 @@ function drawChart() {
 				  }
 		 
 			   if((!empty($numcurmeur[0])) && ($currcurmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmeur[0]."],";} else if((!empty($numcurmgbp[0])) && ($currcurmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmgbp[0]."],"; }    
-			}      
+			}	
+           
 		}
       ?>
-    ]);  
+    ]);
+    
+    var options = {
+        title: 'Current Month',
+        width: 600,
+        height: 700,
+    };
+    
     var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-    chart.draw(data,options);
+    
+    chart.draw(data);
 }
-
-function drawChartlast() { 
+</script>
+<script type="text/javascript">
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChartlast); 
+function drawChartlast() {
+ 
     var datalast = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
@@ -161,8 +168,16 @@ function drawChartlast() {
 		   } 
 		}
       ?>
-    ]); 
+    ]);
+    
+    var options = {
+        title: 'Last Month',
+        width: 600,
+        height: 700,
+    };
+    
     var chart = new google.visualization.PieChart(document.getElementById('piechartlast'));
-    chart.draw(datalast,options);
+    
+    chart.draw(datalast);
 }
 </script>

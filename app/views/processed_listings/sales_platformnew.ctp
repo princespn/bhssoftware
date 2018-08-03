@@ -108,61 +108,69 @@
 	   <tr><td colspan="2"><strong>Total Orders</strong></td><td><?php $currweek = ($curweek1+$curweek2); echo $currweek; ?></td><td><?php $prevweek = ($prevweek1+$prevweek2); echo $prevweek; $precurweek = ((($currweek-$prevweek)/$prevweek)*100); if($precurweek < 0){ echo "<div class='rTableCell color-red-col'>".round($precurweek,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($precurweek,2)."%"."</div>"; } ?></td><td><?php $lastweek = $lastweek1+$lastweek2; echo $lastweek;  $lastcurweek = ((($currweek-$lastweek)/$lastweek)*100); if($lastcurweek < 0){ echo "<div class='rTableCell color-red-col'>".round($lastcurweek,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastcurweek,2)."%"."</div>"; } ?></td><td><?php $currmonth = $currmonth1+$currmonth2; echo $currmonth; ?></td><td><?php $pastmonth = $pastmonth1+$pastmonth2; echo $pastmonth; $curmonthpercetage = ((($currmonth-$pastmonth)/$pastmonth)*100); if($curmonthpercetage < 0){ echo "<div class='rTableCell color-red-col'>".round($curmonthpercetage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($curmonthpercetage,2)."%"."</div>"; }  ?></td><td><?php $lastmonth = $lastmonth1+$lastmonth2; echo $lastmonth; $lastthpercetage = ((($currmonth-$lastmonth)/$lastmonth)*100); if($lastthpercetage < 0){ echo "<div class='rTableCell color-red-col'>".round($lastthpercetage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastthpercetage,2)."%"."</div>"; } ?></td><td><?php $currytd = $currytd1+$currytd2; echo $currytd ; ?></td><td><?php $lastytd = $lastytd1+$lastytd2; echo $lastytd; $lastytdpercantage = ((($currytd-$lastytd)/$lastytd)*100); if($lastytdpercantage < 0){ echo "<div class='rTableCell color-red-col'>".round($lastytdpercantage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastytdpercantage,2)."%"."</div>"; }  ?></td><td><?php echo ($lastyear1+$lastyear2); ?></td></tr>
 		<tr><td colspan="11"></td></tr>
 		<tr>
-		<td colspan="3"><?php echo "<B>Current Month</B>";?></BR><div id="piechart"></div></td><td colspan="4"><?php echo "<B>Last Month</B>";?></BR><div id="piechartlast"></div></td>
+		<td colspan="3"><?php echo "<B>Current Month</B>";?></BR><div id="Sarah_chart_div"></div></td><td colspan="4"><?php echo "<B>Last Month</B>";?></BR><div id="Anthony_chart_div"></div></td>
 		</tr>		
 		</table>
 		</div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(drawChart); 
-google.charts.setOnLoadCallback(drawChartlast); 
-var options = {      
-		legend: 'none',
-		is3D: true,
-		//colors: ['red','yellow', 'blue'],
-		chartArea: {width: 550, height: 400}
-    };
-function drawChart() { 
-    var data = google.visualization.arrayToDataTable([
-      ['Category', 'Orders'],
-      <?php
-		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
-		    if( strpos($search, $searchString) === false ) {
-				$numcurmeur = array(); $currcurmeur = array(); $numcurmgbp = array(); $currcurmgbp = array(); foreach ($Platcurrmonths as $Platcurrmonth){
-					if(($platformname === $Platcurrmonth['ProcessedListing']['plateform']) && ($sourcename === $Platcurrmonth['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platcurrmonth['ProcessedListing']['cat_name'])) {
-					if($Platcurrmonth['ProcessedListing']['currency']==='EUR'){ $currmonth1 += $Platcurrmonth[0]['orderid']; $numcurmeur[] = $Platcurrmonth[0]['orderid'];  $currcurmeur[] = $Platcurrmonth['ProcessedListing']['currency'];} else if($Platcurrmonth['ProcessedListing']['currency']==='GBP'){ $currmonth2 += $Platcurrmonth[0]['orderid'];  $numcurmgbp[] = $Platcurrmonth[0]['orderid'];  $currcurmgbp[] = $Platcurrmonth['ProcessedListing']['currency']; }                             
-					}  
-				  }
-		 
-			   if((!empty($numcurmeur[0])) && ($currcurmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmeur[0]."],";} else if((!empty($numcurmgbp[0])) && ($currcurmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmgbp[0]."],"; }    
-			}      
-		}
-      ?>
-    ]);  
-    var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-    chart.draw(data,options);
-}
 
-function drawChartlast() { 
-    var datalast = google.visualization.arrayToDataTable([
-      ['Category', 'Orders'],
-      <?php
-		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
-		   if( strpos($search, $searchString) === false ) {
-			
-			$numprevmeur = array(); $currprevmeur = array(); $numprevmgbp = array(); $currprevmgbp = array(); foreach ($Platprevmonths as $Platprevmonth){
-				if(($platformname === $Platprevmonth['ProcessedListing']['plateform']) && ($sourcename === $Platprevmonth['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platprevmonth['ProcessedListing']['cat_name'])) {
-				if($Platprevmonth['ProcessedListing']['currency']==='EUR'){ $numprevmeur[] = $Platprevmonth[0]['orderid'];  $currprevmeur[] = $Platprevmonth['ProcessedListing']['currency'];} else if($Platprevmonth['ProcessedListing']['currency']==='GBP'){  $numprevmgbp[] = $Platprevmonth[0]['orderid'];  $currprevmgbp[] = $Platprevmonth['ProcessedListing']['currency']; }                             
-				}  
-			  }
-			if((!empty($numprevmeur[0])) && ($currprevmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmeur[0]."],";} else if((!empty($numprevmgbp[0])) && ($currprevmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmgbp[0]."],"; }    
-				
-		   } 
-		}
-      ?>
-    ]); 
-    var chart = new google.visualization.PieChart(document.getElementById('piechartlast'));
-    chart.draw(datalast,options);
-}
-</script>
+      // Load Charts and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Draw the pie chart for Sarah's pizza when Charts is loaded.
+      google.charts.setOnLoadCallback(drawSarahChart);
+
+      // Draw the pie chart for the Anthony's pizza when Charts is loaded.
+      google.charts.setOnLoadCallback(drawAnthonyChart);
+
+      // Callback that draws the pie chart for Sarah's pizza.
+      function drawSarahChart() {
+
+        // Create the data table for Sarah's pizza.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 1],
+          ['Onions', 1],
+          ['Olives', 2],
+          ['Zucchini', 2],
+          ['Pepperoni', 1]
+        ]);
+
+        // Set options for Sarah's pie chart.
+        var options = {title:'How Much Pizza Sarah Ate Last Night',
+                       width:400,
+                       height:300};
+
+        // Instantiate and draw the chart for Sarah's pizza.
+        var chart = new google.visualization.PieChart(document.getElementById('Sarah_chart_div'));
+        chart.draw(data, options);
+      }
+
+      // Callback that draws the pie chart for Anthony's pizza.
+      function drawAnthonyChart() {
+
+        // Create the data table for Anthony's pizza.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Topping');
+        data.addColumn('number', 'Slices');
+        data.addRows([
+          ['Mushrooms', 2],
+          ['Onions', 2],
+          ['Olives', 2],
+          ['Zucchini', 0],
+          ['Pepperoni', 3]
+        ]);
+
+        // Set options for Anthony's pie chart.
+        var options = {title:'How Much Pizza Anthony Ate Last Night',
+                       width:400,
+                       height:300};
+
+        // Instantiate and draw the chart for Anthony's pizza.
+        var chart = new google.visualization.PieChart(document.getElementById('Anthony_chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
