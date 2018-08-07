@@ -17,7 +17,7 @@ class ProcessedListingsController extends AppController {
 	
 	//$date = date('Y-m-d',strtotime("-1 days"));
 					
-		$newdate = '2018-08-01';		
+		$newdate = '2018-08-05';		
 		return $newdate;		
 	}
 
@@ -247,13 +247,16 @@ $main_end_week = date("Y-m-d",$end_year_week);
         $Countprevweeks = $this->count_prevweeks();
         $Countlastweeks = $this->count_lastweeks();
          
-
-
-
-
-
-
-        $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+		$conditions = array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'))))))));
+			     
+       // $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
  
     $groupby = array(('ProcessedListing.plateform'),
          'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
@@ -440,10 +443,17 @@ $conditions = array('ProcessedListing.order_date <= ' => $end_week,
                     $Countmonthcurrent = $this->count_currentmonths();
                     $Countmonthprevous = $this->count_prevmonths();
                     $Countmonthlast = $this->count_lastmonthly();
-
-
-
-        $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'');
+					
+			$conditions = array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'))))))));
+		
+			//$conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'');
                      $groupby = array(('ProcessedListing.plateform'),
                             'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
@@ -728,18 +738,43 @@ $groupby = array(('ProcessedListing.product_sku'),
         $Countskuprevweeks = $this->countsku_prevweeks($catgoryname,$productname);
         $Countskulastweeks = $this->countsku_lastweeks($catgoryname,$productname);
     
-        
-        
-      
- 
-       if(!empty($catgoryname)){ 
-      $conditions = array('ProcessedListing.cat_name '=> $catgoryname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
+         
+       if(!empty($catgoryname)){
+			$conditions = array(array('ProcessedListing.cat_name'=> $catgoryname),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT')))))))));
+			  		   
+      //$conditions = array('ProcessedListing.cat_name '=> $catgoryname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
             } else if(!empty($productname)){ 
-       $conditions = array('ProcessedListing.product_sku'=> $productname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
+       $conditions = array(array('ProcessedListing.product_sku'=> $productname),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT')))))))));
+			   
+	   //$conditions = array('ProcessedListing.product_sku'=> $productname,'ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'', 'ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
         } else {
-       $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
-        }
-          
+			$conditions = array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'))))))));
+		
+      // $conditions = array('ProcessedListing.price_per_product  !='=>'0','ProcessedListing.plateform !='=>'','ProcessedListing.subsource  !='=>'http://dev.homescapesonline.com','ProcessedListing.cat_name !='=>'','ProcessedListing.product_sku !='=>'');
+        }          
   
      
     $groupby = array(('ProcessedListing.plateform'),
@@ -1425,7 +1460,16 @@ public function importcategory(){
                     'ProcessedListing.order_date >= ' => $firstdate[0],'ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
                     $countselectdated =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $condited,'order' =>array('ProcessedListing.currency  DESC','ProcessedListing.subsource ASC')));
 					
-					$conditions = array('ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
+					$conditions = array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+						'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+						'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+						'AND'=> array(array('ProcessedListing.subsource !='=>''),
+						'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+						'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+						'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+						'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'))))))));
+		
+					//$conditions = array('ProcessedListing.cat_name !='=>'','ProcessedListing.price_per_product !='=>'0','ProcessedListing.currency !='=>'','ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://bhsindia.com','ProcessedListing.subsource !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com');
                     $countselectdates =  $this->ProcessedListing->find('all', array('fields' => array('ProcessedListing.cat_name','ProcessedListing.currency','ProcessedListing.plateform','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','sum(ProcessedListing.price_per_product) AS ordervalues'), 'group' => $groupby,'conditions' => $conditions,'order' =>array('ProcessedListing.cat_name  ASC','ProcessedListing.plateform ASC')));
    
    

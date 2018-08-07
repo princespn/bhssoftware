@@ -15,7 +15,7 @@ class StockLevelsController extends AppController {
 	
 	//$date = date('Y-m-d',strtotime("-1 days"));
 					
-		$newdate = '2018-08-01';		
+		$newdate = '2018-08-05';		
 		return $newdate;		
 	}
 
@@ -135,8 +135,8 @@ class StockLevelsController extends AppController {
 		
 				if(($order->CategoryName !=='Swatches') && ($order->CategoryName !=='SAMPLES')){
 												
-				$this_week_sd = date("Y-m-d");
-				//$this_week_sd = '2018-07-28';
+				//$this_week_sd = date("Y-m-d");
+				$this_week_sd = '2018-08-06';
 				$this->StockLevel->create(); 	
 				$this->StockLevel->saveAll(array('change_date' => $this_week_sd,'item_number' => $order->ItemNumber,'item_title' => $order->ItemTitle, 'barcode_number' => $order->BarcodeNumber,'category_name' => $order->CategoryName, 'location_name' => $order->StockLevels[$i]->Location->LocationName, 'stock_lev' => $order->StockLevels[$i]->StockLevel, 'stock_val' => $order->StockLevels[$i]->StockValue, 'minimum_level' => $order->StockLevels[$i]->MinimumLevel,  'due_level' => $order->StockLevels[$i]->Due, 'unit_costs' => $order->StockLevels[$i]->UnitCost, 'stock_itemid' => $order->StockLevels[$i]->StockItemId, 'stock_location_id' => $order->StockLevels[$i]->Location->StockLocationId));
 				
@@ -148,8 +148,8 @@ class StockLevelsController extends AppController {
 				}
 				
 				$this->loadModel('StockItem');	
-				$today_date = date("Y-m-d");
-				//$today_date = '2018-07-28';
+				//$today_date = date("Y-m-d");
+				$today_date = '2018-08-06';
 				$suppname = $order->Suppliers[0]->Supplier;	
 				$suppcurr = $order->Suppliers[0]->SupplierCurrency;
 				$suppid = $order->Suppliers[0]->SupplierID;	

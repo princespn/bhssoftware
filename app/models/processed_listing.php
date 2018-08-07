@@ -428,9 +428,15 @@ class ProcessedListing extends AppModel {
 	public function platformname()
 		{
 		
-			$cond = array(array('ProcessedListing.plateform !='=>'','ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
-			'AND'=> array('ProcessedListing.plateform !='=>'PLAYTRADE','ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'));
-			
+			$cond = array(array('ProcessedListing.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>''),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedListing.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedListing.plateform !='=>'DIRECT','ProcessedListing.subsource !='=>'DATAIMPORTEXPORT'))))))));
+		
 			$grouby = array(('ProcessedListing.plateform'),
 			 'AND'=> 'ProcessedListing.subsource');
 

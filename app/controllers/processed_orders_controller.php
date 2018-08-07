@@ -71,9 +71,9 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2017-01-01T00:00:00'; //min
+		$from = '2018-07-26T00:00:00'; //min
 		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2017-07-31T60:60:60'; //max
+		$to =  '2018-08-07T60:60:60'; //max
 		//$to = '';
         
 		$datetype = '1';
@@ -390,9 +390,17 @@ $main_end_week = date("Y-m-d",$end_year_week);
         $previousweeks = $this->prevweeks();
         $datalastweeks = $this->last_weekly();
 
-     
+     $conditions = array(array('ProcessedOrder.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>''),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedOrder.plateform !='=>'DIRECT','ProcessedOrder.subsource !='=>'DATAIMPORTEXPORT'))))))));
+			
         
- $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+ //$conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
    
  $groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
@@ -490,11 +498,17 @@ $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('Pr
         $main_last_week = date("Y-m-d", mktime(0, 0, 0, date("m")-13, 1));
         $main_end_week = date("Y-m-d", mktime(0, 0, 0, date("m")-12, 0));
         
- 
+		$conditions = array(array('ProcessedOrder.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>''),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedOrder.plateform !='=>'DIRECT','ProcessedOrder.subsource !='=>'DATAIMPORTEXPORT'))))))));
+			              
 
-        
-
- $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+ //$conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
  
  $groupby = array(('ProcessedOrder.plateform'),
          'AND'=> 'ProcessedOrder.subsource');
@@ -545,8 +559,17 @@ $dataprevweeks =  $this->ProcessedOrder->find('all', array('fields' => array('Pr
 
             public function counselection_periods(){
                  
-           
-                $conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
+			$conditions = array(array('ProcessedOrder.subsource !='=>'https://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://homescapeswholesale.com/mytest'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>''),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'https://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://dev.smartparcelbox.com'),
+			'AND'=> array(array('ProcessedOrder.subsource !='=>'http://www.smartparcelbox.fr'),
+			'AND'=> array('ProcessedOrder.plateform !='=>'DIRECT','ProcessedOrder.subsource !='=>'DATAIMPORTEXPORT'))))))));
+			              
+
+                //$conditions = array('ProcessedOrder.order_value !='=>'0','ProcessedOrder.currency !='=>'','ProcessedOrder.plateform !='=>'','ProcessedOrder.subsource !='=>'http://bhsindia.com','ProcessedOrder.subsource !='=>'','ProcessedOrder.subsource !='=>'http://dev.homescapesonline.com');
                 $groupby = array(('ProcessedOrder.plateform'),
                 'AND'=> 'ProcessedOrder.subsource');
 
