@@ -109,7 +109,11 @@
 		<tr><td colspan="11"></td></tr>
 		<tr>
 		<td colspan="3"><?php echo "<B>Current Month</B>";?></BR><div id="piechart"></div></td><td colspan="4"><?php echo "<B>Last Month</B>";?></BR><div id="piechartlast"></div></td><td colspan="4"><?php echo "<B>Same Month Last Year</B>";?></BR><div id="piechartlastmonth"></div></td>
-		</tr>		
+		</tr>
+		<tr><td colspan="11"></td></tr>
+		<tr>
+		<td colspan="4"><?php echo "<B>Current YTD</B>";?></BR><div id="piechartcurrytd"></div></td><td colspan="4"><?php echo "<B>Last YTD</B>";?></BR><div id="piechartlastytd"></div></td>
+		</tr>
 		</table>
 		</div>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -118,6 +122,8 @@ google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart); 
 google.charts.setOnLoadCallback(drawChartlast); 
 google.charts.setOnLoadCallback(drawChartmonth); 
+google.charts.setOnLoadCallback(drawChartcurrytd); 
+google.charts.setOnLoadCallback(drawChartlastytd); 
 var options = {      
 		legend: 'none',
 		is3D: true,
@@ -185,6 +191,48 @@ function drawChartmonth() {
       ?>
     ]); 
     var chart = new google.visualization.PieChart(document.getElementById('piechartlastmonth'));
+    chart.draw(datalastmonth,options);
+}
+
+function drawChartcurrytd() { 
+    var datalastmonth = google.visualization.arrayToDataTable([
+      ['Category', 'Orders'],
+      <?php
+		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
+		   if( strpos($search, $searchString) === false ) {
+				$numcurytdeur = array(); $currcurytdeur = array(); $numcurytdgbp = array(); $currcurytdgbp = array(); foreach ($Platcurrytds as $Platcurrytd){
+				if(($platformname === $Platcurrytd['ProcessedListing']['plateform']) && ($sourcename === $Platcurrytd['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platcurrytd['ProcessedListing']['cat_name'])) {
+				if($Platcurrytd['ProcessedListing']['currency']==='EUR'){ $numcurytdeur[] = $Platcurrytd[0]['orderid'];  $currcurytdeur[] = $Platcurrytd['ProcessedListing']['currency'];} else if($Platcurrytd['ProcessedListing']['currency']==='GBP'){  $numcurytdgbp[] = $Platcurrytd[0]['orderid'];  $currcurytdgbp[] = $Platcurrytd['ProcessedListing']['currency']; }                             
+				}  
+			  }
+			if((!empty($numcurytdeur[0])) && ($currcurytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdeur[0]."],";} else if((!empty($numcurytdgbp[0])) && ($currcurytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdgbp[0]."],"; }    
+				
+		   } 
+		}
+      ?>
+    ]); 
+    var chart = new google.visualization.PieChart(document.getElementById('piechartcurrytd'));
+    chart.draw(datalastmonth,options);
+}
+
+function drawChartlastytd() { 
+    var datalastmonth = google.visualization.arrayToDataTable([
+      ['Category', 'Orders'],
+      <?php
+		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
+		   if( strpos($search, $searchString) === false ) {
+				 $numlastytdeur = array(); $currlastytdeur = array(); $numlastytdgbp = array(); $currlastytdgbp = array(); foreach ($Platlastytds as $Platlastytd){
+				if(($platformname === $Platlastytd['ProcessedListing']['plateform']) && ($sourcename === $Platlastytd['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platlastytd['ProcessedListing']['cat_name'])) {
+				if($Platlastytd['ProcessedListing']['currency']==='EUR'){ $numlastytdeur[] = $Platlastytd[0]['orderid'];  $currlastytdeur[] = $Platlastytd['ProcessedListing']['currency'];} else if($Platlastytd['ProcessedListing']['currency']==='GBP'){  $numlastytdgbp[] = $Platlastytd[0]['orderid'];  $currlastytdgbp[] = $Platlastytd['ProcessedListing']['currency']; }                             
+				}  
+			  }
+			if((!empty($numlastytdeur[0])) && ($currlastytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdeur[0]."],";} else if((!empty($numlastytdgbp[0])) && ($currlastytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdgbp[0]."],"; }    
+				
+		   } 
+		}
+      ?>
+    ]); 
+    var chart = new google.visualization.PieChart(document.getElementById('piechartlastytd'));
     chart.draw(datalastmonth,options);
 }
 </script>
