@@ -108,11 +108,11 @@
 	   <tr><td colspan="2"><strong>Total Orders</strong></td><td><?php $currweek = ($curweek1+$curweek2); echo $currweek; ?></td><td><?php $prevweek = ($prevweek1+$prevweek2); echo $prevweek; $precurweek = ((($currweek-$prevweek)/$prevweek)*100); if($precurweek < 0){ echo "<div class='rTableCell color-red-col'>".round($precurweek,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($precurweek,2)."%"."</div>"; } ?></td><td><?php $lastweek = $lastweek1+$lastweek2; echo $lastweek;  $lastcurweek = ((($currweek-$lastweek)/$lastweek)*100); if($lastcurweek < 0){ echo "<div class='rTableCell color-red-col'>".round($lastcurweek,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastcurweek,2)."%"."</div>"; } ?></td><td><?php $currmonth = $currmonth1+$currmonth2; echo $currmonth; ?></td><td><?php $pastmonth = $pastmonth1+$pastmonth2; echo $pastmonth; $curmonthpercetage = ((($currmonth-$pastmonth)/$pastmonth)*100); if($curmonthpercetage < 0){ echo "<div class='rTableCell color-red-col'>".round($curmonthpercetage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($curmonthpercetage,2)."%"."</div>"; }  ?></td><td><?php $lastmonth = $lastmonth1+$lastmonth2; echo $lastmonth; $lastthpercetage = ((($currmonth-$lastmonth)/$lastmonth)*100); if($lastthpercetage < 0){ echo "<div class='rTableCell color-red-col'>".round($lastthpercetage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastthpercetage,2)."%"."</div>"; } ?></td><td><?php $currytd = $currytd1+$currytd2; echo $currytd ; ?></td><td><?php $lastytd = $lastytd1+$lastytd2; echo $lastytd; $lastytdpercantage = ((($currytd-$lastytd)/$lastytd)*100); if($lastytdpercantage < 0){ echo "<div class='rTableCell color-red-col'>".round($lastytdpercantage,2)."%"."</div>"; }else{ echo "<div class='rTableCell green-col'>".round($lastytdpercantage,2)."%"."</div>"; }  ?></td><td><?php echo ($lastyear1+$lastyear2); ?></td></tr>
 		<tr><td colspan="11"></td></tr>
 		<tr>
-		<td colspan="3"><?php echo "<B>Current Month</B>";?></BR><div id="piechart"></div></td><td colspan="4"><?php echo "<B>Last Month</B>";?></BR><div id="piechartlast"></div></td><td colspan="4"><?php echo "<B>Same Month Last Year</B>";?></BR><div id="piechartlastmonth"></div></td>
+		<td colspan="3"><?php echo "<B>Current Month</B>";?></BR><div id="piechart"  style="width: 450px; height: 250px;"></div></td><td colspan="4"><?php echo "<B>Last Month</B>";?></BR><div id="piechartlast" style="width: 450px; height: 250px;"></div></td><td colspan="4"><?php echo "<B>Same Month Last Year</B>";?></BR><div id="piechartlastmonth" style="width: 450px; height: 250px;"></div></td>
 		</tr>
 		<tr><td colspan="11"></td></tr>
 		<tr>
-		<td colspan="4"><?php echo "<B>Current YTD</B>";?></BR><div id="piechartcurrytd"></div></td><td colspan="4"><?php echo "<B>Last YTD</B>";?></BR><div id="piechartlastytd"></div></td>
+		<td colspan="4"><?php echo "<B>Current YTD</B>";?></BR><div id="piechartcurrytd" style="width: 450px; height: 250px;"></div></td><td colspan="4"><?php echo "<B>Last YTD</B>";?></BR><div id="piechartlastytd" style="width: 450px; height: 250px;"></div></td>
 		</tr>
 		</table>
 		</div>
@@ -127,6 +127,7 @@ google.charts.setOnLoadCallback(drawChartlastytd);
 var options = {      
 		legend: 'none',
 		is3D: true,
+		//tooltip: {isHtml: true},
 		//colors: ['red','yellow', 'blue'],
 		chartArea: {width: 550, height: 400}
     };

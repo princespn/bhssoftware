@@ -17,7 +17,7 @@ class ProcessedListingsController extends AppController {
 	
 	//$date = date('Y-m-d',strtotime("-1 days"));
 					
-		$newdate = '2018-08-06';		
+		$newdate = '2018-08-11';		
 		return $newdate;		
 	}
 
