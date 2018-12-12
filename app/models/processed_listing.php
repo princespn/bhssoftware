@@ -460,8 +460,10 @@ class ProcessedListing extends AppModel {
 		$grouby = array(('ProcessedListing.plateform'),
          'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 			
-			$platcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
-			return $platcurrentweek;		
+			$platcurrentweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			return $platcurrentweek;
+			
+			
 			
 		}		
 
@@ -480,7 +482,7 @@ public function platprevrecords(){
 		$grouby = array(('ProcessedListing.plateform'),
          'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 			
-			$platprevweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platprevweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platprevweek;		
 			
 		}
@@ -500,7 +502,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 			
-			$platlastweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platlastweek =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platlastweek;		
 			
 		}	
@@ -516,7 +518,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platcurmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platcurmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platcurmonth;		
 			
 		}	
@@ -533,7 +535,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platpreviousmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platpreviousmonth =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platpreviousmonth;		
 			
 		}
@@ -549,7 +551,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platlast =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platlast =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platlast;		
 			
 		}  
@@ -566,7 +568,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platcurytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platcurytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platcurytd;		
 			
 		}  
@@ -586,7 +588,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platlasytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platlasytd =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platlasytd;		
 			
 		} 
@@ -607,7 +609,7 @@ public function platprevrecords(){
 			$grouby = array(('ProcessedListing.plateform'),
 			'AND'=> 'ProcessedListing.subsource','ProcessedListing.cat_name');
 
-			$platlastyear =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
+			$platlastyear =  $this->find('all', array('fields' => array('ProcessedListing.plateform', 'ProcessedListing.subsource','ProcessedListing.cat_name', 'ProcessedListing.currency','count(ProcessedListing.order_id) as orderid', 'sum(ProcessedListing.price_per_product) as ordervalue'), 'group' => $grouby,'conditions' => $cond,'order' =>array('ProcessedListing.cat_name ASC')));
 			return $platlastyear;		
 			
 		}     		

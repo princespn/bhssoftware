@@ -47,14 +47,20 @@
                 </li>
 				<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
             
-                <li><?php echo $this->Html->link(__('Reports', true), array('controller' => 'processed_orders', 'action' => '?page=1')); ?></li>
-			</ul>
+                </ul>
         </li>
          <?php } else if(($session->read('Auth.User.group_id')==='4')) {?>
 		    <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Processed Reports<span class="caret"></span></a>
 			<ul class="dropdown-menu">
                 <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Channels<span class="fa fa-caret-right"></span></a>
-                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_orders', 'action' => 'channel_weekly')); ?></li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_orders', 'action' => 'channel_monthly')); ?></li><li><?php echo $this->Html->link(__('Evolution Periodic', true), array('controller' => 'processed_orders', 'action' => 'selection_periods')); ?></li></li></ul>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_orders', 'action' => 'channel_weekly')); ?></li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_orders', 'action' => 'channel_monthly')); ?></li><li><?php echo $this->Html->link(__('Evolution Periodic', true), array('controller' => 'processed_orders', 'action' => 'selection_periods')); ?></li>
+				<li><?php echo $this->Html->link(__('Product Performance', true), array('controller' => 'processed_listings', 'action' => 'catname_skuname#')); ?></li></li></ul>
+                </li>
+				 <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Platform Detail Analysis<span class="fa fa-caret-right"></span></a>
+                <ul class="dropdown-menu">
+                 <li><?php echo $this->Html->link(__('By Orders Number', true), array('controller' => 'processed_listings', 'action' => 'sales_platform')); ?></li>
+                 <li><?php echo $this->Html->link(__('By Order Value', true), array('controller' => 'processed_listings', 'action' => 'salesvalue_platform')); ?></li>
+				 </ul>
                 </li>
                 <li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Sales Per Category<span class="fa fa-caret-right"></span></a>
                 <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'category_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'category_monthly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Periodic', true), array('controller' => 'processed_listings', 'action' => 'selection_categories')); ?></li></li></ul>
@@ -63,11 +69,17 @@
                 <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Evolution Weekly', true), array('controller' => 'processed_listings', 'action' => 'productsku_weekly')); ?></li><li><li><?php echo $this->Html->link(__('Evolution Monthly', true), array('controller' => 'processed_listings', 'action' => 'productsku_monthly')); ?></li></li></ul>
                 </li> 
 				<li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Stock Report<span class="fa fa-caret-right"></span></a>
-                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Report By Items', true), array('controller' => 'stock_items', 'action' => 'index')); ?></li><li><li><?php echo $this->Html->link(__('Report By Category', true), array('controller' => 'stock_levels', 'action' => 'stock_category')); ?></li></li></ul>
-                </li> 
-				<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
+                <ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Report By Items', true), array('controller' => 'stock_items', 'action' => 'index')); ?></li><li><li><?php echo $this->Html->link(__('Report By Category', true), array('controller' => 'stock_levels', 'action' => 'stock_category')); ?></li><li><?php echo $this->Html->link(__('Availability Level', true), array('controller' => 'stock_items', 'action' => 'minimum_level')); ?></li></li></ul>
+                </li>
+				<li class="submenu"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Top SKU Sales Report<span class="fa fa-caret-right"></span></a>
+				<ul class="dropdown-menu"><li><?php echo $this->Html->link(__('Report By Value', true), array('controller' => 'stock_items', 'action' => 'salesvalue_reports')); ?></li>
+				<li><?php echo $this->Html->link(__('Report By Quantity', true), array('controller' => 'stock_items', 'action' => 'dailysales_reports')); ?></li>
+				</ul>
+				</li> 
+			
+		<li><?php echo $this->Html->link(__('Variation in Sales', true), array('controller' => 'processed_listings', 'action' => 'productsku_notifications')); ?></li>
             				
-                <li><?php echo $this->Html->link(__('Reports', true), array('controller' => 'processed_orders', 'action' => '?page=1')); ?></li>
+                
             </ul>
         </li><?php } else if(($session->read('Auth.User.group_id')==='3')) {?>
 		    <li class="dropdown"><a aria-expanded="false" aria-haspopup="true" role="button" data-toggle="dropdown" class="dropdown-toggle" href="#">Processed Reports<span class="caret"></span></a>

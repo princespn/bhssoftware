@@ -11,7 +11,6 @@
 	<tr>
 	 <th colspan="3"></th>
 	<th  colspan="5" class="text-center text-uppercase color-black  green-bg"><?php __('Quantity Ordered (Sales)'); ?></th>
-	
 	</tr>
 	<tr>
 	<th><?php __('Sales Platform'); ?></th> 

@@ -12,9 +12,8 @@
       </tr>
       </thead>
       <tbody>
-
 <?php foreach ($orders as $order): ?>  
-      <tr>     
+      <tr>    
      
         <td><?php echo $this_week_sd; ?></td>       
         <td><?php echo $order->ItemNumber;?></td>  
@@ -31,7 +30,7 @@
 <script>
 function pageloader()
 {
-<?php for ($i=1; $i<=400; $i++) { ?>
+<?php for ($i=1; $i<=150; $i++) { ?>
  window.open("http://ukwalahome.com/stock_levels/?page=<?php echo $i; ?>", '_blank');
 <?php } ?>
 }

@@ -67,6 +67,6 @@ class StockCurrent extends AppModel {
             ),
         )
   
-    );  
+    ); 
 
 }

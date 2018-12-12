@@ -23,7 +23,7 @@ class UsersController extends AppController {
                 $this->Session->setFlash(__('Welcome, ' . $this->Auth->user('username')));
                 $this->redirect(array('controller' => 'english_listings', 'action' => 'index'));
             } else {
-                $this->Session->setFlash('Your username or password was incorrect.');
+               $this->Session->setFlash('Your username or password was incorrect.');
             }
         } else {
 

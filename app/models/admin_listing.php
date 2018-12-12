@@ -98,13 +98,9 @@ class AdminListing extends AppModel {
             'className' => 'InventoryCode',
             'foreignKey' => false,
             'conditions' => 'AdminListing.linnworks_code = InventoryCode.linnworks_code'
-        )
-           
+        ) 
 
 
     );
-
-
-
       
 }

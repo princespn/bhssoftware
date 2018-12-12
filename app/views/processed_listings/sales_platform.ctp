@@ -135,15 +135,15 @@ function drawChart() {
     var data = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
-		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
+		 foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
 		    if( strpos($search, $searchString) === false ) {
-				$numcurmeur = array(); $currcurmeur = array(); $numcurmgbp = array(); $currcurmgbp = array(); foreach ($Platcurrmonths as $Platcurrmonth){
+				$num = array('0.00'); $numcurmeur = array(); $currcurmeur = array(); $numcurmgbp = array(); $currcurmgbp = array(); foreach ($Platcurrmonths as $Platcurrmonth){
 					if(($platformname === $Platcurrmonth['ProcessedListing']['plateform']) && ($sourcename === $Platcurrmonth['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platcurrmonth['ProcessedListing']['cat_name'])) {
 					if($Platcurrmonth['ProcessedListing']['currency']==='EUR'){ $currmonth1 += $Platcurrmonth[0]['orderid']; $numcurmeur[] = $Platcurrmonth[0]['orderid'];  $currcurmeur[] = $Platcurrmonth['ProcessedListing']['currency'];} else if($Platcurrmonth['ProcessedListing']['currency']==='GBP'){ $currmonth2 += $Platcurrmonth[0]['orderid'];  $numcurmgbp[] = $Platcurrmonth[0]['orderid'];  $currcurmgbp[] = $Platcurrmonth['ProcessedListing']['currency']; }                             
 					}  
 				  }
 		 
-			   if((!empty($numcurmeur[0])) && ($currcurmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmeur[0]."],";} else if((!empty($numcurmgbp[0])) && ($currcurmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmgbp[0]."],"; }    
+			   if((!empty($numcurmeur[0])) && ($currcurmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmeur[0]."],";} else if((!empty($numcurmgbp[0])) && ($currcurmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurmgbp[0]."],"; }else{ echo "['".$value['ProcessedListing']['cat_name']."', ".$num[0]."],"; }    
 			}      
 		}
       ?>
@@ -156,15 +156,15 @@ function drawChartlast() {
     var datalast = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
-		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
+		 foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
 		   if( strpos($search, $searchString) === false ) {
 			
-			$numprevmeur = array(); $currprevmeur = array(); $numprevmgbp = array(); $currprevmgbp = array(); foreach ($Platprevmonths as $Platprevmonth){
+			$nump = array('0.00'); $numprevmeur = array(); $currprevmeur = array(); $numprevmgbp = array(); $currprevmgbp = array(); foreach ($Platprevmonths as $Platprevmonth){
 				if(($platformname === $Platprevmonth['ProcessedListing']['plateform']) && ($sourcename === $Platprevmonth['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platprevmonth['ProcessedListing']['cat_name'])) {
 				if($Platprevmonth['ProcessedListing']['currency']==='EUR'){ $numprevmeur[] = $Platprevmonth[0]['orderid'];  $currprevmeur[] = $Platprevmonth['ProcessedListing']['currency'];} else if($Platprevmonth['ProcessedListing']['currency']==='GBP'){  $numprevmgbp[] = $Platprevmonth[0]['orderid'];  $currprevmgbp[] = $Platprevmonth['ProcessedListing']['currency']; }                             
 				}  
 			  }
-			if((!empty($numprevmeur[0])) && ($currprevmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmeur[0]."],";} else if((!empty($numprevmgbp[0])) && ($currprevmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmgbp[0]."],"; }    
+			if((!empty($numprevmeur[0])) && ($currprevmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmeur[0]."],";} else if((!empty($numprevmgbp[0])) && ($currprevmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numprevmgbp[0]."],"; }else{ echo "['".$value['ProcessedListing']['cat_name']."', ".$nump[0]."],";}    
 				
 		   } 
 		}
@@ -180,12 +180,12 @@ function drawChartmonth() {
       <?php
 		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
 		   if( strpos($search, $searchString) === false ) {
-		   $numlastmeur = array(); $currlastmeur = array(); $numlastmgbp = array(); $currlastmgbp = array(); foreach ($Platlastmonths as $Platlastmonth){
+		   $numl = array('0.00'); $numlastmeur = array(); $currlastmeur = array(); $numlastmgbp = array(); $currlastmgbp = array(); foreach ($Platlastmonths as $Platlastmonth){
 				if(($platformname === $Platlastmonth['ProcessedListing']['plateform']) && ($sourcename === $Platlastmonth['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platlastmonth['ProcessedListing']['cat_name'])) {
 				if($Platlastmonth['ProcessedListing']['currency']==='EUR'){ $numlastmeur[] = $Platlastmonth[0]['orderid'];  $currlastmeur[] = $Platlastmonth['ProcessedListing']['currency'];} else if($Platlastmonth['ProcessedListing']['currency']==='GBP'){  $numlastmgbp[] = $Platlastmonth[0]['orderid'];  $currlastmgbp[] = $Platlastmonth['ProcessedListing']['currency']; }                             
 				}  
 			  }
-			if((!empty($numlastmeur[0])) && ($currlastmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastmeur[0]."],";} else if((!empty($numlastmgbp[0])) && ($currlastmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastmgbp[0]."],"; }    
+			if((!empty($numlastmeur[0])) && ($currlastmeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastmeur[0]."],";} else if((!empty($numlastmgbp[0])) && ($currlastmgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastmgbp[0]."],"; }else{echo "['".$value['ProcessedListing']['cat_name']."', ".$numl[0]."],"; } 
 				
 		   } 
 		}
@@ -196,44 +196,44 @@ function drawChartmonth() {
 }
 
 function drawChartcurrytd() { 
-    var datalastmonth = google.visualization.arrayToDataTable([
+    var datalastytd = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
 		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
 		   if( strpos($search, $searchString) === false ) {
-				$numcurytdeur = array(); $currcurytdeur = array(); $numcurytdgbp = array(); $currcurytdgbp = array(); foreach ($Platcurrytds as $Platcurrytd){
+				$numc = array('0.00'); $numcurytdeur = array(); $currcurytdeur = array(); $numcurytdgbp = array(); $currcurytdgbp = array(); foreach ($Platcurrytds as $Platcurrytd){
 				if(($platformname === $Platcurrytd['ProcessedListing']['plateform']) && ($sourcename === $Platcurrytd['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platcurrytd['ProcessedListing']['cat_name'])) {
 				if($Platcurrytd['ProcessedListing']['currency']==='EUR'){ $numcurytdeur[] = $Platcurrytd[0]['orderid'];  $currcurytdeur[] = $Platcurrytd['ProcessedListing']['currency'];} else if($Platcurrytd['ProcessedListing']['currency']==='GBP'){  $numcurytdgbp[] = $Platcurrytd[0]['orderid'];  $currcurytdgbp[] = $Platcurrytd['ProcessedListing']['currency']; }                             
 				}  
 			  }
-			if((!empty($numcurytdeur[0])) && ($currcurytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdeur[0]."],";} else if((!empty($numcurytdgbp[0])) && ($currcurytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdgbp[0]."],"; }    
+			if((!empty($numcurytdeur[0])) && ($currcurytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdeur[0]."],";} else if((!empty($numcurytdgbp[0])) && ($currcurytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numcurytdgbp[0]."],"; }else{echo "['".$value['ProcessedListing']['cat_name']."', ".$numc[0]."],"; }
 				
 		   } 
 		}
       ?>
     ]); 
     var chart = new google.visualization.PieChart(document.getElementById('piechartcurrytd'));
-    chart.draw(datalastmonth,options);
+    chart.draw(datalastytd,options);
 }
 
 function drawChartlastytd() { 
-    var datalastmonth = google.visualization.arrayToDataTable([
+    var datacuuytd = google.visualization.arrayToDataTable([
       ['Category', 'Orders'],
       <?php
 		foreach($Results as $value){ $search = $value['ProcessedListing']['cat_name']; $searchString = '/';
 		   if( strpos($search, $searchString) === false ) {
-				 $numlastytdeur = array(); $currlastytdeur = array(); $numlastytdgbp = array(); $currlastytdgbp = array(); foreach ($Platlastytds as $Platlastytd){
+				$numlyd = array('0.00'); $numlastytdeur = array(); $currlastytdeur = array(); $numlastytdgbp = array(); $currlastytdgbp = array(); foreach ($Platlastytds as $Platlastytd){
 				if(($platformname === $Platlastytd['ProcessedListing']['plateform']) && ($sourcename === $Platlastytd['ProcessedListing']['subsource']) && ($value['ProcessedListing']['cat_name'] === $Platlastytd['ProcessedListing']['cat_name'])) {
 				if($Platlastytd['ProcessedListing']['currency']==='EUR'){ $numlastytdeur[] = $Platlastytd[0]['orderid'];  $currlastytdeur[] = $Platlastytd['ProcessedListing']['currency'];} else if($Platlastytd['ProcessedListing']['currency']==='GBP'){  $numlastytdgbp[] = $Platlastytd[0]['orderid'];  $currlastytdgbp[] = $Platlastytd['ProcessedListing']['currency']; }                             
 				}  
 			  }
-			if((!empty($numlastytdeur[0])) && ($currlastytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdeur[0]."],";} else if((!empty($numlastytdgbp[0])) && ($currlastytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdgbp[0]."],"; }    
+			if((!empty($numlastytdeur[0])) && ($currlastytdeur[0]==='EUR')){  echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdeur[0]."],";} else if((!empty($numlastytdgbp[0])) && ($currlastytdgbp[0]==='GBP')){ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlastytdgbp[0]."],"; }else{ echo "['".$value['ProcessedListing']['cat_name']."', ".$numlyd[0]."],";}
 				
 		   } 
 		}
       ?>
     ]); 
     var chart = new google.visualization.PieChart(document.getElementById('piechartlastytd'));
-    chart.draw(datalastmonth,options);
+    chart.draw(datacuuytd,options);
 }
 </script>

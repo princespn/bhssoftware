@@ -6,7 +6,7 @@ class ProcessedOrdersController extends AppController {
 
     function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow(array('sales_platform','index', 'dailysales_category', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
+        $this->Auth->allow(array('sales_platform','index_one', 'dailysales_category', 'selection_periods','category_weekly','importprocessed','category_monthly','channel_monthly','channel_weekly','categname','prevweeks','currentweeks','currentmonths','prevmonths'));
         $this->Session->activate();
 
     }
@@ -71,10 +71,10 @@ class ProcessedOrdersController extends AppController {
         $some_data = array('token' => $userkey);
 
     
-		$from = '2018-01-10T00:00:00'; //min
-		//$from = '';   // 2017-04-03 - TO - 2017-04-09
-		$to =  '2018-08-13T60:60:60'; //max
-		//$to = '';
+		//$from = '2018-09-10T00:00:00'; //min
+		$from = '';   // 2017-04-03 - TO - 2017-04-09
+		//$to =  '2018-10-17T60:60:60'; //max
+		$to = '';
         
 		$datetype = '1';
         $sfield  = '';
@@ -110,12 +110,10 @@ class ProcessedOrdersController extends AppController {
 
     
 
-    public function index(){
+    public function index_one(){
 
         $this->set('title', 'Linnworks Processed Orders.');
         $page = $this->params['url']['page'];
-
-
 
         $userkey = $this->tokenkey();
         $some_data = array('token' => $userkey);
@@ -260,7 +258,7 @@ for ($i = 0;$i<=count($order->Items); $i++) {
 
     $this->loadModel('ProcessedListing');	 
 	
-	if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	//if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
 		/* Add sku conditions 
 	
 		if($order->Items[$i]->SKU === 'D0-XCPS-BUS3-MADE'){
@@ -279,19 +277,19 @@ for ($i = 0;$i<=count($order->Items); $i++) {
 		
 	
     $this->ProcessedListing->create();   
-    $this->ProcessedListing->saveAll(array('order_id' => $smart_orderid,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $order->Items[$i]->Title, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
+    $this->ProcessedListing->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum,'order_date' => $this_week_sd,  'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource, 'product_sku' => $order->Items[$i]->SKU, 'cat_name' => $order->Items[$i]->CategoryName, 'product_name' => $order->Items[$i]->Title, 'quantity' =>  $order->Items[$i]->Quantity, 'price_per_product' => $order->Items[$i]->CostIncTax));
     } 
 
     $days = strtotime($order->GeneralInfo->ReceivedDate);
 
     $this_week_sd = date("Y-m-d",$days);
-	if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
+	//if(($order->GeneralInfo->Source === 'DATAIMPORTEXPORT') && ($order->GeneralInfo->SubSource === 'Daily Mail')){$smart_orderid = "DMail10".$order->GeneralInfo->ExternalReferenceNum;}else {$smart_orderid = $order->GeneralInfo->ExternalReferenceNum;}
 	
 	
 	   //$ordervalue = (($order->TotalsInfo->TotalCharge)-($order->TotalsInfo->Tax));
    $ordervalue = $order->TotalsInfo->TotalCharge;
    $this->ProcessedOrder->create();	
-    $this->ProcessedOrder->saveAll(array('order_id' => $smart_orderid, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
+    $this->ProcessedOrder->saveAll(array('order_id' => $order->GeneralInfo->ExternalReferenceNum, 'currency' => $order->TotalsInfo->Currency, 'plateform' => $order->GeneralInfo->Source,'subsource' => $order->GeneralInfo->SubSource,'order_date' => $this_week_sd,'order_value' => $ordervalue));
 	  
      
 

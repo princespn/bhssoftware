@@ -50,6 +50,7 @@ $this->requestAction('/users/logout/', array('return'));
 			<td width="100px"><strong><?php __('Total Order vlues'); ?></strong></td></tr></thead>
 			<?php    $a = '0'; foreach ($countselectdates as $value): ?>  
 			<?php $b = $value['ProcessedListing']['cat_name']; ?>			
+			
 			<?php $Totalnumbsumeur = array(); $Totalnumbsumegbp = array();  $Totalordersumeur = array();  $Totalordersumegbp = array(); ?>
 		    <?php foreach ($Catsaveall as $currentsweeks): ?>  
             <?php if(($value['ProcessedListing']['cat_name'] === $currentsweeks['ProcessedListing']['cat_name'])) {?>

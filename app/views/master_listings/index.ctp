@@ -437,7 +437,7 @@ $(document).ready(function() {
 		 $('#exportfile').removeAttr('disabled');
             });
         }else{
-            $('.checkbox1').each(function() { //loop through each checkbox
+            $('.').each(function() { //loop through each checkbox
                 this.checked = false; //deselect all checkboxes with class "checkbox1"                      
 		$('#exportfile').attr("disabled", "disabled");
 		$('#MasterListingError').removeAttr('disabled','disabled');

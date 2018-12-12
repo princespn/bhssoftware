@@ -61,16 +61,16 @@ class StockCurrentsController extends AppController {
         return $catgory;
     }
 
-		public function index(){					
+	public function index(){					
 					
-					ini_set('memory_limit', '-1');
+				ini_set('memory_limit', '-1');
 					
-					$this->set('title', 'Linnworks Get Full Stock Items Information.');
+     			  $this->set('title', 'Linnworks Get Full Stock Items Information.');
       
-					$userkey = $this->tokenkey();
-					$some_data = array('token' => $userkey);
+     			   $userkey = $this->tokenkey();
+     			   $some_data = array('token' => $userkey);
 		
-					$page = $this->params['url']['page'];
+			  	   $page = $this->params['url']['page'];
 			
 					$keywords = '';
 					$location = '';
