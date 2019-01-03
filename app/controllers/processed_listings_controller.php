@@ -780,9 +780,7 @@ $groupby = array(('ProcessedListing.product_sku'),
     $groupby = array(('ProcessedListing.plateform'),
          'AND'=> 'ProcessedListing.subsource','ProcessedListing.product_sku','ProcessedListing.cat_name');
       
-      
-    
-     $this->paginate = array(
+        $this->paginate = array(
         'fields' => array('ProcessedListing.product_sku','ProcessedListing.product_name','ProcessedListing.plateform','ProcessedListing.cat_name','ProcessedListing.subsource','count(ProcessedListing.order_id) as orderid','ProcessedListing.currency','sum(ProcessedListing.price_per_product) AS ordervalues'), 
         'limit' => 50,
         'group' => $groupby,

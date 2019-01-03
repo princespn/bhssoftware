@@ -19,8 +19,8 @@ class StockItemsController extends AppController {
 		$newdate = '2018-11-18';			
 		return $newdate;		
 	}
-
-	    public function tokenkey() {
+	
+	public function tokenkey() {
         	            $auth_data = array(
 				'applicationId' =>'b72fc47a-ef82-4cb3-8179-2113f09c50ff',
 				'applicationSecret' =>'e727f554-7d27-4fd2-bcaf-dad3e0079821',
@@ -46,6 +46,7 @@ class StockItemsController extends AppController {
 				        if(!empty($Token)){return $Token;}else{throw new MissingWidgetHelperException('Token not authorized to view this page.', 401);}
 		
 	    }
+		
  public function categname() {
 
         $userkey = $this->tokenkey();
@@ -197,8 +198,7 @@ class StockItemsController extends AppController {
 					$groupby = array(('ProcessedListing.product_sku'));
 							
 					$groupmax = array(('ProcessedListing.product_sku'),
-							'AND'=> 'month_name');
-						
+							'AND'=> 'month_name');						
 					
 					
 					$condition = array('ProcessedListing.order_date <= ' => $lastdate,
